@@ -1,7 +1,7 @@
 package trivia;
 
 import java.awt.BorderLayout;
-import java.awt.Toolkit;
+//import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
