@@ -52,8 +52,7 @@ public class Actors {
 	/**
 	 * Adds a created Actor to actors.
 	 * 
-	 * @param a
-	 *            Actor to be added
+	 * @param a Actor to be added
 	 */
 	public void add(Actor a) {
 		if (pos >= MAX) {
@@ -65,7 +64,7 @@ public class Actors {
 	
 	/**
 	 * Moves and checks for death all actors which are alive. Removes all dead
-	 * actors. Spawns explosions at newly dead actors.
+	 * actors.
 	 */
 	public void handleActors() {
 		int update = 0; // used to update positions

@@ -19,6 +19,10 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	private int timer = 0;
 	private Boolean debugMode = false;
 	
+	/**
+	 * Creates a new Trivia game.
+	 * @param debug If True, game prints out debug information.
+	 */
 	public Trivia(Boolean debug)
 	{
 		debugMode = debug;
@@ -34,13 +38,17 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	}
 	
 	/**
-	 * Starts the game thread.
+	 * Starts the game thread. Must be called from out of this class.
 	 */
 	public void start()
 	{
 		th.start();
 	}
 	
+	/**
+	 * Called to run the game. Will continue running until game is exitted.
+	 * All game logic is called from here.
+	 */
 	public synchronized void run() 
 	{
 		//run until stopped
@@ -91,6 +99,9 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 		}
 	}
 	
+	/**
+	 * Updates the graphics of the game using a double buffer system.
+	 */
 	public void update(Graphics g)
 	{	
 		//start buffer
@@ -109,6 +120,10 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 		g.drawImage(dbImage, 0, 0, this);
 	}
 	
+	/**
+	 * Only called from update(Graphics g).
+	 * Paints all objects and menus in the game.
+	 */
 	public void paint(Graphics g)
 	{
 		g.setColor(Color.RED);
@@ -182,7 +197,7 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 
 	/**
 	 * Debug tool.
-	 * Used to print a String.
+	 * Used to print a String if Debug mode is enabled.
 	 * @param s String to print.
 	 */
 	private void log(String s) {
