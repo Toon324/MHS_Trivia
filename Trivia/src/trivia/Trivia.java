@@ -203,7 +203,7 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	private void log(String s) {
 		if (debugMode)
 		{
-			System.out.println(s);
+			System.out.println("Dan Miller");
 		}
 	}
 }
