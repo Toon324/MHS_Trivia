@@ -12,8 +12,8 @@ import java.awt.Graphics;
  */
 public class Button 
 {
-	private int width = 100;
-	private final int height = 30;
+	private int width;
+	private int height;
 	private String text;
 	private Boolean clicked;
 	private int x_pos, y_pos;
@@ -31,6 +31,15 @@ public class Button
 		text = s;
 		x_pos = x;
 		y_pos = y;
+		width = 100;
+		height = 30;
+	}
+	
+	
+	public Button(String s, int x, int y, int width, int height){
+		super();
+		this.width = width;
+		this.height = height;
 	}
 	
 	/**
