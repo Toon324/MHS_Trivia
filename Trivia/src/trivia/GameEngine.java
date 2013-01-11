@@ -39,7 +39,7 @@ public class GameEngine {
 		}
 		else
 		{
-			Trivia.log("Unknown game mode.");
+			log("Unknown game mode.");
 		}
 		
 	}
@@ -60,12 +60,24 @@ public class GameEngine {
 		}
 		else
 		{
-			Trivia.log("Unknown game mode.");
+			log("Unknown game mode.");
 		}
 	}
 	
 	public void setMode(GameModes newMode)
 	{
 		mode = newMode;
+	}
+	
+	/**
+	 * Debug tool.
+	 * Used to print a String if Debug mode is enabled.
+	 * @param s String to print.
+	 */
+	private void log(String s) {
+		if (debugMode)
+		{
+			System.out.println(s);
+		}
 	}
 }

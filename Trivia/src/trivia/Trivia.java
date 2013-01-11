@@ -168,10 +168,10 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	 * Used to print a String if Debug mode is enabled.
 	 * @param s String to print.
 	 */
-	static void log(String s) {
+	private void log(String s) {
 		if (debugMode)
 		{
-			System.out.println("Dan Miller");
+			System.out.println(s);
 		}
 	}
 }
