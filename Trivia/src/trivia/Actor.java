@@ -21,7 +21,7 @@ public class Actor
 	private Rectangle bounds = new Rectangle();
 	/**
 	 * Creates a new Actor.
-	 * @param i SpaceImage of Actor
+	 * @param i GameImage of Actor
 	 * @param p Position in ArrayList
 	 */
 	public Actor(GameImage i, int p)
@@ -48,7 +48,7 @@ public class Actor
 	
 	/**
 	 * Draws the Actor.
-	 * @param p Corner of the screen to draw in reference to.
+	 * @param p Corner of the screen to draw in reference to
 	 * @param g Graphics to be drawn with
 	 */
 	public void draw(Point p, Graphics g)
@@ -248,8 +248,4 @@ public class Actor
 		return "Actor";
 	}
 	
-	private void log(String s)
-	{
-		System.out.println(s);
-	}
 }
