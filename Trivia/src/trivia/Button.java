@@ -8,7 +8,7 @@ import java.awt.Graphics;
 /**
  * Graphic representing a clickable area for game control.
  * 
- * @author Cody Swendrowski
+ * @author Cody Swendrowski, Dan Miller
  */
 public class Button 
 {
@@ -21,7 +21,7 @@ public class Button
 	
 	/**
 	 * Creates a new Button.
-	 * @param s String to display in button
+	 * @param s String to display in Button
 	 * @param x x_pos to draw at
 	 * @param y y_pos to draw at
 	 */
@@ -35,7 +35,14 @@ public class Button
 		height = 30;
 	}
 	
-	
+	/**
+	 * Creates a new button with a specified width and height.
+	 * @param s String to display in Button
+	 * @param x x_pos to draw at
+	 * @param y y_pos to draw at
+	 * @param width width of Button
+	 * @param height height of Button
+	 */
 	public Button(String s, int x, int y, int width, int height){
 		super();
 		this.width = width;
