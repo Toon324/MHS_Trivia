@@ -13,11 +13,11 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 {
 	private static final long serialVersionUID = 1L;
 	private Thread th = new Thread(this); //Game thread
-	private enum states {mainMenu, dismantle, dismantlePause, create, createPause};
-	private states gameState;
-	private Actors actors;
-	private int timer = 0;
+	private GameEngine engine;
 	private Boolean debugMode = false;
+	private Actors actors;
+	
+	public enum GameModes {mainMenu, play, pause};
 	
 	/**
 	 * Creates a new Trivia game.
@@ -35,6 +35,8 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	{
 		actors = new Actors(debugMode);
 		actors.setSize(WIDTH, HEIGHT);
+		engine = new GameEngine(actors, debugMode);
+		engine.setMode(GameModes.mainMenu);
 	}
 	
 	/**
@@ -53,31 +55,9 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	{
 		//run until stopped
 		while (true)
-		{
-			//add a step to the timer
-			timer++;
-			
+		{			
 			//controls game flow
-			if (gameState == states.mainMenu)
-			{
-				//mainMenu();
-			}
-			else if (gameState == states.dismantle)
-			{
-				//dismantle();
-			}
-			else if (gameState == states.dismantlePause)
-			{
-				//pause();
-			}
-			else if (gameState == states.create)
-			{
-				//create();
-			}
-			else if (gameState == states.createPause)
-			{
-				//pause();
-			}
+			engine.run();
 			
 			//repaint applet
 			repaint();
@@ -126,21 +106,9 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	 */
 	public void paint(Graphics g)
 	{
-		g.setColor(Color.RED);
-		
-		if (gameState == states.mainMenu)
-		{
-			//drawMain(g);
-		}
-		else if ((gameState == states.dismantlePause) || (gameState == states.createPause))
-		{
-			//drawPause(g);
-		}
-		else
-		{
-			//actors.drawActors(g);
-		}
+		engine.paint(g);
 		super.paint(g);
+		
 		synchronized(this) 
 		{
 			notifyAll();
@@ -200,7 +168,7 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	 * Used to print a String if Debug mode is enabled.
 	 * @param s String to print.
 	 */
-	private void log(String s) {
+	static void log(String s) {
 		if (debugMode)
 		{
 			System.out.println("Dan Miller");
