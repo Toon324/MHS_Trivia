@@ -9,9 +9,8 @@ import java.awt.Graphics;
  * @author Cody Swendrowski
  *
  */
-public class MainMenu implements GameEngine.GameMode {
+public class MainMenu extends GameMode {
 	
-	private Button[] buttons;
 	private GameEngine engine;
 	
 	
@@ -39,13 +38,6 @@ public class MainMenu implements GameEngine.GameMode {
 		buttons[0].draw(g);
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void clicked(int x, int y) {
-		for(int i = 0; i < buttons.length; i++){
-			buttons[i].checkClick(x, y);
-		}
 	}
 
 }

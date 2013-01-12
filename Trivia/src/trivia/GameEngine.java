@@ -14,12 +14,6 @@ public class GameEngine {
 	private Actors actors;
 	private int timer = 0;
 	private boolean debugMode;
-
-	public interface GameMode{
-		public void run();
-		public void clicked(int x, int y);
-		public void paint(Graphics g);
-	}
 	
 	
 	public GameEngine(Actors actors, Boolean debug)
