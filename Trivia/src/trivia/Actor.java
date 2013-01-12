@@ -4,28 +4,33 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
 /*import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;*/
+ import java.awt.geom.AffineTransform;
+ import java.awt.image.AffineTransformOp;*/
 
 /**
  * Generic class for all objects in the game.
+ * 
  * @author Cody Swendrowski
  */
-public class Actor
-{
-	public int width, height, speed, x_pos, y_pos, score, xTile, yTile, tile, tileSpeed, tiles, dir, attack, life;
+public class Actor {
+	public int width, height, speed, x_pos, y_pos, score, xTile, yTile, tile,
+			tileSpeed, tiles, dir, attack, life;
 	public GameImage image;
 	private int pos;
 	protected boolean death;
 	private Rectangle bounds = new Rectangle();
+
 	/**
 	 * Creates a new Actor.
-	 * @param i GameImage of Actor
-	 * @param p Position in ArrayList
+	 * 
+	 * @param i
+	 *            GameImage of Actor
+	 * @param p
+	 *            Position in ArrayList
 	 */
-	public Actor(GameImage i, int p)
-	{
+	public Actor(GameImage i, int p) {
 		image = i;
 		dir = 0;
 		x_pos = 0;
@@ -45,40 +50,41 @@ public class Actor
 		pos = p;
 		bounds.setSize(width, height);
 	}
-	
+
 	/**
 	 * Draws the Actor.
-	 * @param p Corner of the screen to draw in reference to
-	 * @param g Graphics to be drawn with
+	 * 
+	 * @param p
+	 *            Corner of the screen to draw in reference to
+	 * @param g
+	 *            Graphics to be drawn with
 	 */
-	public void draw(Point p, Graphics g)
-	{
-		//ensure no dead objects are draw
-		if (!death)
-		{
-			BufferedImage i = image.getImage(xTile,yTile);
-			if (i == null)
-			{
+	public void draw(Point p, Graphics g) {
+		// ensure no dead objects are draw
+		if (!death) {
+			BufferedImage i = image.getImage(xTile, yTile);
+			if (i == null) {
 				return;
 			}
-			g.drawImage(i,x_pos-p.x,y_pos-p.y, x_pos+width-p.x, y_pos+height-p.y, 0, 0, i.getWidth(), i.getHeight(), null);
+			g.drawImage(i, x_pos - p.x, y_pos - p.y, x_pos + width - p.x, y_pos
+					+ height - p.y, 0, 0, i.getWidth(), i.getHeight(), null);
 		}
 	}
-	
+
 	/**
 	 * Moves the Actor.
-	 * @param w Width of area to draw in
-	 * @param h Height of area to draw in
+	 * 
+	 * @param w
+	 *            Width of window to draw in
+	 * @param h
+	 *            Height of window to draw in
 	 */
-	public void move(int w, int h)
-	{	
+	public void move(int w, int h) {
 		tile++;
-		if (tile > tileSpeed)
-		{
+		if (tile > tileSpeed) {
 			xTile++;
-			tile =0;
-			if (xTile > tiles)
-			{
+			tile = 0;
+			if (xTile > tiles) {
 				xTile = 0;
 			}
 		}
@@ -86,166 +92,175 @@ public class Actor
 
 	/**
 	 * Returns known position in Actors.
+	 * 
 	 * @return position in Actors
 	 */
-	public int getPos()
-	{
+	public int getPos() {
 		return pos;
 	}
-	
+
 	/**
 	 * Sets known position in Actors.
-	 * @param p int position to set
+	 * 
+	 * @param p
+	 *            int position to set
 	 */
-	public void setPos(int p)
-	{
+	public void setPos(int p) {
 		pos = p;
 	}
-	
+
 	/**
-	 * Sets the known bounds of the Actor. Should not be called past initialization.
-	 * @param x Width of bounds
-	 * @param y Height of bounds
+	 * Sets the known bounds of the Actor. Should not be called past
+	 * initialization.
+	 * 
+	 * @param x
+	 *            Width of bounds
+	 * @param y
+	 *            Height of bounds
 	 */
-	public void setBounds(int x, int y)
-	{
-		bounds.setBounds(new Rectangle(x,y));
+	public void setBounds(int x, int y) {
+		bounds.setBounds(new Rectangle(x, y));
 	}
-	
+
 	/**
 	 * Returns true if Actor is dead; else, returns false.
+	 * 
 	 * @return death
 	 */
-	public boolean isDead()
-	{
+	public boolean isDead() {
 		return death;
 	}
-	
+
 	/**
 	 * Returns score value of Actor.
+	 * 
 	 * @return score
 	 */
-	public int getScore()
-	{
+	public int getScore() {
 		return score;
 	}
-	
+
 	/**
-	 * Sets the score value of the Actor. Should not be called after initialization.
-	 * @param s the score to set
+	 * Sets the score value of the Actor. Should not be called after
+	 * initialization.
+	 * 
+	 * @param s
+	 *            the score to set
 	 */
 	public void setScore(int s) {
 		score = s;
 	}
-	
 
 	/**
 	 * Checks to see if Actor is colliding with another Actor.
-	 * @param other Actor to check collision against
+	 * 
+	 * @param other
+	 *            Actor to check collision against
 	 */
-	public void checkCollision(Actor other)
-	{
-		//only checks enemy collisions
-		//to be overridden
+	public void checkCollision(Actor other) {
+		// only checks enemy collisions
+		// to be overridden
 	}
-	
+
 	/**
 	 * Returns speed value of Actor.
+	 * 
 	 * @return speed
 	 */
-	public int getSpeed()
-	{
+	public int getSpeed() {
 		return speed;
 	}
-	
+
 	/**
 	 * Returns x_pos of Actor.
+	 * 
 	 * @return x_pos
 	 */
-	public int getX()
-	{
+	public int getX() {
 		return x_pos;
 	}
-	
+
 	/**
 	 * Returns y_pos of Actor.
+	 * 
 	 * @return y_pos
 	 */
-	public int getY()
-	{
+	public int getY() {
 		return y_pos;
 	}
-	
+
 	/**
 	 * Sets x_pos of Actor.
-	 * @param x int x_pos to set
+	 * 
+	 * @param x
+	 *            int x_pos to set
 	 */
-	public void setX(int x)
-	{
-			x_pos = x;
+	public void setX(int x) {
+		x_pos = x;
 	}
-	
+
 	/**
 	 * Sets y_pos of Actor.
-	 * @param y int y_pos to set
+	 * 
+	 * @param y
+	 *            int y_pos to set
 	 */
-	public void setY(int y)
-	{
-			y_pos = y;
+	public void setY(int y) {
+		y_pos = y;
 	}
-	
+
 	/**
 	 * Returns the direction that the Actor is facing.
+	 * 
 	 * @return dir
 	 */
-	public int getDir()
-	{
+	public int getDir() {
 		return dir;
 	}
-	
+
 	/**
 	 * Sets the direction that the Actor is facing.
-	 * @param d Direction to set as.
+	 * 
+	 * @param d
+	 *            Direction to set as.
 	 */
-	public void setDir(int d)
-	{
+	public void setDir(int d) {
 		dir = d;
 	}
-	
+
 	/**
 	 * Reduces health of Actor. If health is less than 0, the Actor dies.
-	 * @param a Amount of health to reduce by.
+	 * 
+	 * @param a
+	 *            Amount of health to reduce by.
 	 */
-	public void addDamage(int a)
-	{
-		if (life == -324)
-		{
+	public void addDamage(int a) {
+		if (life == -324) {
 			return;
 		}
 		life -= a;
-		if (life <= 0)
-		{
+		if (life <= 0) {
 			setDeath(true);
 		}
 	}
-	
+
 	/**
 	 * Sets death to parameter.
-	 * @param d boolean to set death to
+	 * 
+	 * @param d
+	 *            boolean to set death to
 	 */
-	public void setDeath(boolean d)
-	{
+	public void setDeath(boolean d) {
 		death = d;
 	}
 
 	/**
-	 * Allows System to print name of object.
-	 * Returns the name of the Actor
+	 * Allows System to print name of object. Returns the name of the Actor
+	 * 
 	 * @return "Actor"
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return "Actor";
 	}
-	
+
 }

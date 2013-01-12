@@ -3,59 +3,75 @@ package trivia;
 import java.awt.Graphics;
 
 /**
- * @author Cody Swendrowski
- *
+ * @author Cody Swendrowski, Dan Miller
+ * Handles all the game logic and painting based on the current game mode.
  */
 public class GameEngine {
 
 	private GameMode mode;
-	public final MainMenu MAIN_MENU = new MainMenu(this);
-	public final MainGame MAIN_GAME = new MainGame(this);
+	public MainMenu mainMenu;
+	public MainGame mainGame;
 	private Actors actors;
 	private int timer = 0;
 	private boolean debugMode;
-	
-	
-	public GameEngine(Actors actors, Boolean debug)
-	{
-		mode = MAIN_MENU;
+
+	/**
+	 * Creates a new GameEngine
+	 * @param actors Array of actors to pass logic to.
+	 * @param debug If true, prints out debug messages.
+	 */
+	public GameEngine(Actors actors, Boolean debug) {
 		this.actors = actors;
 		debugMode = debug;
+		mainMenu = new MainMenu(this);
+		mainGame = new MainGame(this);
+		mode = mainMenu;
 	}
-	
+
+	/**
+	 * Runs the game logic based on the current game mode.
+	 */
 	public void run() {
 		timer++;
 		mode.run();
-		
+		actors.handleActors();
 	}
 
+	/**
+	 * Paints the game based on the current game mode.
+	 * @param g Graphics to paint with.
+	 */
 	public void paint(Graphics g) {
-		
 		mode.paint(g);
 	}
-	
-	public void setMode(GameMode newMode)
-	{
+
+	/**
+	 * Sets the current game mode.
+	 * @param newMode
+	 */
+	public void setMode(GameMode newMode) {
 		mode = newMode;
 	}
-	
+
 	/**
-	 * Called when a click occurs, meant to send the update to the current gameMode
+	 * Called when a click occurs, sends the click to the current
+	 * gameMode.
+	 * 
 	 * @param x
 	 * @param y
 	 */
-	public void clickedAt(int x, int y){
+	public void clickedAt(int x, int y) {
 		mode.clicked(x, y);
 	}
-	
+
 	/**
-	 * Debug tool.
-	 * Used to print a String if Debug mode is enabled.
-	 * @param s String to print.
+	 * Debug tool. Used to print a String if Debug mode is enabled.
+	 * 
+	 * @param s
+	 *            String to print.
 	 */
 	public void log(String s) {
-		if (debugMode)
-		{
+		if (debugMode) {
 			System.out.println(s);
 		}
 	}

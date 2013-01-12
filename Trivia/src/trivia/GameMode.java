@@ -13,6 +13,7 @@ public abstract class GameMode {
 	
 	public void run(){
 	}
+	
 	public void clicked(int x, int y){
 		try{
 			for(int i = 0; i < buttons.length; i++){
