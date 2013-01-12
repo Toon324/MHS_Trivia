@@ -18,11 +18,10 @@ public class MainGame extends GameMode {
 	
 	
 	private String[] questions = {"What is 1 + 2?", "What is 4 - 9?", "What describes your mom?"};
-	private String[][] answers = {
-			{"3", "-5", "fat"},
-			{"-2", "3", "beautiful"},
-			{"4", "-9", "pretty"},
-			{"2", "-4", "glorious"}
+	private String[][] 	answers = {
+			{"3", "-2", "4", "2"},
+			{"-5", "3", "-9", "-4"},
+			{"fat", "beautiful", "pretty", "glorious"}
 	};
 	private int currentQuestion = 0;
 	private int score = 0;
@@ -42,14 +41,14 @@ public class MainGame extends GameMode {
 	public void run() {
 		switch(state){
 		case QUESTIONS:
-			if(buttons == null){
+			if(buttons == null){//if this is the first time, set up the buttons
 				currentQuestion -= 1;
 				nextQuestion();
 			}
 			
 			for(int i = 0; i < buttons.length; i++){
 				if(buttons[i].isClicked()){
-					if( buttons[i].getText().equals(answers[0][currentQuestion]) ){
+					if( buttons[i].getText().equals(answers[currentQuestion][0]) ){//if the text of the current button is the answer
 						score += 1;
 						lastAnswer = true;
 					}else{
@@ -73,14 +72,15 @@ public class MainGame extends GameMode {
 	private void nextQuestion(){
 		engine.log("Asking next question");
 		currentQuestion += 1;
-		if(currentQuestion >= answers[0].length){
+		if(currentQuestion >= answers.length){
 			state = states.END_GAME;
 			return;
 		}
+		//makes sure that the mode is correct, for when this gets called from a different mode
 		state = states.QUESTIONS;
 		buttons = new Button[4];
-		for(int i = 0; i < answers.length; i++){
-			buttons[i] = new Button(answers[i][currentQuestion], 10, 70 + (i * 35));
+		for(int i = 0; i < answers[currentQuestion].length; i++){
+			buttons[i] = new Button(answers[currentQuestion][i], 10, 70 + (i * 35));
 		}
 	}
 	
