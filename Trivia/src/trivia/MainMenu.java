@@ -5,8 +5,6 @@ package trivia;
 
 import java.awt.Graphics;
 
-import trivia.GameEngine.GameMode;
-
 /**
  * @author Cody Swendrowski
  *
@@ -14,11 +12,13 @@ import trivia.GameEngine.GameMode;
 public class MainMenu implements GameEngine.GameMode {
 	
 	private Button[] buttons;
+	private GameEngine engine;
 	
 	
-	public MainMenu(){
+	public MainMenu(GameEngine eng){
+		engine = eng;
 		buttons = new Button[1];
-		buttons[0] = new Button("Test", 10 ,10);
+		buttons[0] = new Button("Start Questioning", 10, 10, 100, 30);
 	}
 	
 	/* (non-Javadoc)
@@ -27,10 +27,8 @@ public class MainMenu implements GameEngine.GameMode {
 	@Override
 	public void run() {
 		if(buttons[0].isClicked()){
-			buttons[0].set(buttons[0].getX() + 5, buttons[0].getY() + 5);
+			engine.setMode(engine.MAIN_GAME);
 		}
-		// TODO Add in logic
-
 	}
 
 	/* (non-Javadoc)

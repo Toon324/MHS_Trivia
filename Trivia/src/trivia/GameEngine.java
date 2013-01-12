@@ -9,7 +9,8 @@ import java.awt.Graphics;
 public class GameEngine {
 
 	private GameMode mode;
-	public static final MainMenu MAIN_MENU = new MainMenu();
+	public final MainMenu MAIN_MENU = new MainMenu(this);
+	public final MainGame MAIN_GAME = new MainGame(this);
 	private Actors actors;
 	private int timer = 0;
 	private boolean debugMode;
@@ -58,7 +59,7 @@ public class GameEngine {
 	 * Used to print a String if Debug mode is enabled.
 	 * @param s String to print.
 	 */
-	private void log(String s) {
+	public void log(String s) {
 		if (debugMode)
 		{
 			System.out.println(s);

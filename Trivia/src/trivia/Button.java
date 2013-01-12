@@ -15,7 +15,7 @@ public class Button
 	private int width;
 	private int height;
 	private String text;
-	private Boolean clicked;
+	private boolean clicked;
 	private int x_pos, y_pos;
 	private Font f = new Font ("Serif", Font.BOLD, 20);
 	
@@ -44,7 +44,7 @@ public class Button
 	 * @param height height of Button
 	 */
 	public Button(String s, int x, int y, int width, int height){
-		super();
+		this(s, x, y);
 		this.width = width;
 		this.height = height;
 	}
@@ -135,6 +135,14 @@ public class Button
 	public int getHeight()
 	{
 		return height;
+	}
+	
+	/**
+	 * Returns the text displayed in the button
+	 * @return text
+	 */
+	public String getText(){
+		return text;
 	}
 	
 	/**
