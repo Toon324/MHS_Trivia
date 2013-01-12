@@ -6,6 +6,9 @@ package trivia;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * @author dsmiller95
@@ -17,12 +20,8 @@ public class MainGame extends GameMode {
 	private states state;
 	
 	
-	private String[] questions = {"What is 1 + 2?", "What is 4 - 9?", "What describes your mom?"};
-	private String[][] 	answers = {
-			{"3", "-2", "4", "2"},
-			{"-5", "3", "-9", "-4"},
-			{"fat", "beautiful", "pretty", "glorious"}
-	};
+	private ArrayList<String> questions;
+	
 	private int currentQuestion = 0;
 	private int score = 0;
 	private boolean lastAnswer = false;
@@ -34,6 +33,8 @@ public class MainGame extends GameMode {
 	public MainGame(GameEngine eng){
 		super(eng);
 		state = states.QUESTIONS;
+		questions = new ArrayList<String>();
+		loadQuestions();
 	}
 	
 	
@@ -41,24 +42,7 @@ public class MainGame extends GameMode {
 	public void run() {
 		switch(state){
 		case QUESTIONS:
-			if(buttons == null){//if this is the first time, set up the buttons
-				currentQuestion -= 1;
-				nextQuestion();
-			}
-			
-			for(int i = 0; i < buttons.length; i++){
-				if(buttons[i].isClicked()){
-					if( buttons[i].getText().equals(answers[currentQuestion][0]) ){//if the text of the current button is the answer
-						score += 1;
-						lastAnswer = true;
-					}else{
-						score -= 1;
-						lastAnswer = false;
-					}
-					lastTime = System.currentTimeMillis();
-					state = states.DISPLAY_RESPONSE;
-				}
-			}
+			runQuestions();
 			break;
 		case DISPLAY_RESPONSE:
 			if(System.currentTimeMillis() > lastTime + 1000)
@@ -69,6 +53,29 @@ public class MainGame extends GameMode {
 		}
 	}
 	
+	private void runQuestions() {
+		if(buttons == null){//if this is the first time, set up the buttons
+			currentQuestion -= 1;
+			nextQuestion();
+		}
+		
+		for (Iterator<String> i = questions.iterator(); i.hasNext();){
+			if(buttons[i].isClicked()){
+				if( buttons[i].getText().equals(answers[currentQuestion][0]) ){//if the text of the current button is the answer
+					score += 1;
+					lastAnswer = true;
+				}else{
+					score -= 1;
+					lastAnswer = false;
+				}
+				lastTime = System.currentTimeMillis();
+				state = states.DISPLAY_RESPONSE;
+			}
+		}
+		
+	}
+
+
 	private void nextQuestion(){
 		engine.log("Asking next question");
 		currentQuestion += 1;
@@ -121,6 +128,27 @@ public class MainGame extends GameMode {
 		g.setColor(temp);
 		g.setFont(tempF);
 		
+	}
+	
+	private void loadQuestions() {
+		engine.log("loading the questions");
+	    Scanner scanner = new Scanner(Trivia.class.getResourceAsStream("questions.txt"));
+	    try 
+	    {
+	    	while(scanner.hasNext())
+			{
+	    		String s = scanner.next();
+	    		questions.add(s);
+			}
+	    }
+	    catch(Exception e)
+	    {
+	    	engine.log(e.toString());
+	    }
+	    finally
+	    {
+	      scanner.close();
+	    }
 	}
 	
 	public String toString(){

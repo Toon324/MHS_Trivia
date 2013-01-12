@@ -4,6 +4,8 @@
 package trivia;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * @author Cody Swendrowski
@@ -11,13 +13,12 @@ import java.awt.Graphics;
  */
 public class MainMenu extends GameMode {
 	
-	
 	public MainMenu(GameEngine eng){
 		super(eng);
 		buttons = new Button[1];
 		buttons[0] = new Button("Start Questioning", 10, 10, 100, 30);
 	}
-	
+
 	@Override
 	public void run() {
 		if(buttons[0].isClicked()){
