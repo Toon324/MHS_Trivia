@@ -17,8 +17,6 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	private Boolean debugMode = false;
 	private Actors actors;
 	
-	public enum GameModes {mainMenu, play, pause};
-	
 	/**
 	 * Creates a new Trivia game.
 	 * @param debug If True, game prints out debug information.
@@ -33,10 +31,11 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	 */
 	public void init()
 	{
+		addMouseListener(this);
 		actors = new Actors(debugMode);
 		actors.setSize(WIDTH, HEIGHT);
 		engine = new GameEngine(actors, debugMode);
-		engine.setMode(GameModes.mainMenu);
+		engine.setMode(engine.MAIN_MENU);
 	}
 	
 	/**
@@ -116,49 +115,48 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent arg0) {
+	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
+	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
+	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
+		engine.clickedAt(e.getX(), e.getY());
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

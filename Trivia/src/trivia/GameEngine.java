@@ -1,7 +1,6 @@
 package trivia;
 
 import java.awt.Graphics;
-import trivia.Trivia.GameModes;
 
 /**
  * @author Cody Swendrowski
@@ -9,64 +8,42 @@ import trivia.Trivia.GameModes;
  */
 public class GameEngine {
 	
-	private GameModes mode;
+	private GameMode mode;
+	public static final MainMenu MAIN_MENU = new MainMenu();
 	private Actors actors;
 	private int timer = 0;
 	private boolean debugMode;
 	
 	public GameEngine(Actors actors, Boolean debug)
 	{
-		mode = GameModes.mainMenu;
+		mode = MAIN_MENU;
 		this.actors = actors;
 		debugMode = debug;
 	}
 	
 	public void run() {
-
 		timer++;
-		
-		if (mode == GameModes.mainMenu)
-		{
-			//mainMenu.run();
-		}
-		else if (mode == GameModes.play)
-		{
-			//play.run();
-		}
-		else if (mode == GameModes.pause)
-		{
-			//pause.run();
-		}
-		else
-		{
-			log("Unknown game mode.");
-		}
+		mode.run();
 		
 	}
 
 	public void paint(Graphics g) {
 		
-		if (mode == GameModes.mainMenu)
-		{
-			//mainMenu.paint();
-		}
-		else if (mode == GameModes.play)
-		{
-			//play.paint();
-		}
-		else if (mode == GameModes.pause)
-		{
-			//pause.paint();
-		}
-		else
-		{
-			log("Unknown game mode.");
-		}
+		mode.paint(g);
 	}
 	
-	public void setMode(GameModes newMode)
+	public void setMode(GameMode newMode)
 	{
 		mode = newMode;
+	}
+	
+	/**
+	 * Called when a click occurs, meant to send the update to the current gameMode
+	 * @param x
+	 * @param y
+	 */
+	public void clickedAt(int x, int y){
+		mode.clicked(x, y);
 	}
 	
 	/**

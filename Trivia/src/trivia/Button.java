@@ -73,11 +73,15 @@ public class Button
 	}
 	
 	/**
-	 * Returns true if Button was clicked; else, returns false.
+	 * Returns true if Button was clicked; else, returns false. If it is true, it sets it to false immediately. One-use method.
 	 * @return clicked
 	 */
 	public boolean isClicked()
 	{
+		if(clicked){
+			clicked = false;
+			return true;
+		}
 		return clicked;
 	}
 	
