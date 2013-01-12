@@ -11,11 +11,10 @@ import java.awt.Graphics;
  */
 public class MainMenu extends GameMode {
 	
-	private GameEngine engine;
 	
 	
 	public MainMenu(GameEngine eng){
-		engine = eng;
+		super(eng);
 		buttons = new Button[1];
 		buttons[0] = new Button("Start Questioning", 10, 10, 100, 30);
 	}
@@ -39,5 +38,9 @@ public class MainMenu extends GameMode {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	public String toString(){
+		return "Main Menu";
+	}
+	
 }
