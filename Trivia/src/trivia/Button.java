@@ -65,7 +65,7 @@ public class Button
 		g.setFont(f);
 		g.setColor(Color.BLACK);
 		g.fillRect(x_pos, y_pos, width, height);
-		g.setColor(Color.red);
+		g.setColor(Color.cyan);
 		g.drawString(text, x_pos+10, y_pos+20);
 		
 		g.setColor(temp);

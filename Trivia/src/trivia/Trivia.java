@@ -35,7 +35,7 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 		actors = new Actors(debugMode);
 		actors.setSize(WIDTH, HEIGHT);
 		engine = new GameEngine(actors, debugMode);
-		engine.setMode(engine.MAIN_MENU);
+		engine.setMode(engine.mainMenu);
 	}
 	
 	/**

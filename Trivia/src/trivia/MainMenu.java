@@ -25,7 +25,7 @@ public class MainMenu extends GameMode {
 	@Override
 	public void run() {
 		if(buttons[0].isClicked()){
-			engine.setMode(engine.MAIN_GAME);
+			engine.setMode(engine.mainGame);
 		}
 	}
 
