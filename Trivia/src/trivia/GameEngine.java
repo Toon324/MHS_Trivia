@@ -7,12 +7,19 @@ import java.awt.Graphics;
  *
  */
 public class GameEngine {
-	
+
 	private GameMode mode;
 	public static final MainMenu MAIN_MENU = new MainMenu();
 	private Actors actors;
 	private int timer = 0;
 	private boolean debugMode;
+
+	public interface GameMode{
+		public void run();
+		public void clicked(int x, int y);
+		public void paint(Graphics g);
+	}
+	
 	
 	public GameEngine(Actors actors, Boolean debug)
 	{

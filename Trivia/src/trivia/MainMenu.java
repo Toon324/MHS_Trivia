@@ -5,15 +5,19 @@ package trivia;
 
 import java.awt.Graphics;
 
+import trivia.GameEngine.GameMode;
+
 /**
  * @author Cody Swendrowski
  *
  */
-public class MainMenu implements GameMode {
+public class MainMenu implements GameEngine.GameMode {
 	
-	private Button[] buttons = new Button[1];
+	private Button[] buttons;
+	
 	
 	public MainMenu(){
+		buttons = new Button[1];
 		buttons[0] = new Button("Test", 10 ,10);
 	}
 	
