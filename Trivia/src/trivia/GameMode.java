@@ -23,7 +23,16 @@ public abstract class GameMode {
 			engine.log("No defined buttons in " + this.toString());
 		}
 	}
+	
+	
 	public void paint(Graphics g){
+		try{
+			for(int i = 0; i < buttons.length; i++){
+				buttons[i].draw(g);
+			}
+		}catch(java.lang.NullPointerException e){
+			engine.log("No defined buttons in " + this.toString());
+		}
 	}
 
 }
