@@ -9,62 +9,65 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * @author dsmiller95
- *
+ * 
  */
 public class MainGame extends GameMode {
-	
-	private enum states {QUESTIONS, DISPLAY_RESPONSE, END_GAME};
+
+	private enum states {
+		QUESTIONS, DISPLAY_RESPONSE, END_GAME
+	};
+
 	private states state;
-	
-	
-	private ArrayList<String> questions;
-	
+
+	private String[] questions;
+	private String[][] answers;
+	private int[] ansKey;
+
 	private int currentQuestion = 0;
 	private int score = 0;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
-	private Font f = new Font ("Serif", Font.BOLD, 20);
-	
-	
-	public MainGame(GameEngine eng){
+	private Font f = new Font("Serif", Font.BOLD, 20);
+
+	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.QUESTIONS;
-		questions = new ArrayList<String>();
-		loadQuestions();
+		proccessQuestions(readFile());
 	}
-	
-	
+
 	@Override
 	public void run() {
-		switch(state){
+		switch (state) {
 		case QUESTIONS:
 			runQuestions();
 			break;
 		case DISPLAY_RESPONSE:
-			if(System.currentTimeMillis() > lastTime + 1000)
+			if (System.currentTimeMillis() > lastTime + 1000)
 				nextQuestion();
 			break;
 		case END_GAME:
 			break;
 		}
 	}
-	
+
 	private void runQuestions() {
-		if(buttons == null){//if this is the first time, set up the buttons
+		if (buttons == null) {// if this is the first time, set up the buttons
 			currentQuestion -= 1;
 			nextQuestion();
 		}
-		
-		for (Iterator<String> i = questions.iterator(); i.hasNext();){
-			if(buttons[i].isClicked()){
-				if( buttons[i].getText().equals(answers[currentQuestion][0]) ){//if the text of the current button is the answer
+
+		for (int i = 0; i < buttons.length; i++) {
+			if (buttons[i].isClicked()) {
+				// if the text of the current button is the answer
+				if (i == ansKey[currentQuestion]) {
 					score += 1;
 					lastAnswer = true;
-				}else{
+				} else {
 					score -= 1;
 					lastAnswer = false;
 				}
@@ -72,86 +75,186 @@ public class MainGame extends GameMode {
 				state = states.DISPLAY_RESPONSE;
 			}
 		}
-		
+
 	}
 
-
-	private void nextQuestion(){
+	private void nextQuestion() {
 		engine.log("Asking next question");
 		currentQuestion += 1;
-		if(currentQuestion >= answers.length){
+		if (currentQuestion >= answers.length) {
 			state = states.END_GAME;
 			return;
 		}
-		//makes sure that the mode is correct, for when this gets called from a different mode
+		// makes sure that the mode is correct, for when this gets called from a
+		// different mode
 		state = states.QUESTIONS;
-		buttons = new Button[4];
-		for(int i = 0; i < answers[currentQuestion].length; i++){
-			buttons[i] = new Button(answers[currentQuestion][i], 10, 70 + (i * 35));
+		buttons = new Button[answers[currentQuestion].length];
+		for (int i = 0; i < answers[currentQuestion].length; i++) {
+			buttons[i] = new Button(answers[currentQuestion][i], 10,
+					70 + (i * 35));
 		}
 	}
-	
-	
+
 	@Override
 	public void paint(Graphics g) {
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
-		
 
 		g.setFont(f);
 		g.setColor(Color.BLUE);
-		
-		switch(state){
+
+		switch (state) {
 		case QUESTIONS:
 			g.drawString(questions[currentQuestion], 10, 50);
-			
-			try{
-				for(int i = 0; i < buttons.length; i++){
+
+			try {
+				for (int i = 0; i < buttons.length; i++) {
 					buttons[i].draw(g);
 				}
-			}catch(java.lang.NullPointerException e){
+			} catch (java.lang.NullPointerException e) {
 				engine.log("No buttons in MainGame!");
 			}
-			//intentionally left out break; room is left for the score to be printed out after the previous prints
+			// intentionally left out break; room is left for the score to be
+			// printed out after the previous prints
 		case END_GAME:
 			g.drawString("Your score is " + score + ".", 10, 30);
 			break;
-			
+
 		case DISPLAY_RESPONSE:
-			if(lastAnswer){
+			if (lastAnswer) {
 				g.drawString("You got that right!", 10, 30);
-			}else{
+			} else {
 				g.drawString("You got that wrong!", 10, 30);
 			}
 		}
-		
+
 		g.setColor(temp);
 		g.setFont(tempF);
+
+	}
+
+	/**
+	 * Reads in a file to an array
+	 * 
+	 * @return ArrayList<String> arrayList containing the contents of the file,
+	 *         separated by line
+	 */
+	private ArrayList<String> readFile() {
+		engine.log("loading the questions");
+
+		ArrayList<String> input = new ArrayList<String>();
+
+		Scanner scanner = new Scanner(
+				Trivia.class.getResourceAsStream("questions.txt"));
+		scanner.useDelimiter("\n");
+		try {
+			while (scanner.hasNext()) {
+				String s = scanner.next();
+				input.add(s);
+			}
+		} catch (Exception e) {
+			engine.log(e.toString());
+		} finally {
+			scanner.close();
+		}
+		return input;
+	}
+	
+	
+	/**
+	 * Takes the read in file, randomizes the questions and answers, and puts the results into global variables questions, answers, and the answer key into ansKey
+	 * Preconditions:
+	 * 		The text file input has questions seperated by lines, and on each line the items are seperated by "|", with the first item being the question, the second the correct answer, and all the rest incorrect answers
+	 * @param input
+	 */
+	private void proccessQuestions(ArrayList<String> input) {
+		
+		ArrayList<String> questList = new ArrayList<String>();
+		ArrayList<ArrayList<String>> ansList = new ArrayList<ArrayList<String>>();
+		
+		//Variables for use inside the loops
+		String line, item;
+		int lineCount = 0;
+		boolean isFirstItem = true;
+		Iterator<String> iter = input.iterator();
+		
+		while (iter.hasNext()) {
+			line = iter.next();
+			
+			//Scanner used to separate out each line based on the "|" character
+			Scanner scan = new Scanner(line);
+			scan.useDelimiter("\\x7C");
+			isFirstItem = true;
+			
+			while (scan.hasNext()) {
+				item = scan.next();
+				
+				if (isFirstItem) {
+					questList.add(item);
+					ansList.add(new ArrayList<String>());
+					isFirstItem = false;
+				} else {
+					ansList.get(lineCount).add(item);
+				}
+			}
+			scan.close();
+			lineCount++;
+		}
+		
+		
+		questions = new String[questList.size()];
+		ansKey = new int[questList.size()];
+		
+		answers = new String[questList.size()][];
+		
+		//sort arrays are used to determine where each value should be pulled from either questList or ansList and put into the result array
+		int[] sort1 = genUniqueRandArray(questList.size());
+		int[] sort2;
+		for(int i = 0; i < sort1.length; i++){
+			questions[i] = questList.get(sort1[i]);
+			
+			answers[i] = new String[ansList.get(sort1[i]).size()];
+			sort2 = genUniqueRandArray(answers[i].length);
+			
+			for(int j = 0; j < answers[i].length; j++){
+				answers[i][j] = ansList.get(sort1[i]).get(sort2[j]);
+				if(sort2[j] == 0){
+					//if this is pulling the first answer, set the answer key to this index as the correct answer
+					ansKey[i] = j;
+				}
+			}
+		}
 		
 	}
-	
-	private void loadQuestions() {
-		engine.log("loading the questions");
-	    Scanner scanner = new Scanner(Trivia.class.getResourceAsStream("questions.txt"));
-	    try 
-	    {
-	    	while(scanner.hasNext())
-			{
-	    		String s = scanner.next();
-	    		questions.add(s);
+
+	/**
+	 * Utility used to generate an array of a certain length which contains numbers from 0 to length - 1, with each number occuring only once
+	 * @param len: length of the result array
+	 * @return Array of random numbers ranging from 0 to len - 1, with no number occuring twice
+	 */
+	private int[] genUniqueRandArray(int len) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		int addNumber;
+
+		for (int i = 0; i < len; i++) {
+			addNumber = (int) (Math.random() * len);
+			if (list.contains(addNumber)) {
+				i--;
+			} else {
+				list.add(addNumber);
 			}
-	    }
-	    catch(Exception e)
-	    {
-	    	engine.log(e.toString());
-	    }
-	    finally
-	    {
-	      scanner.close();
-	    }
+		}
+		
+		Iterator<Integer> iter = list.iterator();
+		int[] result = new int[len];
+		for(int i = 0; i< result.length; i++){
+			result[i] = iter.next().intValue();
+		}
+		return result;
 	}
 	
-	public String toString(){
+	
+	public String toString() {
 		return "Main Game";
 	}
 }
