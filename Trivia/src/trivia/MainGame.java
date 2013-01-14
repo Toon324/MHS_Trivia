@@ -1,18 +1,17 @@
-/**
- * 
- */
 package trivia;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * @author dsmiller95
+ * @author Cody Swendrowski, Dan Miller
  * 
  */
 public class MainGame extends GameMode {
@@ -23,10 +22,10 @@ public class MainGame extends GameMode {
 
 	private states state;
 
-	private String[] questions;
-	private String[][] answers;
-	private int[] ansKey;
+	private Question[] questions;
+	private int[] toAsk;
 
+	private Question question;
 	private int currentQuestion = 0;
 	private int score = 0;
 	private boolean lastAnswer = false;
@@ -37,7 +36,7 @@ public class MainGame extends GameMode {
 	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.QUESTIONS;
-		proccessQuestions(readFile());
+		sortQuestions(readFile());
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class MainGame extends GameMode {
 		for (int i = 0; i < buttons.length; i++) {
 			if (buttons[i].isClicked()) {
 				// if the text of the current button is the answer
-				if (i == ansKey[currentQuestion]) {
+				if (i == question.getAnswer()-1) {
 					score += 1;
 					lastAnswer = true;
 				} else {
@@ -81,17 +80,17 @@ public class MainGame extends GameMode {
 	private void nextQuestion() {
 		engine.log("Asking next question");
 		currentQuestion += 1;
-		if (currentQuestion >= answers.length) {
+		if (currentQuestion >= questions.length) {
 			state = states.END_GAME;
 			return;
 		}
+		question = questions[currentQuestion];
 		// makes sure that the mode is correct, for when this gets called from a
 		// different mode
 		state = states.QUESTIONS;
-		buttons = new Button[answers[currentQuestion].length];
-		for (int i = 0; i < answers[currentQuestion].length; i++) {
-			buttons[i] = new Button(answers[currentQuestion][i], 10,
-					70 + (i * 35));
+		buttons = new Button[4];
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i] = new Button(question.getPossibleAnswer(i), 10,70 + (i * 35));
 		}
 	}
 
@@ -105,7 +104,7 @@ public class MainGame extends GameMode {
 
 		switch (state) {
 		case QUESTIONS:
-			g.drawString(questions[currentQuestion], 10, 50);
+			g.drawString(questions[currentQuestion].getQuestion(), 10, 50);
 
 			try {
 				for (int i = 0; i < buttons.length; i++) {
@@ -139,27 +138,32 @@ public class MainGame extends GameMode {
 	 * @return ArrayList<String> arrayList containing the contents of the file,
 	 *         separated by line
 	 */
-	private ArrayList<String> readFile() {
+	private ArrayList<Question> readFile() {
 		engine.log("loading the questions");
 
-		ArrayList<String> input = new ArrayList<String>();
+		ArrayList<Question> input = new ArrayList<Question>();
 
-		Scanner scanner = new Scanner(
-				Trivia.class.getResourceAsStream("questions.txt"));
-		scanner.useDelimiter("\n");
+		Scanner scanner = new Scanner(MainGame.class.getResourceAsStream("questions.txt"));
+
+		int cnt = 0;
 		try {
-			while (scanner.hasNext()) {
-				String s = scanner.next();
-				input.add(s);
+			while (scanner.hasNextLine()) {
+				input.add(readQuestion(cnt));
+				engine.log("Added: " + readQuestion(cnt).getQuestion());
+				for (int x=0; x<4; x++)
+				{
+					engine.log("Answers: " + readQuestion(cnt).getPossibleAnswer(x));
+				}
+				cnt++;
+				scanner.nextLine();
 			}
 		} catch (Exception e) {
-			engine.log(e.toString());
+			e.printStackTrace();
 		} finally {
 			scanner.close();
 		}
 		return input;
 	}
-	
 	
 	/**
 	 * Takes the read in file, randomizes the questions and answers, and puts the results into global variables questions, answers, and the answer key into ansKey
@@ -167,62 +171,14 @@ public class MainGame extends GameMode {
 	 * 		The text file input has questions seperated by lines, and on each line the items are seperated by "|", with the first item being the question, the second the correct answer, and all the rest incorrect answers
 	 * @param input
 	 */
-	private void proccessQuestions(ArrayList<String> input) {
-		
-		ArrayList<String> questList = new ArrayList<String>();
-		ArrayList<ArrayList<String>> ansList = new ArrayList<ArrayList<String>>();
-		
-		//Variables for use inside the loops
-		String line, item;
-		int lineCount = 0;
-		boolean isFirstItem = true;
-		Iterator<String> iter = input.iterator();
-		
-		while (iter.hasNext()) {
-			line = iter.next();
-			
-			//Scanner used to separate out each line based on the "|" character
-			Scanner scan = new Scanner(line);
-			scan.useDelimiter("\\x7C");
-			isFirstItem = true;
-			
-			while (scan.hasNext()) {
-				item = scan.next();
-				
-				if (isFirstItem) {
-					questList.add(item);
-					ansList.add(new ArrayList<String>());
-					isFirstItem = false;
-				} else {
-					ansList.get(lineCount).add(item);
-				}
-			}
-			scan.close();
-			lineCount++;
-		}
-		
-		
-		questions = new String[questList.size()];
-		ansKey = new int[questList.size()];
-		
-		answers = new String[questList.size()][];
+	private void sortQuestions(ArrayList<Question> input) {		
+		questions = new Question[input.size()];
 		
 		//sort arrays are used to determine where each value should be pulled from either questList or ansList and put into the result array
-		int[] sort1 = genUniqueRandArray(questList.size());
-		int[] sort2;
+		int[] sort1 = genUniqueRandArray(input.size());
+		engine.log("Sort1 length: " + sort1.length);
 		for(int i = 0; i < sort1.length; i++){
-			questions[i] = questList.get(sort1[i]);
-			
-			answers[i] = new String[ansList.get(sort1[i]).size()];
-			sort2 = genUniqueRandArray(answers[i].length);
-			
-			for(int j = 0; j < answers[i].length; j++){
-				answers[i][j] = ansList.get(sort1[i]).get(sort2[j]);
-				if(sort2[j] == 0){
-					//if this is pulling the first answer, set the answer key to this index as the correct answer
-					ansKey[i] = j;
-				}
-			}
+			questions[i] = input.get(sort1[i]);
 		}
 		
 	}
@@ -253,6 +209,84 @@ public class MainGame extends GameMode {
 		return result;
 	}
 	
+	/**
+	 * Reads a question from file and returns it.
+	 * @param q int of Question to be read
+	 * @return Question q
+	 */
+	private Question readQuestion(int q) 
+	{
+		engine.log("reading question " + q);
+		Scanner scanner = new Scanner(MainGame.class.getResourceAsStream("questions.txt"));
+			
+		while (scanner.hasNextLine())
+		{
+			String line = scanner.nextLine();
+			Scanner scan = new Scanner(line);
+			Integer text = new Integer(scan.next());
+			if (text.equals(q))
+			{
+				scan.next();
+				String first = "";
+				while (true)
+				{
+					String s = scan.next();
+					if (s.endsWith("|"))
+					{
+						break;
+					}
+					first += " " + s;					
+				}
+				String a = "";
+				while (true)
+				{
+					String s = scan.next();
+					if (s.endsWith("|"))
+					{
+						break;
+					}
+					a += " " + s;
+				}
+				String b = "";
+				while (true)
+				{
+					String s = scan.next();
+					if (s.endsWith("|"))
+					{
+						break;
+					}
+					b += " " + s;
+				}
+				String c = "";
+				while (true)
+				{
+					String s = scan.next();
+					if (s.endsWith("|"))
+					{
+						break;
+					}
+					c += " " + s;
+				}
+				String d = "";
+				while (true)
+				{
+					String s = scan.next();
+					if (s.endsWith("|"))
+					{
+						break;
+					}
+					d += " " + s;
+				}
+				Integer ans = new Integer(scan.next());
+				scanner.close();
+				scan.close();
+				return new Question(first, a, b, c, d, ans.intValue());
+			}
+			scan.close();
+		}
+			scanner.close();
+			return new Question("Error", "e", "e", "e", "e", 1);
+	}
 	
 	public String toString() {
 		return "Main Game";
