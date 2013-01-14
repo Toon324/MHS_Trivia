@@ -144,15 +144,18 @@ public class MainGame extends GameMode {
 		ArrayList<Question> input = new ArrayList<Question>();
 
 		Scanner scanner = new Scanner(MainGame.class.getResourceAsStream("questions.txt"));
-
+		
+		Question temp;
+		
 		int cnt = 0;
 		try {
 			while (scanner.hasNextLine()) {
-				input.add(readQuestion(cnt));
-				engine.log("Added: " + readQuestion(cnt).getQuestion());
-				for (int x=0; x<4; x++)
+				temp = readQuestion(cnt);
+				input.add(temp);
+				engine.log("Added: " + temp.getQuestion());
+				for (int x = 0; x < 4; x++)
 				{
-					engine.log("Answers: " + readQuestion(cnt).getPossibleAnswer(x));
+					engine.log("Answers: " + temp.getPossibleAnswer(x));
 				}
 				cnt++;
 				scanner.nextLine();
@@ -218,14 +221,21 @@ public class MainGame extends GameMode {
 	{
 		engine.log("reading question " + q);
 		Scanner scanner = new Scanner(MainGame.class.getResourceAsStream("questions.txt"));
-			
+		
+		ArrayList<String> content;
+		
 		while (scanner.hasNextLine())
 		{
 			String line = scanner.nextLine();
 			Scanner scan = new Scanner(line);
+			scan.useDelimiter("\\x7C");
 			Integer text = new Integer(scan.next());
 			if (text.equals(q))
 			{
+				content = new ArrayList<String>();
+				while(scan.hasNext()){
+					content.add(scan.next());
+				}/*
 				scan.next();
 				String first = "";
 				while (true)
@@ -277,15 +287,15 @@ public class MainGame extends GameMode {
 					}
 					d += " " + s;
 				}
-				Integer ans = new Integer(scan.next());
+				Integer ans = new Integer(scan.next());*/
 				scanner.close();
 				scan.close();
-				return new Question(first, a, b, c, d, ans.intValue());
+				return new Question(content.get(0), content.subList(1, content.size()).toArray(new String[] {}));
 			}
 			scan.close();
 		}
 			scanner.close();
-			return new Question("Error", "e", "e", "e", "e", 1);
+			return new Question("Error", new String[] {"e", "e", "e", "e"});
 	}
 	
 	public String toString() {

@@ -1,3 +1,3 @@
-0 | What is the capitol of the U.S.? | Washington D.C. | New York City | Utah | Madison | 1
-1 | What is e^(PI * i)? | -1 | undefined | -e | PI | 2
-2 | What is the chemical formula for Butane? | C4H10 | C2H5 | C4H12O4 | C2H6 | 3
+0|What is the capitol of the U.S.?|Washington D.C.|New York City|Utah|Madison
+1|What is e^(PI * i)?|-1|undefined|-e|PI
+2|What is the chemical formula for Butane?|C4H10|C2H5|C4H12O4|C2H6

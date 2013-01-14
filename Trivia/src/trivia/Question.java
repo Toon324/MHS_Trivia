@@ -6,9 +6,9 @@ package trivia;
  */
 public class Question
 {
-	private String question, a, b, c, d;
+	private String question;
 	private int answer;
-	private String[] answers = new String[4];
+	private String[] answers;
 	
 	/**
 	 * Creates new multiple choice question.
@@ -19,15 +19,11 @@ public class Question
 	 * @param d Answer D [INT 4]
 	 * @param ans int of which answer is correct.
 	 */
-	public Question(String q, String A, String B, String C, String D, int ans)
+	public Question(String q, String[] ansStr)
 	{
 		question = q;
-		a= "A)" + A;
-		b= "B)" +B;
-		c= "C)" +C;
-		d= "D)" +D;
-		answer = ans;
-		pack();
+		answers = ansStr;
+		answer = 0;
 	}
 	
 	/**
@@ -60,16 +56,5 @@ public class Question
 	public String getPossibleAnswer(int a)
 	{
 		return answers[a];
-	}
-	
-	/**
-	 * Packs together all possible answers into an array.
-	 */
-	private void pack()
-	{
-		answers[0]=a;
-		answers[1]=b;
-		answers[2]=c;
-		answers[3]=d;
 	}
 }
