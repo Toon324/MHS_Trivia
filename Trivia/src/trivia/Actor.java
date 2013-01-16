@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 /**
  * Generic class for all objects in the game.
  * 
- * @author Cody Swendrowski
+ * @author Cody Swendrowski, Dan Miller
  */
 public class Actor {
 	public int width, height, speed, x_pos, y_pos, score, xTile, yTile, tile,
@@ -59,20 +59,20 @@ public class Actor {
 	 * @param g
 	 *            Graphics to be drawn with
 	 */
-	public void draw(Point p, Graphics g) {
+	public void draw(Graphics g) {
 		// ensure no dead objects are draw
 		if (!death) {
 			BufferedImage i = image.getImage(xTile, yTile);
 			if (i == null) {
 				return;
 			}
-			g.drawImage(i, x_pos - p.x, y_pos - p.y, x_pos + width - p.x, y_pos
-					+ height - p.y, 0, 0, i.getWidth(), i.getHeight(), null);
+			g.drawImage(i, x_pos, y_pos, x_pos + width, y_pos
+					+ height, 0, 0, i.getWidth(), i.getHeight(), null);
 		}
 	}
 
 	/**
-	 * Moves the Actor.
+	 * Moves the Actor. Updates tiles used for animations.
 	 * 
 	 * @param w
 	 *            Width of window to draw in

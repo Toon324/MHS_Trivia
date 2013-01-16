@@ -10,13 +10,14 @@ import javax.sound.sampled.Clip;
  * Container for all Actors. Handles updating and drawing of all contained
  * Actors.
  * 
- * @author Cody Swendrowski
+ * @author Cody Swendrowski, Dan Miller
  */
 public class Actors {
+	
+	private final int MAX_ACTORS = 50;
 	private GameImage ship;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
-	private int pos, playerX, playerY;
-	private Font normal = new Font ("Serif", Font.BOLD, 20);
+	private int pos, width, height;
 	private Boolean debugMode = false;
 
 	/*
@@ -29,24 +30,14 @@ public class Actors {
     private DataOutputStream output;
     private boolean hasConnection = false;
     */
-	
-    final int MAX = 50;
-
-	private int score, width, height;
 
 	/**
 	 * Creates a new container of Actor.
 	 */
 	public Actors(Boolean debug) {
 		pos = 0;
-		playerX = 0;
-		playerY = 0;
 		debugMode = debug;
-		try {
-			ship = new GameImage("ship");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		//ship = new GameImage("ship");
 	}
 
 	/**
@@ -55,7 +46,7 @@ public class Actors {
 	 * @param a Actor to be added
 	 */
 	public void add(Actor a) {
-		if (pos >= MAX) {
+		if (pos >= MAX_ACTORS) {
 			return;
 		}
 		actors.add(a);
@@ -119,98 +110,11 @@ public class Actors {
 	 *            ImageObserver to be reported to
 	 */
 	public void drawActors(Graphics g) {
-		Actor[] sorted = new Actor[actors.size()];
-		for (int x = 0; x < sorted.length; x++) {
-			sorted[x] = null;
-		}
-		drawFloor(g);
-		
-		Point p = new Point(playerX, playerY);
 		
 		for (Iterator<Actor> iter = actors.iterator(); iter.hasNext();) {
 			Actor temp = iter.next();
-			findPlace(sorted, temp);
+			temp.draw(g);
 		}
-		
-		for (int x = 0; x < sorted.length; x++) {
-			try {
-				sorted[x].draw(p, g);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * Helper method for Array sorting. Finds logical place for Actor based on it's relative X and Y position.
-	 * @param sorted Array that contains Actors that were already sorted.
-	 * @param temp Actor to find place for.
-	 */
-	private void findPlace(Actor[] sorted, Actor temp) {
-		int x = temp.getX();
-		int y = temp.getY();
-
-		// System.out.println("Sorting:" + sorted.length + " items");
-
-		for (int i = 0; i < sorted.length; i++) {
-			// System.out.println("Sorting " + i + " " + sorted[i]);
-			if (sorted[i] == null) {
-				// System.out.println("Placed " + temp.toString() + " at " + i);
-				sorted[i] = temp;
-				return;
-			}
-			if ((y < sorted[i].getY())) {
-				Actor temp2 = sorted[i];
-				// System.out.println("Removed " + temp2.toString() + " at " +
-				// i);
-				sorted[i] = temp;
-				// System.out.println("Placed " + temp.toString() + " at " + i);
-				findPlace(sorted, temp2);
-				return;
-			}
-			if ((!(y > sorted[i].getY())) && (x < sorted[i].getX())) {
-				Actor temp2 = sorted[i];
-				// System.out.println("Removed " + temp2.toString() + " at " +
-				// i);
-				sorted[i] = temp;
-				// System.out.println("Placed " + temp.toString() + " at " + i);
-				findPlace(sorted, temp2);
-				return;
-			}
-		}
-	}
-
-	/**
-	 * Draws a grid on the Graphics object.
-	 * @param g Graphics to draw with.
-	 */
-	public void drawFloor(Graphics g) {
-		Color temp = g.getColor();
-		g.setColor(Color.gray);
-		g.fillRect(0, 0, 800, 600);
-		g.setColor(Color.black);
-		int tempX = playerX;
-		while (tempX > 100) {
-			tempX -= 100;
-		}
-		while (tempX < 0) {
-			tempX += 100;
-		}
-		for (int x = 0 - tempX; x < 800 + tempX; x += 25) {
-			g.drawLine(x, 0, x, 600);
-		}
-
-		int tempY = playerY;
-		while (tempY > 100) {
-			tempY -= 100;
-		}
-		while (tempY < 0) {
-			tempY += 100;
-		}
-		for (int y = 0 - tempY; y < 600 + tempY; y += 25) {
-			g.drawLine(0, y, 800, y);
-		}
-		g.setColor(temp);
 	}
 
 	/**
@@ -220,17 +124,6 @@ public class Actors {
 	 */
 	public ArrayList<Actor> getArray() {
 		return actors;
-	}
-
-	/**
-	 * Returns score to add, then resets to 0.
-	 * 
-	 * @return score
-	 */
-	public int getScore() {
-		int scr = score;
-		score = 0;
-		return scr;
 	}
 
 	/**

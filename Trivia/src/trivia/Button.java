@@ -25,14 +25,18 @@ public class Button
 	 * @param x x_pos to draw at
 	 * @param y y_pos to draw at
 	 */
-	public Button(String s, int x, int y)
+	public Button(String s, int x, int y, Graphics g)
 	{
 		clicked = false;
 		text = s;
 		x_pos = x;
 		y_pos = y;
-		width = 100;
 		height = 30;
+		
+		FontMetrics fm   = g.getFontMetrics(f);
+		
+		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
+		width = (int) rect.getWidth() + 20;
 	}
 	
 	/**
@@ -43,9 +47,8 @@ public class Button
 	 * @param width width of Button
 	 * @param height height of Button
 	 */
-	public Button(String s, int x, int y, int width, int height){
-		this(s, x, y);
-		this.width = width;
+	public Button(String s, int x, int y, int height, Graphics g){
+		this(s, x, y, g);
 		this.height = height;
 	}
 	
@@ -57,10 +60,6 @@ public class Button
 	{
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
-		FontMetrics fm   = g.getFontMetrics(f);
-		
-		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
-		width = (int) rect.getWidth() + 20;
 		
 		g.setFont(f);
 		g.setColor(Color.BLACK);
