@@ -23,7 +23,7 @@ public class MainGame extends GameMode {
 	private states state;
 
 	private Question[] questions;
-	private int[] toAsk;
+	//private int[] toAsk;
 
 	private Question question;
 	private int currentQuestion = 0;
