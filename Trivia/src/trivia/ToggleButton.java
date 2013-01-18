@@ -43,16 +43,13 @@ public class ToggleButton extends Button {
 		
 		g.setFont(f);
 		g.setColor(Color.BLACK);
-		if (clicked)
-		{
-			g.setColor(Color.cyan);
-		}
+		if (clicked) g.setColor(Color.cyan);
+		if (!enabled) g.setColor(Color.DARK_GRAY);
+		
 		g.fillRect(x_pos, y_pos, width, height);
 		g.setColor(Color.cyan);
-		if (clicked)
-		{
-			g.setColor(Color.black);
-		}
+		if (clicked) g.setColor(Color.black);
+		
 		g.drawString(text, x_pos+10, y_pos+20);
 		
 		g.setColor(temp);
@@ -66,12 +63,10 @@ public class ToggleButton extends Button {
 	
 	public void checkClick(int mx, int my)
 	{
-		if ((mx >= x_pos) && (mx <= x_pos+width))
-		{
-			if ((my <= y_pos+height) && (my >= y_pos))
-			{
-				clicked = !clicked;
-			}
+		if (enabled &&
+				(mx >= x_pos) && (mx <= x_pos+width) &&
+				(my <= y_pos+height) && (my >= y_pos)){
+			clicked = !clicked;
 		}
 	}
 }

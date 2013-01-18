@@ -32,6 +32,15 @@ public class MainMenu extends GameMode {
 
 	@Override
 	public void run() {
+		boolean isOneClicked = false;
+		for(int i = 1; i < buttons.length; i++){
+			if (buttons[i].clicked){
+				isOneClicked = true;
+				break;
+			}
+		}
+		buttons[0].setEnabled(isOneClicked);
+		
 		if(buttons[0].isClicked()){
 			ArrayList<String> cats = new ArrayList<String>();
 			//assumes there is only one button that is not a toggleButton
