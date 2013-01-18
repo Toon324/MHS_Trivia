@@ -43,7 +43,28 @@ public class MainMenu extends GameMode {
 			engine.setMode(engine.mainGame);
 		}
 	}
+	
+	public void paint(Graphics g){
+		int w = engine.windowWidth, h = engine.windowHeight;
 		
+		if(w >= 800 && h >= 600){
+			buttons[0].set(w/2 - buttons[0].width/2       , h/2 - h/6 );
+			buttons[1].set(w/2 - buttons[1].width/2 - w/16, h/2 - h/12);
+			buttons[2].set(w/2 - buttons[2].width/2 + w/16, h/2 - h/12);
+			buttons[3].set(w/2 - buttons[3].width/2 - w/16, h/2 + h/12);
+			buttons[4].set(w/2 - buttons[4].width/2 + w/16, h/2 + h/12);
+			buttons[5].set(w/2 - buttons[5].width/2       , h/2       );
+		}else{
+			buttons[0].set(w/2 - buttons[0].width/2     , h/2 - 100);
+			buttons[1].set(w/2 - buttons[1].width/2 - 50, h/2 - 50 );
+			buttons[2].set(w/2 - buttons[2].width/2 + 50, h/2 - 50 );
+			buttons[3].set(w/2 - buttons[3].width/2 - 50, h/2 + 50 );
+			buttons[4].set(w/2 - buttons[4].width/2 + 50, h/2 + 50 );
+			buttons[5].set(w/2 - buttons[5].width/2     , h/2      );
+		}
+		super.paint(g);
+	}
+	
 	public String toString(){
 		return "Main Menu";
 	}
