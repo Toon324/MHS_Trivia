@@ -105,6 +105,7 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	 */
 	public void paint(Graphics g)
 	{
+		engine.setWindowSize(getWidth(), getHeight());
 		engine.paint(g);
 		super.paint(g);
 		

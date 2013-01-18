@@ -45,7 +45,7 @@ public class MainMenu extends GameMode {
 	
 	public void paint(Graphics g)
 	{
-		g.drawImage(background, 0, 0, 800, 600, null);
+		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
 		super.paint(g);
 	}
 		

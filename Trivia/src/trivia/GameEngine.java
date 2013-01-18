@@ -13,6 +13,7 @@ public class GameEngine {
 	public MainGame mainGame;
 	private Actors actors;
 	private int timer = 0;
+	int windowWidth, windowHeight;
 	private boolean debugMode;
 
 	/**
@@ -26,6 +27,8 @@ public class GameEngine {
 		mainMenu = new MainMenu(this);
 		mainGame = new MainGame(this);
 		mode = mainMenu;
+		windowWidth = 800;
+		windowHeight = 600;
 	}
 
 	/**
@@ -62,6 +65,12 @@ public class GameEngine {
 	 */
 	public void clickedAt(int x, int y) {
 		mode.clicked(x, y);
+	}
+	
+	public void setWindowSize(int width, int height)
+	{
+		windowWidth = width;
+		windowHeight = height;
 	}
 
 	/**
