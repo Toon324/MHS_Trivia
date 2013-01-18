@@ -39,7 +39,7 @@ public class MainMenu extends GameMode {
 				if(buttons[i].isClicked())
 					cats.add(buttons[i].getText());
 			}
-			engine.mainGame = new MainGame(engine, cats.toArray(new String[0]));
+			engine.mainGame.setCategories(cats.toArray(new String[0]));
 			engine.setMode(engine.mainGame);
 		}
 	}
