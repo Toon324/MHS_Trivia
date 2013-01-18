@@ -17,8 +17,6 @@ import javax.imageio.ImageIO;
  */
 public class MainMenu extends GameMode {
 	
-	private Image background;
-	
 	public MainMenu(GameEngine eng){
 		super(eng);
 		buttons = new Button[6];
@@ -29,11 +27,7 @@ public class MainMenu extends GameMode {
 		buttons[4] = new ToggleButton("Cat4", 400, 300);
 		buttons[5] = new ToggleButton("Cat5", 350, 250);
 		
-		try {
-			background = ImageIO.read(MainMenu.class.getResourceAsStream("Resources\\space_background.jpg"));
-		} catch (IOException e) {
-			eng.log("Can not load background image.");
-		}
+		engine.playSound("Eternity.wav", true);
 	}
 
 	@Override
@@ -48,12 +42,6 @@ public class MainMenu extends GameMode {
 			engine.mainGame = new MainGame(engine, cats.toArray(new String[0]));
 			engine.setMode(engine.mainGame);
 		}
-	}
-	
-	public void paint(Graphics g)
-	{
-		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
-		super.paint(g);
 	}
 		
 	public String toString(){

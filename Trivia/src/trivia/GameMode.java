@@ -1,6 +1,10 @@
 package trivia;
 
 import java.awt.Graphics;
+import java.awt.Image;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * 
@@ -12,6 +16,7 @@ public abstract class GameMode {
 	
 	public Button[] buttons;
 	public GameEngine engine;
+	protected Image background;
 	
 	/**
 	 * Creates a new GameMode.
@@ -19,6 +24,11 @@ public abstract class GameMode {
 	 */
 	public GameMode(GameEngine eng){
 		engine = eng;
+		try {
+			background = ImageIO.read(MainMenu.class.getResourceAsStream("Resources\\space_background.jpg"));
+		} catch (IOException e) {
+			eng.log("Can not load background image.");
+		}
 	}
 	
 	/**
@@ -47,6 +57,8 @@ public abstract class GameMode {
 	 * @param g Graphics to paint with
 	 */
 	public void paint(Graphics g){
+		
+		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
 		try{
 			for(int i = 0; i < buttons.length; i++){
 				buttons[i].draw(g);

@@ -103,11 +103,14 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void paint(Graphics g) {
+		
+		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
+		
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
 
 		g.setFont(f);
-		g.setColor(Color.BLUE);
+		g.setColor(Color.cyan);
 
 		switch (state) {
 		case QUESTIONS:

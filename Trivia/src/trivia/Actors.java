@@ -163,25 +163,6 @@ public class Actors {
 		width = w;
 		height = h;
 	}
-
-	/**
-	 * Uses AudioSystem to get a clip of name s and play it.
-	 * 
-	 * @param s
-	 *            Name of sound clip to play
-	 */
-	public void playSound(String s) {
-		try {
-			Clip clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(Actors.class
-							.getResourceAsStream("audio\\" + s));
-			clip.open(inputStream);
-			clip.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Debug tool.

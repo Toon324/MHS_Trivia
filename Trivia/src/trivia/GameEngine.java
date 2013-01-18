@@ -2,6 +2,10 @@ package trivia;
 
 import java.awt.Graphics;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 /**
  * @author Cody Swendrowski, Dan Miller
  * Handles all the game logic and painting based on the current game mode.
@@ -70,6 +74,34 @@ public class GameEngine {
 	{
 		windowWidth = width;
 		windowHeight = height;
+	}
+	
+	/**
+	 * Uses AudioSystem to get a clip of name s and play it.
+	 * 
+	 * @param s
+	 *            Name of sound clip to play
+	 * @param loop If true, loops sound forever
+	 */
+	public void playSound(String s, boolean loop) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			AudioInputStream inputStream = AudioSystem
+					.getAudioInputStream(Actors.class
+							.getResourceAsStream("Resources\\" + s));
+			clip.open(inputStream);
+			if (loop)
+			{
+				clip.loop(clip.LOOP_CONTINUOUSLY);
+			}
+			else
+			{
+				clip.start();
+			}
+			log("Now playing " + s);
+		} catch (Exception e) {
+			log("Could not load sound clip " + s + " Error: " + e.toString());
+		}
 	}
 
 	/**
