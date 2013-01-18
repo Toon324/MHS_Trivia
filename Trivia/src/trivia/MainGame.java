@@ -9,7 +9,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 /**
  * @author dsmiller95
@@ -22,6 +21,7 @@ public class MainGame extends GameMode {
 	};
 
 	private states state;
+
 
 	private String[] questions;
 	private String[][] answers;
@@ -253,7 +253,7 @@ public class MainGame extends GameMode {
 		return result;
 	}
 	
-	
+
 	public String toString() {
 		return "Main Game";
 	}

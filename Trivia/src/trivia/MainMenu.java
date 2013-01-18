@@ -16,7 +16,7 @@ public class MainMenu extends GameMode {
 	public MainMenu(GameEngine eng){
 		super(eng);
 		buttons = new Button[1];
-		buttons[0] = new Button("Start Questioning", 10, 10, 100, 30);
+		buttons[0] = new Button("Start Questioning", 10, 10, 30);
 	}
 
 	@Override

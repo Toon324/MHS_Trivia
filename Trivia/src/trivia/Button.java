@@ -31,7 +31,6 @@ public class Button
 		text = s;
 		x_pos = x;
 		y_pos = y;
-		width = 100;
 		height = 30;
 	}
 	
@@ -43,9 +42,8 @@ public class Button
 	 * @param width width of Button
 	 * @param height height of Button
 	 */
-	public Button(String s, int x, int y, int width, int height){
+	public Button(String s, int x, int y, int height){
 		this(s, x, y);
-		this.width = width;
 		this.height = height;
 	}
 	
@@ -57,6 +55,8 @@ public class Button
 	{
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
+		
+		//Autosizes width of Button to fit text
 		FontMetrics fm   = g.getFontMetrics(f);
 		
 		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
