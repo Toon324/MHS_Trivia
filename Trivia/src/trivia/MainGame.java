@@ -228,7 +228,7 @@ public class MainGame extends GameMode {
 		{
 			String line = scanner.nextLine();
 			Scanner scan = new Scanner(line);
-			scan.useDelimiter("\\x7C");
+			scan.useDelimiter("\\t");
 			Integer text = new Integer(scan.next());
 			if (text.equals(q))
 			{
