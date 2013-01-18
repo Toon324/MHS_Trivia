@@ -12,12 +12,11 @@ import java.awt.Graphics;
  */
 public class Button 
 {
-	private int width;
-	private int height;
-	private String text;
-	private boolean clicked;
-	private int x_pos, y_pos;
-	private Font f = new Font ("Serif", Font.BOLD, 20);
+	protected int width, height;
+	protected String text;
+	protected boolean clicked;
+	protected int x_pos, y_pos;
+	protected Font f = new Font ("Serif", Font.BOLD, 20);
 	
 	/**
 	 * Creates a new Button.
