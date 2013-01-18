@@ -22,7 +22,8 @@ public class MainGame extends GameMode {
 
 	private states state;
 
-
+	private String[] categories = {"Cat1"};
+	
 	private String[] questions;
 	private String[][] answers;
 	private int[] ansKey;
@@ -34,10 +35,11 @@ public class MainGame extends GameMode {
 
 	private Font f = new Font("Serif", Font.BOLD, 20);
 
-	public MainGame(GameEngine eng) {
+	public MainGame(GameEngine eng, String[] cats) {
 		super(eng);
 		state = states.QUESTIONS;
-		proccessQuestions(readFile());
+		categories = cats;
+		proccessQuestions(readFile(cats));
 	}
 
 	@Override
@@ -77,7 +79,11 @@ public class MainGame extends GameMode {
 		}
 
 	}
-
+	
+	public void setCategories(String[] cats){
+		categories = cats;
+	}
+	
 	private void nextQuestion() {
 		engine.log("Asking next question");
 		currentQuestion += 1;
@@ -139,23 +145,26 @@ public class MainGame extends GameMode {
 	 * @return ArrayList<String> arrayList containing the contents of the file,
 	 *         separated by line
 	 */
-	private ArrayList<String> readFile() {
+	private ArrayList<String> readFile(String[] fileNames) {
 		engine.log("loading the questions");
 
 		ArrayList<String> input = new ArrayList<String>();
-
-		Scanner scanner = new Scanner(
-				Trivia.class.getResourceAsStream("questions.txt"));
-		scanner.useDelimiter("\n");
-		try {
-			while (scanner.hasNext()) {
-				String s = scanner.next();
-				input.add(s);
+		
+		for(int i = 0; i < fileNames.length; i++){
+			engine.log("Loading " + fileNames[i]);
+			Scanner scanner = new Scanner(
+					Trivia.class.getResourceAsStream("\\Resources\\question_Sets\\" + fileNames[i] + ".txt"));
+			scanner.useDelimiter("\n");
+			try {
+				while (scanner.hasNext()) {
+					String s = scanner.next();
+					input.add(s);
+				}
+			} catch (Exception e) {
+				engine.log(e.toString());
+			} finally {
+				scanner.close();
 			}
-		} catch (Exception e) {
-			engine.log(e.toString());
-		} finally {
-			scanner.close();
 		}
 		return input;
 	}

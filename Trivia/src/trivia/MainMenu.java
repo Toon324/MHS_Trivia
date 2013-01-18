@@ -39,6 +39,13 @@ public class MainMenu extends GameMode {
 	@Override
 	public void run() {
 		if(buttons[0].isClicked()){
+			ArrayList<String> cats = new ArrayList<String>();
+			//assumes there is only one button that is not a toggleButton
+			for(int i = 1; i < buttons.length; i++){
+				if(buttons[i].isClicked())
+					cats.add(buttons[i].getText());
+			}
+			engine.mainGame = new MainGame(engine, cats.toArray(new String[0]));
 			engine.setMode(engine.mainGame);
 		}
 	}

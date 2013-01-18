@@ -25,7 +25,6 @@ public class GameEngine {
 		this.actors = actors;
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
-		mainGame = new MainGame(this);
 		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;
