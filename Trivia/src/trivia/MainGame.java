@@ -171,30 +171,34 @@ public class MainGame extends GameMode {
 		
 		ArrayList<String> questList = new ArrayList<String>();
 		ArrayList<ArrayList<String>> ansList = new ArrayList<ArrayList<String>>();
+		ArrayList<Integer> ansKeyList = new ArrayList<Integer>();
 		
 		//Variables for use inside the loops
 		String line, item;
 		int lineCount = 0;
-		boolean isFirstItem = true;
+		int itemCnt = 0;
 		Iterator<String> iter = input.iterator();
 		
 		while (iter.hasNext()) {
 			line = iter.next();
 			
-			//Scanner used to separate out each line based on the "|" character
+			//Scanner used to separate out each line based on the tab character
 			Scanner scan = new Scanner(line);
 			scan.useDelimiter("\\t");
-			isFirstItem = true;
+			itemCnt = 0;
 			
 			while (scan.hasNext()) {
 				item = scan.next();
 				
-				if (isFirstItem) {
+				if (itemCnt > 1) {
+					ansList.get(lineCount).add(item);
+				} else if (itemCnt == 1){
+					ansKeyList.add(Integer.parseInt(item) - 1);
+					itemCnt++;
+				} else if (itemCnt == 0){
 					questList.add(item);
 					ansList.add(new ArrayList<String>());
-					isFirstItem = false;
-				} else {
-					ansList.get(lineCount).add(item);
+					itemCnt++;
 				}
 			}
 			scan.close();
@@ -218,8 +222,8 @@ public class MainGame extends GameMode {
 			
 			for(int j = 0; j < answers[i].length; j++){
 				answers[i][j] = ansList.get(sort1[i]).get(sort2[j]);
-				if(sort2[j] == 0){
-					//if this is pulling the first answer, set the answer key to this index as the correct answer
+				if(sort2[j] == ansKeyList.get(sort1[i])){
+					//if this is pulling the same answer as determined in the list, set the answer key to this index as the correct answer
 					ansKey[i] = j;
 				}
 			}
