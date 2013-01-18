@@ -104,7 +104,7 @@ public class Button
 	}
 	
 	public void setEnabled(boolean enable){
-		clicked = false;
+		if(!enable) clicked = false;
 		enabled = enable;
 	}
 	
