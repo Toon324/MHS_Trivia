@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Graphic representing a clickable area for game control.
@@ -89,6 +91,18 @@ public class Button
 		}
 	}
 	
+	public static boolean isOneClicked(List<Button> buts){
+		try{
+			for(Button but : buts){
+				//intentionally does not use the .isClicked method
+				if(but.clicked) return true;
+			}
+			return false;
+		}catch(java.lang.NullPointerException e){
+			return false;
+		}
+	}
+	
 	public void setEnabled(boolean enable){
 		if(!enable) clicked = false;
 		enabled = enable;
@@ -147,5 +161,13 @@ public class Button
 	{
 		x_pos = x;
 		y_pos = y;
+	}
+	
+	/**
+	 * Sets the string inside the button
+	 * @param s text for the button
+	 */
+	public void setString(String s){
+		text = s;
 	}
 }

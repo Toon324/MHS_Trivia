@@ -6,6 +6,8 @@ package trivia;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author Cody Swendrowski, Dan Miller
@@ -14,6 +16,7 @@ import java.awt.Graphics;
 public class MainGame extends GameMode {
 
 	private final int WRONG_ANSWER = 5, MAX_POINTS_POSSIBLE = 10;
+
 	private enum states {
 		QUESTIONS, DISPLAY_RESPONSE, END_GAME
 	};
@@ -22,8 +25,7 @@ public class MainGame extends GameMode {
 
 	private Questions qstSet;
 
-	private int currentQuestion = 0;
-	private int score = 0;
+	private int score;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
@@ -31,13 +33,13 @@ public class MainGame extends GameMode {
 
 	public MainGame(GameEngine eng) {
 		super(eng);
-		state = states.QUESTIONS;
+		state = states.DISPLAY_RESPONSE;// will automatically time out to next
 	}
-	
-	public void setCategories(String[] cats){
+
+	public void setCategories(String[] cats) {
 		qstSet = new Questions("\\Resources\\question_Sets\\", cats);
 	}
-	
+
 	@Override
 	public void run() {
 		switch (state) {
@@ -45,9 +47,21 @@ public class MainGame extends GameMode {
 			runQuestion();
 			break;
 		case DISPLAY_RESPONSE:
-			if (System.currentTimeMillis() > lastTime + 1000)
-				nextQuestion();
+			if (System.currentTimeMillis() > lastTime + 1000) {
+				state = states.QUESTIONS;
+
+				if (qstSet.nextQuestion()) {
+					buttons = new ArrayList<Button>();
+					String[] ans = qstSet.getAnsArray();
+					for (int i = 0; i < ans.length; i++) {
+						buttons.add(new Button(ans[i], 10, 70 + (i * 35)));
+					}
+				} else {
+					state = states.END_GAME;
+				}
+			}
 			break;
+
 		case END_GAME:
 			break;
 		}
@@ -55,57 +69,33 @@ public class MainGame extends GameMode {
 
 	private void runQuestion() {
 		if (buttons == null) {// if this is the first time, set up the buttons
-			currentQuestion -= 1;
-			nextQuestion();
+			if (!qstSet.nextQuestion())
+				state = states.END_GAME;
 		}
-
-		for (int i = 0; i < buttons.length; i++) {
-			updateButtonPositions();
-			if (buttons[i].isClicked()) {
-				// if the current button is the answer
-				if (i == qstSet.answerKey[currentQuestion]) {
-					score += 1;
-					lastAnswer = true;
-				} else {
-					score -= 1;
-					lastAnswer = false;
-				}
-				lastTime = System.currentTimeMillis();
-				state = states.DISPLAY_RESPONSE;
+		if (Button.isOneClicked(buttons)) {
+			lastTime = System.currentTimeMillis();
+			state = states.DISPLAY_RESPONSE;
+			lastAnswer = qstSet.checkCorrect(buttons.toArray(new Button[0]));
+			if (lastAnswer) {
+				score += 100 / Math.pow(2,
+						Math.pow(qstSet.getTimePassed() / (double) 5000, 4));
+			} else {
+				score -= 90;
 			}
 		}
-
 	}
-	
+
 	private void updateButtonPositions() {
 		int totalWidth = 0;
-		for (int i=0; i<buttons.length; i++)
-		{
-			totalWidth += buttons[i].getWidth();
+		for (Button but : buttons) {
+			totalWidth += but.getWidth();
 		}
-		Button lastButton = new Button("",-(engine.windowWidth-totalWidth)/4,0);
-		for (int i=0; i<buttons.length; i++)
-		{
-			buttons[i].set(((engine.windowWidth-totalWidth)/4) + 
-					lastButton.getX() + lastButton.getWidth(), buttons[i].getY());
-			lastButton = buttons[i];
-		}
-	}
-
-	private void nextQuestion() {
-		//engine.log("Asking next question");
-		currentQuestion += 1;
-		if (currentQuestion >= qstSet.answers.length) {
-			state = states.END_GAME;
-			return;
-		}
-		// makes sure that the mode is correct, for when this gets called from a
-		// different mode
-		state = states.QUESTIONS;
-		buttons = new Button[qstSet.answers[currentQuestion].length];
-		for (int i = 0; i < qstSet.answers[currentQuestion].length; i++) {
-			buttons[i] = new Button(qstSet.answers[currentQuestion][i], 10,
-					70 + (i * 35));
+		Button lastButton = new Button("", -(engine.windowWidth - totalWidth) / 4, 0);
+		for (int i = 0; i < buttons.size(); i++) {
+			buttons.get(i).set(
+					((engine.windowWidth - totalWidth) / 4) + lastButton.getX()
+							+ lastButton.getWidth(), buttons.get(i).getY());
+			lastButton = buttons.get(i);
 		}
 	}
 
@@ -121,17 +111,20 @@ public class MainGame extends GameMode {
 
 		switch (state) {
 		case QUESTIONS:
+			
+			updateButtonPositions();
+			
 			//Draws question background
 			g.setColor(Color.gray);
 			g.fillRect(0, engine.windowHeight-250, engine.windowWidth, engine.windowHeight);
 			g.setColor(Color.cyan);
 			
 			//Draws question
-			g.drawString(qstSet.questions[currentQuestion], 60, engine.windowHeight-180);
+			g.drawString(qstSet.getQuestion(), 60, engine.windowHeight-180);
 
 			try {
-				for (int i = 0; i < buttons.length; i++) {
-					buttons[i].draw(g);
+				for (Button but:buttons) {
+					but.draw(g);
 				}
 			} catch (java.lang.NullPointerException e) {
 				engine.log("No buttons in MainGame!");
@@ -154,7 +147,6 @@ public class MainGame extends GameMode {
 		g.setFont(tempF);
 
 	}
-	
 
 	public String toString() {
 		return "Main Game";

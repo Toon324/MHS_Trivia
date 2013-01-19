@@ -7,9 +7,12 @@ import java.util.Scanner;
 public class Questions {
 	
 	private String[] filePaths;
-	public String[] questions;
-	public String[][] answers;
-	public int[] answerKey;
+	private String[] questions;
+	private String[][] answers;
+	private int[] answerKey;
+	
+	private int currentQuestion;
+	private long lastQuestionTime = 0;
 	
 	public Questions(String path, String[] names){
 		filePaths = new String[names.length];
@@ -18,10 +21,66 @@ public class Questions {
 		}
 		
 		proccessQuestions(readFile(filePaths));
+		
+		currentQuestion = -1;
 	}
 	
-
-
+	public String getQuestion(){
+		try{
+			return questions[currentQuestion];
+		}catch(Exception e){
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+	
+	public String[] getAnsArray(){
+		try{
+			return answers[currentQuestion];
+		}catch(Exception e){
+			e.printStackTrace();
+			return new String[] {e.getMessage()};
+		}
+	}
+	
+	public long getTimePassed(){
+		return System.currentTimeMillis() - lastQuestionTime;
+	}
+	
+	/**
+	 * Checks to find the first clicked button and returns if it is the correct answer or not
+	 * @param buts The buttons to check
+	 * @return The correctness of the answer
+	 */
+	public boolean checkCorrect(Button[] buts){
+		for (int i = 0; i < buts.length; i++) {
+			if (buts[i].isClicked()) {
+				// if the current button is the answer
+				if (i == answerKey[currentQuestion]) {
+					System.out.println("Question is correct!");
+					return true;
+				} else {
+					System.out.println("Question is incorrect!");
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Moves to the next question
+	 * @return true if there is another question, false otherwise
+	 */
+	public boolean nextQuestion() {
+		currentQuestion += 1;
+		lastQuestionTime = System.currentTimeMillis();
+		if (currentQuestion >= questions.length) {
+			return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Reads in a file to an array
 	 * 

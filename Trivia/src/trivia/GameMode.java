@@ -3,6 +3,7 @@ package trivia;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -14,7 +15,7 @@ import javax.imageio.ImageIO;
 
 public abstract class GameMode {
 	
-	public Button[] buttons;
+	public ArrayList<Button> buttons;
 	public GameEngine engine;
 	protected Image background;
 	
@@ -44,8 +45,8 @@ public abstract class GameMode {
 	 */
 	public void clicked(int x, int y){
 		try{
-			for(int i = 0; i < buttons.length; i++){
-				buttons[i].checkClick(x, y);
+			for(int i = 0; i < buttons.size(); i++){
+				buttons.get(i).checkClick(x, y);
 			}
 		}catch(java.lang.NullPointerException e){
 			engine.log("No defined buttons in " + this.toString());
@@ -60,8 +61,8 @@ public abstract class GameMode {
 		
 		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
 		try{
-			for(int i = 0; i < buttons.length; i++){
-				buttons[i].draw(g);
+			for(int i = 0; i < buttons.size(); i++){
+				buttons.get(i).draw(g);
 			}
 		}catch(java.lang.NullPointerException e){
 			engine.log("No defined buttons in " + this.toString());
