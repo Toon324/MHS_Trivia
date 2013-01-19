@@ -1,3 +1,5 @@
-What is the capitol of the U.S.?	1	Washington D.C.	New York City	Utah	Madison
-What is e^(PI * i)?	2	undefined	-1	-e	PI
-What is the chemical formula for Butane?	3	C4H12O4	C2H5	C4H10	C2H6
+NLC is in which state this year?	2	Wisconsin	California	Utah	Florida
+FBLA NLC starts on what day in June?	1	22nd	13th	5th	30th
+What is the early bird fee for FBLA NLC?	3	$75	$85	$95	$105
+Where can questions be asked?	4	800-FBLA-NLC	800-FBLA-NAT	800-FBLA-CAL
+When does the early bird pricing end?	2	June 1st	May 20th	June 21st	May 15th

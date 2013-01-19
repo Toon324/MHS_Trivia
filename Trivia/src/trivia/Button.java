@@ -17,7 +17,7 @@ public class Button
 	protected boolean clicked;
 	protected boolean enabled;
 	protected int x_pos, y_pos;
-	protected Font f = new Font ("Serif", Font.BOLD, 20);
+	protected Font f = new Font ("Serif", Font.BOLD, 25);
 	
 	/**
 	 * Creates a new Button.
@@ -32,20 +32,6 @@ public class Button
 		text = s;
 		x_pos = x;
 		y_pos = y;
-		height = 30;
-	}
-	
-	/**
-	 * Creates a new button with a specified width and height.
-	 * @param s String to display in Button
-	 * @param x x_pos to draw at
-	 * @param y y_pos to draw at
-	 * @param width width of Button
-	 * @param height height of Button
-	 */
-	public Button(String s, int x, int y, int height){
-		this(s, x, y);
-		this.height = height;
 	}
 	
 	/**
@@ -57,20 +43,20 @@ public class Button
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
 		
-		//Autosizes width of Button to fit text
-		FontMetrics fm   = g.getFontMetrics(f);
+		g.setFont(f);
 		
+		//Autosizes width and height of Button to fit text
+		FontMetrics fm   = g.getFontMetrics(f);
 		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
 		width = (int) rect.getWidth() + 20;
-		
-		g.setFont(f);
+		height = (int) rect.getHeight();
 		
 		g.setColor(Color.BLACK);
 		if(!enabled) g.setColor(Color.DARK_GRAY);
 		
 		g.fillRect(x_pos, y_pos, width, height);
 		g.setColor(Color.cyan);
-		g.drawString(text, x_pos+10, y_pos+20);
+		g.drawString(text, x_pos+10, y_pos+23);
 		
 		g.setColor(temp);
 		g.setFont(tempF);

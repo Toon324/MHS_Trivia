@@ -8,11 +8,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 /**
- * @author dsmiller95
+ * @author Cody Swendrowski, Dan Miller
  * 
  */
 public class MainGame extends GameMode {
 
+	private final int WRONG_ANSWER = 5, MAX_POINTS_POSSIBLE = 10;
 	private enum states {
 		QUESTIONS, DISPLAY_RESPONSE, END_GAME
 	};
@@ -59,6 +60,7 @@ public class MainGame extends GameMode {
 		}
 
 		for (int i = 0; i < buttons.length; i++) {
+			updateButtonPositions();
 			if (buttons[i].isClicked()) {
 				// if the current button is the answer
 				if (i == qstSet.answerKey[currentQuestion]) {
@@ -75,8 +77,23 @@ public class MainGame extends GameMode {
 
 	}
 	
+	private void updateButtonPositions() {
+		int totalWidth = 0;
+		for (int i=0; i<buttons.length; i++)
+		{
+			totalWidth += buttons[i].getWidth();
+		}
+		Button lastButton = new Button("",-(engine.windowWidth-totalWidth)/4,0);
+		for (int i=0; i<buttons.length; i++)
+		{
+			buttons[i].set(((engine.windowWidth-totalWidth)/4) + 
+					lastButton.getX() + lastButton.getWidth(), buttons[i].getY());
+			lastButton = buttons[i];
+		}
+	}
+
 	private void nextQuestion() {
-		engine.log("Asking next question");
+		//engine.log("Asking next question");
 		currentQuestion += 1;
 		if (currentQuestion >= qstSet.answers.length) {
 			state = states.END_GAME;
@@ -94,7 +111,6 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void paint(Graphics g) {
-		
 		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
 		
 		Color temp = g.getColor();
@@ -105,7 +121,13 @@ public class MainGame extends GameMode {
 
 		switch (state) {
 		case QUESTIONS:
-			g.drawString(qstSet.questions[currentQuestion], 10, 50);
+			//Draws question background
+			g.setColor(Color.gray);
+			g.fillRect(0, engine.windowHeight-250, engine.windowWidth, engine.windowHeight);
+			g.setColor(Color.cyan);
+			
+			//Draws question
+			g.drawString(qstSet.questions[currentQuestion], 60, engine.windowHeight-180);
 
 			try {
 				for (int i = 0; i < buttons.length; i++) {
@@ -117,7 +139,7 @@ public class MainGame extends GameMode {
 			// intentionally left out break; room is left for the score to be
 			// printed out after the previous prints
 		case END_GAME:
-			g.drawString("Your score is " + score + ".", 10, 30);
+			g.drawString("Your score is " + score + ".", 60, engine.windowHeight-230);
 			break;
 
 		case DISPLAY_RESPONSE:
