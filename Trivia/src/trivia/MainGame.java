@@ -1,21 +1,20 @@
-/**
- * 
- */
 package trivia;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 /**
- * @author Cody Swendrowski, Dan Miller
+ * Pulls questions from text files based on which categories are selected. Displays those questions and answers.
+ * Right answers are give points based on how fast they are answered.
+ * Wrong answers lose points.
  * 
+ * @author Cody Swendrowski, Dan Miller
  */
 public class MainGame extends GameMode {
 
@@ -33,11 +32,19 @@ public class MainGame extends GameMode {
 
 	private Font f = new Font("Serif", Font.BOLD, 23);
 
+	/**
+	 * Creates a new MainGame controller.
+	 * @param eng Engine to utilize and report to.
+	 */
 	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
 	}
 
+	/**
+	 * Loads questions based on which categories are set to be true.
+	 * @param cats Categories to load.
+	 */
 	public void setCategories(String[] cats) {
 		qstSet = new Questions("\\Resources\\question_Sets\\", cats);
 	}
@@ -69,6 +76,9 @@ public class MainGame extends GameMode {
 		}
 	}
 
+	/**
+	 * Determines if answer is clicked, and what score to give.
+	 */
 	private void runQuestion() {
 		if (buttons == null) {// if this is the first time, set up the buttons
 			if (!qstSet.nextQuestion())

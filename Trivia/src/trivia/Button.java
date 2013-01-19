@@ -94,7 +94,7 @@ public class Button
 	public static boolean isOneClicked(List<Button> buts){
 		try{
 			for(Button but : buts){
-				//intentionally does not use the .isClicked method
+				//intentionally does not use the .isClicked method to avoid unclicking buttons
 				if(but.clicked) return true;
 			}
 			return false;
