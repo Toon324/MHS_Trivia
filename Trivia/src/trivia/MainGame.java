@@ -75,9 +75,9 @@ public class MainGame extends GameMode {
 			state = states.DISPLAY_RESPONSE;
 			lastAnswer = qstSet.checkCorrect(buttons.toArray(new Button[0]));
 			if(lastAnswer){
-				score += 100 - Math.pow(qstSet.getTimePassed() / 1000, 2);
+				score += 100 / Math.pow(2, Math.pow(qstSet.getTimePassed() / (double)5000, 4));
 			}else{
-				score -= Math.pow(qstSet.getTimePassed() / 1000, 2);
+				score -= 90;
 			}
 		}
 
