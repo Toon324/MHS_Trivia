@@ -22,10 +22,11 @@ public class MainGame extends GameMode {
 	private states state;
 
 	private Questions qstSet;
-
+	
+	private int score;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
-
+	
 	private Font f = new Font("Serif", Font.BOLD, 20);
 
 	public MainGame(GameEngine eng) {
@@ -73,6 +74,11 @@ public class MainGame extends GameMode {
 			lastTime = System.currentTimeMillis();
 			state = states.DISPLAY_RESPONSE;
 			lastAnswer = qstSet.checkCorrect(buttons.toArray(new Button[0]));
+			if(lastAnswer){
+				score += 100 - Math.pow(qstSet.getTimePassed() / 1000, 2);
+			}else{
+				score -= Math.pow(qstSet.getTimePassed() / 1000, 2);
+			}
 		}
 
 	}
@@ -102,7 +108,7 @@ public class MainGame extends GameMode {
 			// intentionally left out break; room is left for the score to be
 			// printed out after the previous prints
 		case END_GAME:
-			g.drawString("Your score is " + qstSet.getScore() + ".", 10, 30);
+			g.drawString("Your score is " + score + ".", 10, 30);
 			break;
 
 		case DISPLAY_RESPONSE:
