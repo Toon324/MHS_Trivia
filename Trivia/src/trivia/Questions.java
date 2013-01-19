@@ -11,6 +11,9 @@ public class Questions {
 	public String[][] answers;
 	public int[] answerKey;
 	
+	private int currentQuestion;
+	private int score;
+	
 	public Questions(String path, String[] names){
 		filePaths = new String[names.length];
 		for(int i = 0; i < names.length; i++){
@@ -18,10 +21,68 @@ public class Questions {
 		}
 		
 		proccessQuestions(readFile(filePaths));
+		
+		score = 0;
+		currentQuestion = -1;
 	}
 	
-
-
+	/**
+	 * Checks to find the first clicked button and returns if it is the correct answer or not
+	 * @param buts The buttons to check
+	 * @return The correctness of the answer
+	 */
+	public boolean checkCorrect(Button[] buts){
+		for (int i = 0; i < buts.length; i++) {
+			if (buts[i].isClicked()) {
+				// if the current button is the answer
+				if (i == answerKey[currentQuestion]) {
+					score += 1;
+					System.out.println("Question is correct!");
+					return true;
+				} else {
+					score -= 1;
+					System.out.println("Question is incorrect!");
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public int getScore(){
+		return score;
+	}
+	
+	public String getQuestion(){
+		try{
+			return questions[currentQuestion];
+		}catch(Exception e){
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+	
+	public String[] getAnsArray(){
+		try{
+			return answers[currentQuestion];
+		}catch(Exception e){
+			e.printStackTrace();
+			return new String[] {e.getMessage()};
+		}
+	}
+	
+	/**
+	 * Moves to the next question
+	 * @return true if there is another question, false otherwise
+	 */
+	public boolean nextQuestion() {
+		currentQuestion += 1;
+		if (currentQuestion >= questions.length) {
+			return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Reads in a file to an array
 	 * 
