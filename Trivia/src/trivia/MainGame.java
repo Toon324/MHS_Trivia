@@ -5,8 +5,13 @@ package trivia;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 
 /**
  * @author Cody Swendrowski, Dan Miller
@@ -105,7 +110,36 @@ public class MainGame extends GameMode {
 			g.setColor(Color.cyan);
 			
 			//Draws question
-			g.drawString(qstSet.getQuestion(), 60, engine.windowHeight-190);
+			FontMetrics fm   = g.getFontMetrics(f);
+			Rectangle2D rect = fm.getStringBounds(qstSet.getQuestion(), g);
+			int questionWidth = (int) rect.getWidth()+60;
+			
+			if (questionWidth < engine.windowWidth)
+			{
+				g.drawString(qstSet.getQuestion(), 60, engine.windowHeight-190);
+			}
+			else //If question goes outside the screen, split it
+			{
+				String question = qstSet.getQuestion();
+				StringBuilder part1 = new StringBuilder();
+				StringBuilder part2 = new StringBuilder();
+				Scanner splitter = new Scanner(question);
+				while (splitter.hasNext())
+				{
+					rect = fm.getStringBounds(part1.toString(), g);
+					if (rect.getWidth()+60 < engine.windowWidth -50)
+					{
+						part1.append(" " + splitter.next());
+					}
+					else
+					{
+						part2.append(" " + splitter.next());
+					}
+				}
+				splitter.close();
+				g.drawString(part1.toString(), 60, engine.windowHeight-190);
+				g.drawString(part2.toString(), 60, engine.windowHeight-165);
+			}
 
 			try {
 				for (Button but:buttons) {
