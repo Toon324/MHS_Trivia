@@ -8,11 +8,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 /**
- * @author dsmiller95
+ * @author Cody Swendrowski, Dan Miller
  * 
  */
 public class MainGame extends GameMode {
 
+	private final int WRONG_ANSWER = 5, MAX_POINTS_POSSIBLE = 10;
 	private enum states {
 		QUESTIONS, DISPLAY_RESPONSE, END_GAME
 	};
@@ -24,7 +25,7 @@ public class MainGame extends GameMode {
 	private int currentQuestion = 0;
 	private int score = 0;
 	private boolean lastAnswer = false;
-	private long lastTime = 0;
+	private long lastAnswered, questionStarted = 0;
 
 	private Font f = new Font("Serif", Font.BOLD, 20);
 
@@ -44,7 +45,7 @@ public class MainGame extends GameMode {
 			runQuestion();
 			break;
 		case DISPLAY_RESPONSE:
-			if (System.currentTimeMillis() > lastTime + 1000)
+			if (System.currentTimeMillis() > lastAnswered + 1000)
 				nextQuestion();
 			break;
 		case END_GAME:
@@ -59,24 +60,44 @@ public class MainGame extends GameMode {
 		}
 
 		for (int i = 0; i < buttons.length; i++) {
+			updateButtonPositions();
 			if (buttons[i].isClicked()) {
 				// if the current button is the answer
 				if (i == qstSet.answerKey[currentQuestion]) {
-					score += 1;
+					score += MAX_POINTS_POSSIBLE - ((System.currentTimeMillis() - questionStarted) / 1000);
 					lastAnswer = true;
 				} else {
-					score -= 1;
+					score -= WRONG_ANSWER;
+					if (score < 0)
+					{
+						score = 0;
+					}
 					lastAnswer = false;
 				}
-				lastTime = System.currentTimeMillis();
+				lastAnswered = System.currentTimeMillis();
 				state = states.DISPLAY_RESPONSE;
 			}
 		}
 
 	}
 	
+	private void updateButtonPositions() {
+		int totalWidth = 0;
+		for (int i=0; i<buttons.length; i++)
+		{
+			totalWidth += buttons[i].getWidth();
+		}
+		Button lastButton = new Button("",-(engine.windowWidth-totalWidth)/4,0);
+		for (int i=0; i<buttons.length; i++)
+		{
+			buttons[i].set(((engine.windowWidth-totalWidth)/4) + 
+					lastButton.getX() + lastButton.getWidth(), buttons[i].getY());
+			lastButton = buttons[i];
+		}
+	}
+
 	private void nextQuestion() {
-		engine.log("Asking next question");
+		//engine.log("Asking next question");
 		currentQuestion += 1;
 		if (currentQuestion >= qstSet.answers.length) {
 			state = states.END_GAME;
@@ -87,14 +108,14 @@ public class MainGame extends GameMode {
 		state = states.QUESTIONS;
 		buttons = new Button[qstSet.answers[currentQuestion].length];
 		for (int i = 0; i < qstSet.answers[currentQuestion].length; i++) {
-			buttons[i] = new Button(qstSet.answers[currentQuestion][i], 10,
-					70 + (i * 35));
+			buttons[i] = new Button(qstSet.answers[currentQuestion][i], 0,
+					(engine.windowHeight - 150));
 		}
+		questionStarted = System.currentTimeMillis();
 	}
 
 	@Override
 	public void paint(Graphics g) {
-		
 		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
 		
 		Color temp = g.getColor();
@@ -105,7 +126,17 @@ public class MainGame extends GameMode {
 
 		switch (state) {
 		case QUESTIONS:
-			g.drawString(qstSet.questions[currentQuestion], 10, 50);
+			//Draws question background
+			g.setColor(Color.gray);
+			g.fillRect(0, engine.windowHeight-250, engine.windowWidth, engine.windowHeight);
+			g.setColor(Color.cyan);
+			
+			//Draws amount of points remaining to be gained
+			g.drawString("Points left: " + (MAX_POINTS_POSSIBLE - ((System.currentTimeMillis() - questionStarted) / 1000)),
+					60, engine.windowHeight - 200);
+			
+			//Draws question
+			g.drawString(qstSet.questions[currentQuestion], 60, engine.windowHeight-180);
 
 			try {
 				for (int i = 0; i < buttons.length; i++) {
@@ -117,7 +148,7 @@ public class MainGame extends GameMode {
 			// intentionally left out break; room is left for the score to be
 			// printed out after the previous prints
 		case END_GAME:
-			g.drawString("Your score is " + score + ".", 10, 30);
+			g.drawString("Your score is " + score + ".", 60, engine.windowHeight-230);
 			break;
 
 		case DISPLAY_RESPONSE:

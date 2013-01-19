@@ -1,3 +1,5 @@
-Capitol of the U.S.?	1	Washington D.C.	New York City	Utah	Madison
-e^(PI * i)?	2	undefined	-1	-e	PI
-Chemical formula for Butane?	3	C4H12O4	C2H5	C4H10	C2H6
+How much profit does Country Meats provide?	2	35%	45%	55%	65%
+Which donut company is a national partner?	3	Dunkin's	Dixie Cream	Krispie Cream	SLO Donuts
+Ozark Delights provides what food?	1	Lollipops	Granola Bars	Meat Snacks	Slushies
+Your Town-Opoly is produced by what company?	4	Schermer	National Distributors	InPro	Pride Distributors
+Zinch.com gives how much per sign-up?	1	$1	$2	$3	$5
