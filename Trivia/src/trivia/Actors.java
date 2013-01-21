@@ -15,7 +15,6 @@ import javax.sound.sampled.Clip;
 public class Actors {
 	
 	private final int MAX_ACTORS = 50;
-	private GameImage ship;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
 	private int pos, width, height;
 	private Boolean debugMode = false;
@@ -37,7 +36,6 @@ public class Actors {
 	public Actors(Boolean debug) {
 		pos = 0;
 		debugMode = debug;
-		//ship = new GameImage("ship");
 	}
 
 	/**
@@ -162,6 +160,12 @@ public class Actors {
 	public void setSize(int w, int h) {
 		width = w;
 		height = h;
+	}
+	
+	public void addTriangle() {
+		Triangle c = new Triangle(pos);
+		c.setCorner(200,200);
+		add(c);
 	}
 	
 	/**

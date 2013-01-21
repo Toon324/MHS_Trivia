@@ -50,6 +50,7 @@ public class GameEngine {
 	 */
 	public void paint(Graphics g) {
 		mode.paint(g);
+		actors.drawActors(g);
 	}
 
 	/**
