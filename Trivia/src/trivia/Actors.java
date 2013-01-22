@@ -163,8 +163,9 @@ public class Actors {
 	}
 	
 	public void addTriangle() {
-		Triangle c = new Triangle(pos);
+		Triangle c = new Triangle(debugMode, pos);
 		c.setCorner(200,200);
+		c.setAngle(90);
 		add(c);
 	}
 	
@@ -178,6 +179,12 @@ public class Actors {
 		{
 			System.out.println(s);
 		}
+	}
+
+	public void addSinglePoint() {
+		SinglePoint sp = new SinglePoint(debugMode, pos);
+		sp.setAngle(90);
+		add(sp);
 	}
 }
 

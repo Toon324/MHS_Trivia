@@ -4,14 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
-import java.awt.image.BufferedImage;
-
-/*import java.awt.Graphics2D;
- import java.awt.geom.AffineTransform;
- import java.awt.image.AffineTransformOp;*/
 
 /**
  * Generic class for all objects in the game.
@@ -22,9 +16,10 @@ public class Actor {
 	protected int width, height, speed, score, angle;
 	private int pos;
 	private AffineTransform transformer;
+	private boolean debug;
 	protected boolean death;
 	protected Point corner, center;
-	protected Polygon poly = new Polygon();
+	protected Polygon poly;
 
 	/**
 	 * Creates a new Actor.
@@ -32,7 +27,9 @@ public class Actor {
 	 * @param p
 	 *            Position in ArrayList
 	 */
-	public Actor(int p) {
+	public Actor(boolean debugMode, int p) {
+		debug = debugMode;
+		poly = new Polygon();
 		angle = 0;
 		corner = new Point(0,0);
 		center = new Point(0,0);
@@ -130,9 +127,8 @@ public class Actor {
 	public void setSize(int x, int y) {
 		width = x;
 		height = y;
-		center.x = width;
-		center.x /= 2;
-		center.y = height /2;
+		center.x = width/2;
+		center.y = -height/2;
 	}
 	
 	public Point getCorner()
@@ -162,10 +158,78 @@ public class Actor {
 	 *            Direction to set as.
 	 */
 	public void setAngle(int d) {
-		poly = rotate(poly, Math.toRadians(d), center.x, center.y);
+		log("**********************************");
+		d %= 360;
 		angle=d;
-		System.out.println("Angle: " + angle);
-		System.out.println("Radians: " + Math.toRadians(angle));
+		poly = rotate(angle);
+		
+	}
+
+	private Polygon rotate(double d) {
+		d = Math.toRadians(d);
+		Polygon newPoly = new Polygon();
+		log("computing angle " + Math.toDegrees(d));
+		for(int i=0; i < poly.npoints; i++)
+		{
+			log("-------");
+			/*
+			float localX = center.x-poly.xpoints[i];
+			float localY = center.y-poly.ypoints[i];
+			*/
+			/*
+			float localX = poly.xpoints[i];
+			float localY = poly.ypoints[i];
+			
+			float a = (float) Math.atan2(localX,localY);
+			log("Angle to point: " + Math.toDegrees(a));
+			float r = (float) Math.sqrt(Math.pow(localX,2)+Math.pow(localY,2));
+			log("Cos: " + Math.cos(a+d));
+			log("Sin: " + Math.sin(a+d));
+			log("r: " + r);
+			*/
+			/*
+			int x = center.x + Math.round((float)(r * Math.cos(a+d)));
+			int y = center.y + Math.round((float)(r * Math.sin(a+d)));
+			*/
+			/*
+			int x = (int) (center.x + Math.cos(d) * (localX - center.x) - Math.sin(d) * (localY - center.y));
+			int y = (int) (center.y + Math.sin(d) * (localX - center.x) + Math.cos(d) * (localY - center.y));
+			
+			
+			
+			*/
+			/*
+			double[] pt = {poly.xpoints[i], poly.ypoints[i]};
+			AffineTransform.getRotateInstance(Math.toRadians(d), center.x, center.y)
+			  .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+			int newX = (int) pt[0];
+			int newY = (int) pt[1];
+			
+			*/
+			Point currentPoint = new Point(poly.xpoints[i], poly.ypoints[i]);
+			log("oldx: " + currentPoint.x);
+			log("oldy: " + currentPoint.y);
+			Point newPoint = rotatePoint(currentPoint,center, d);
+			log("centerx: " + center.x);
+			log("centery: " + center.y);
+			log("newx: " + newPoint.y);
+			log("newy: " + newPoint.x);
+			
+			newPoly.addPoint(newPoint.x,newPoint.y);
+		}
+		return newPoly;
+	}
+	
+	public Point rotatePoint(Point pt, Point center, double angleRad)
+	{
+	    double cosAngle = Math.cos(angleRad );
+	    double sinAngle = Math.sin(angleRad );
+	    double dx = (pt.x-center.x);
+	    double dy = (pt.y-center.y);
+
+	    pt.x = center.x + (int) (dx*cosAngle-dy*sinAngle);
+	    pt.y = center.y + (int) (dx*sinAngle+dy*cosAngle);
+	    return pt;
 	}
 
 	/**
@@ -178,7 +242,7 @@ public class Actor {
 		death = d;
 	}
 	
-	public static Polygon rotate(Polygon p, double angle, double x, double y) {  
+	public Polygon rotate(Polygon p, double angle, double x, double y) {  
 	    if (angle == 0) return p;
 	    AffineTransform rotation = AffineTransform.getRotateInstance(angle, x, y);  
 	    PathIterator pit = p.getPathIterator(rotation);  
@@ -187,8 +251,12 @@ public class Actor {
 	    int ty;  
 	    do {  
 	      ty = pit.currentSegment(a);  
-	      if (ty != PathIterator.SEG_CLOSE)  
-	        rp.addPoint(Math.round(a[0]), Math.round(a[1]));  
+	      if (ty != PathIterator.SEG_CLOSE)
+	      {
+	    	  log("BeforeX: " + a[0] + " BeforeY: " + a[1]);
+	    	  rp.addPoint(Math.round(a[0]), Math.round(a[1]));  
+	    	  log("AfterX: " + Math.round(a[0]) + " AfterY: " + Math.round(a[1]));
+	      }
 	      pit.next();  
 	    } while (ty!=PathIterator.SEG_CLOSE && !pit.isDone());  
 	    return rp;  
@@ -201,6 +269,14 @@ public class Actor {
 	 */
 	public String toString() {
 		return "Actor";
+	}
+	
+	private void log(String s)
+	{
+		if(debug)
+		{
+			System.out.println(s);
+		}
 	}
 
 }

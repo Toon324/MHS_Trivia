@@ -4,13 +4,13 @@ public class Triangle extends Actor {
 	
 	int timer = 0;
 	
-	public Triangle(int p) {
-		super(p);
+	public Triangle(boolean debugMode, int p) {
+		super(debugMode, p);
 		setSize(30,30);
 		speed = 1;
 		poly.addPoint(0, 0);
-		poly.addPoint(0, height);
-		poly.addPoint(width, height/2);
+		poly.addPoint(width/2, -height);
+		poly.addPoint(width, 0);
 	}
 	
 	public void move(int w, int h)
@@ -18,7 +18,7 @@ public class Triangle extends Actor {
 		timer++;
 		if (timer % 100 == 0)
 		{
-			setAngle(angle+1);
+			setAngle(90);
 		}
 		
 	}
