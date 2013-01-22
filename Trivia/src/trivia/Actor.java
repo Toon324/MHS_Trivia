@@ -156,9 +156,11 @@ public class Actor {
 	
 	public void setCenter(int x, int y)
 	{
+		if(drawPoly != null) drawPoly.translate(-center.x, -center.y);
 		basePoly.translate(-center.x, -center.y);
 		center.x = x;
 		center.y = y;
+		if(drawPoly != null) drawPoly.translate(center.x, center.y);
 		basePoly.translate(center.x, center.y);
 	}
 	

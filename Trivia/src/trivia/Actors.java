@@ -162,9 +162,10 @@ public class Actors {
 		height = h;
 	}
 	
-	public void addTriangle() {
-		Triangle c = new Triangle(debugMode, pos);
-		c.setCenter(200,200);
+	public void addTriangle(int targetX, int x, int y) {
+		Triangle c = new Triangle(debugMode, pos, targetX);
+		c.rotate(Math.toRadians(90));
+		c.setCenter(x,y);
 		add(c);
 	}
 	
