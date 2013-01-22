@@ -13,7 +13,8 @@ import java.awt.geom.PathIterator;
  * @author Cody Swendrowski, Dan Miller
  */
 public class Actor {
-	protected int width, height, speed, score, angle;
+	protected int width, height, speed, score;
+	protected double angle;
 	private int pos;
 	private AffineTransform transformer;
 	private boolean debug;
@@ -143,84 +144,106 @@ public class Actor {
 	}
 	
 	/**
-	 * Returns the direction that the Actor is facing.
+	 * Returns the direction that the Actor is facing in radians.
 	 * 
 	 * @return dir
 	 */
-	public int getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 
 	/**
-	 * Sets the direction that the Actor is facing.
+	 * Sets the direction that the Actor is facing in radians.
 	 * 
 	 * @param d
 	 *            Direction to set as.
 	 */
-	public void setAngle(int d) {
+	public void setAngle(double d) {
 		log("**********************************");
-		d %= 360;
+		d %= (2 * Math.PI);
+		log("Angle: " + Math.toDegrees(d));
+		poly = rotate(poly, (d - angle));
 		angle=d;
-		poly = rotate(angle);
-		
+	}
+	
+	public void rotate(double d){
+		d %= (2 * Math.PI);
+		poly = rotate(poly, d);
+		angle += d;
+		angle %= (2 * Math.PI);
 	}
 
-	private Polygon rotate(double d) {
-		d = Math.toRadians(d);
+	private Polygon rotate(Polygon myPoly, double d) {
 		Polygon newPoly = new Polygon();
 		log("computing angle " + Math.toDegrees(d));
-		for(int i=0; i < poly.npoints; i++)
+		Point[] pnts = new Point[myPoly.npoints];
+		for(int i=0; i < myPoly.npoints; i++)
 		{
 			log("-------");
-			/*
-			float localX = center.x-poly.xpoints[i];
-			float localY = center.y-poly.ypoints[i];
-			*/
-			/*
-			float localX = poly.xpoints[i];
-			float localY = poly.ypoints[i];
-			
-			float a = (float) Math.atan2(localX,localY);
-			log("Angle to point: " + Math.toDegrees(a));
-			float r = (float) Math.sqrt(Math.pow(localX,2)+Math.pow(localY,2));
-			log("Cos: " + Math.cos(a+d));
-			log("Sin: " + Math.sin(a+d));
-			log("r: " + r);
-			*/
-			/*
-			int x = center.x + Math.round((float)(r * Math.cos(a+d)));
-			int y = center.y + Math.round((float)(r * Math.sin(a+d)));
-			*/
-			/*
-			int x = (int) (center.x + Math.cos(d) * (localX - center.x) - Math.sin(d) * (localY - center.y));
-			int y = (int) (center.y + Math.sin(d) * (localX - center.x) + Math.cos(d) * (localY - center.y));
-			
-			
-			
-			*/
-			/*
-			double[] pt = {poly.xpoints[i], poly.ypoints[i]};
-			AffineTransform.getRotateInstance(Math.toRadians(d), center.x, center.y)
-			  .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
-			int newX = (int) pt[0];
-			int newY = (int) pt[1];
-			
-			*/
-			Point currentPoint = new Point(poly.xpoints[i], poly.ypoints[i]);
-			log("oldx: " + currentPoint.x);
-			log("oldy: " + currentPoint.y);
-			Point newPoint = rotatePoint(currentPoint,center, d);
+			pnts[i] = new Point(myPoly.xpoints[i], myPoly.ypoints[i]);
+			log("oldx: " + pnts[i].x);
+			log("oldy: " + pnts[i].y);
+			/**
+			 * float localX = center.x-poly.xpoints[i];
+			 * float localY = center.y-poly.ypoints[i];
+			 * 
+			 * ------------------
+			 * 
+			 * float localX = poly.xpoints[i];
+			 * float localY = poly.ypoints[i];
+			 * 
+			 * float a = (float) Math.atan2(localX,localY);
+			 * log("Angle to point: " + Math.toDegrees(a));
+			 * float r = (float) Math.sqrt(Math.pow(localX,2)+Math.pow(localY,2));
+			 * log("Cos: " + Math.cos(a+d));
+			 * log("Sin: " + Math.sin(a+d));
+			 * log("r: " + r);
+			 * 
+			 * ---------------------
+			 * 
+			 * int x = center.x + Math.round((float)(r * Math.cos(a+d)));
+			 * int y = center.y + Math.round((float)(r * Math.sin(a+d)));
+			 * 
+			 * ----------------------
+			 * 
+			 * int x = (int) (center.x + Math.cos(d) * (localX - center.x) - Math.sin(d) * (localY - center.y));
+			 * int y = (int) (center.y + Math.sin(d) * (localX - center.x) + Math.cos(d) * (localY - center.y));
+			 * 
+			 * ----------------------------------
+			 * 
+			 * double[] pt = {poly.xpoints[i], poly.ypoints[i]};
+			 * AffineTransform.getRotateInstance(Math.toRadians(d), center.x, center.y)
+			 * .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+			 * int newX = (int) pt[0];
+			 * int newY = (int) pt[1];
+			 * 
+			 * ----------------------
+			 * 
+			 * Point currentPoint = new Point(poly.xpoints[i], poly.ypoints[i]);
+			 * log("oldx: " + currentPoint.x);
+			 * log("oldy: " + currentPoint.y);
+			 * 
+			 * Point newPoint = rotatePoint(currentPoint, center, d);
+			 * log("centerx: " + center.x);
+			 * log("centery: " + center.y);
+			 * log("newx: " + newPoint.y);
+			 * log("newy: " + newPoint.x);
+			 * 
+			 * newPoly.addPoint(newPoint.x,newPoint.y);
+			 */
+		}
+		AffineTransform.getRotateInstance(d, center.x, center.y).transform(pnts, 0, pnts, 0, pnts.length);
+		for(int i = 0; i < pnts.length; i++){
+			newPoly.addPoint(pnts[i].x, pnts[i].y);
 			log("centerx: " + center.x);
 			log("centery: " + center.y);
-			log("newx: " + newPoint.y);
-			log("newy: " + newPoint.x);
-			
-			newPoly.addPoint(newPoint.x,newPoint.y);
+			log("newx: " + pnts[i].y);
+			log("newy: " + pnts[i].x);
 		}
 		return newPoly;
 	}
 	
-	public Point rotatePoint(Point pt, Point center, double angleRad)
+	/*public Point rotatePoint(Point pt, Point center, double angleRad)
 	{
 	    double cosAngle = Math.cos(angleRad );
 	    double sinAngle = Math.sin(angleRad );
@@ -230,7 +253,7 @@ public class Actor {
 	    pt.x = center.x + (int) (dx*cosAngle-dy*sinAngle);
 	    pt.y = center.y + (int) (dx*sinAngle+dy*cosAngle);
 	    return pt;
-	}
+	}*/
 
 	/**
 	 * Sets death to parameter.
@@ -242,7 +265,7 @@ public class Actor {
 		death = d;
 	}
 	
-	public Polygon rotate(Polygon p, double angle, double x, double y) {  
+	/*public Polygon rotate(Polygon p, double angle, double x, double y) {  
 	    if (angle == 0) return p;
 	    AffineTransform rotation = AffineTransform.getRotateInstance(angle, x, y);  
 	    PathIterator pit = p.getPathIterator(rotation);  
@@ -257,10 +280,10 @@ public class Actor {
 	    	  rp.addPoint(Math.round(a[0]), Math.round(a[1]));  
 	    	  log("AfterX: " + Math.round(a[0]) + " AfterY: " + Math.round(a[1]));
 	      }
-	      pit.next();  
+	      pit.next();
 	    } while (ty!=PathIterator.SEG_CLOSE && !pit.isDone());  
 	    return rp;  
-	  }  
+	  }*/
 
 	/**
 	 * Allows System to print name of object. Returns the name of the Actor

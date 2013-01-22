@@ -1,6 +1,3 @@
-/**
- * 
- */
 package trivia;
 
 /**
@@ -20,7 +17,7 @@ public class SinglePoint extends Actor {
 	
 	public void move(int w, int h)
 	{
-		setAngle(angle+90);
+		setAngle(angle + 90);
 	}
 
 }

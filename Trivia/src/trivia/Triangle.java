@@ -16,9 +16,9 @@ public class Triangle extends Actor {
 	public void move(int w, int h)
 	{
 		timer++;
-		if (timer % 100 == 0)
+		if (timer % 1 == 0)
 		{
-			setAngle(90);
+			rotate(Math.toRadians(1));
 		}
 		
 	}
