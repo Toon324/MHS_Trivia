@@ -12,7 +12,7 @@ public class SinglePoint extends Actor {
 	 */
 	public SinglePoint(boolean debugMode, int p) {
 		super(debugMode, p);
-		poly.addPoint(1, 1);
+		basePoly.addPoint(1, 1);
 	}
 	
 	public void move(int w, int h)

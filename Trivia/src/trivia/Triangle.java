@@ -8,9 +8,9 @@ public class Triangle extends Actor {
 		super(debugMode, p);
 		setSize(30,30);
 		speed = 1;
-		poly.addPoint(0, 0);
-		poly.addPoint(width/2, -height);
-		poly.addPoint(width, 0);
+		basePoly.addPoint(0, 0);
+		basePoly.addPoint(width/2, -height);
+		basePoly.addPoint(width, 0);
 	}
 	
 	public void move(int w, int h)

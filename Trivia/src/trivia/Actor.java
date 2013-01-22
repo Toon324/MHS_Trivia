@@ -16,11 +16,10 @@ public class Actor {
 	protected int width, height, speed, score;
 	protected double angle;
 	private int pos;
-	private AffineTransform transformer;
 	private boolean debug;
 	protected boolean death;
 	protected Point corner, center;
-	protected Polygon poly;
+	protected Polygon basePoly, drawPoly;
 
 	/**
 	 * Creates a new Actor.
@@ -30,7 +29,7 @@ public class Actor {
 	 */
 	public Actor(boolean debugMode, int p) {
 		debug = debugMode;
-		poly = new Polygon();
+		basePoly = new Polygon();
 		angle = 0;
 		corner = new Point(0,0);
 		center = new Point(0,0);
@@ -38,7 +37,6 @@ public class Actor {
 		height = 0;
 		score = 0;
 		speed = 3;
-		transformer = new AffineTransform();
 		death = false;
 		pos = p;
 	}
@@ -53,15 +51,30 @@ public class Actor {
 	 */
 	public void draw(Graphics g) {
 		g.setColor(Color.cyan);
-		for(int i=0; i<poly.npoints; i++)
-		{
-			int u = i+1;
-			if (u >= poly.npoints)
-			{
-				u=0;
+		if(drawPoly == null) drawPoly = basePoly;
+		
+		
+		int x = 0, y = 0, firstX = 0, firstY = 0;
+		int res;
+		float array[] = new float[6];
+		PathIterator iter = drawPoly.getPathIterator(new AffineTransform());
+		while(!iter.isDone()){
+			res = iter.currentSegment(array);
+			switch(res){
+			case PathIterator.SEG_CLOSE:
+				array[0] = firstX; array[1] = firstY;
+			case PathIterator.SEG_LINETO:
+				g.drawLine(x + corner.x, y + corner.y, (int)array[0] + corner.x, (int)array[1] + corner.y);
+				g.drawLine(x + corner.x, y + corner.y, center.x + corner.x, center.y + corner.y);
+				x = (int) array[0]; y = (int) array[1];
+				break;
+			case PathIterator.SEG_MOVETO:
+				x = (int) array[0]; y = (int) array[1];
+				firstX = x;
+				firstY = y;
+				break;
 			}
-			g.drawLine(corner.x+poly.xpoints[i], corner.y+poly.ypoints[i],
-					corner.x+poly.xpoints[u], corner.y+poly.ypoints[u]);
+			iter.next();
 		}
 	}
 
@@ -162,15 +175,15 @@ public class Actor {
 		log("**********************************");
 		d %= (2 * Math.PI);
 		log("Angle: " + Math.toDegrees(d));
-		poly = rotate(poly, (d - angle));
+		drawPoly = rotate(basePoly, d);
 		angle=d;
 	}
 	
 	public void rotate(double d){
 		d %= (2 * Math.PI);
-		poly = rotate(poly, d);
 		angle += d;
 		angle %= (2 * Math.PI);
+		drawPoly = rotate(basePoly, angle);
 	}
 
 	private Polygon rotate(Polygon myPoly, double d) {
@@ -183,54 +196,6 @@ public class Actor {
 			pnts[i] = new Point(myPoly.xpoints[i], myPoly.ypoints[i]);
 			log("oldx: " + pnts[i].x);
 			log("oldy: " + pnts[i].y);
-			/**
-			 * float localX = center.x-poly.xpoints[i];
-			 * float localY = center.y-poly.ypoints[i];
-			 * 
-			 * ------------------
-			 * 
-			 * float localX = poly.xpoints[i];
-			 * float localY = poly.ypoints[i];
-			 * 
-			 * float a = (float) Math.atan2(localX,localY);
-			 * log("Angle to point: " + Math.toDegrees(a));
-			 * float r = (float) Math.sqrt(Math.pow(localX,2)+Math.pow(localY,2));
-			 * log("Cos: " + Math.cos(a+d));
-			 * log("Sin: " + Math.sin(a+d));
-			 * log("r: " + r);
-			 * 
-			 * ---------------------
-			 * 
-			 * int x = center.x + Math.round((float)(r * Math.cos(a+d)));
-			 * int y = center.y + Math.round((float)(r * Math.sin(a+d)));
-			 * 
-			 * ----------------------
-			 * 
-			 * int x = (int) (center.x + Math.cos(d) * (localX - center.x) - Math.sin(d) * (localY - center.y));
-			 * int y = (int) (center.y + Math.sin(d) * (localX - center.x) + Math.cos(d) * (localY - center.y));
-			 * 
-			 * ----------------------------------
-			 * 
-			 * double[] pt = {poly.xpoints[i], poly.ypoints[i]};
-			 * AffineTransform.getRotateInstance(Math.toRadians(d), center.x, center.y)
-			 * .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
-			 * int newX = (int) pt[0];
-			 * int newY = (int) pt[1];
-			 * 
-			 * ----------------------
-			 * 
-			 * Point currentPoint = new Point(poly.xpoints[i], poly.ypoints[i]);
-			 * log("oldx: " + currentPoint.x);
-			 * log("oldy: " + currentPoint.y);
-			 * 
-			 * Point newPoint = rotatePoint(currentPoint, center, d);
-			 * log("centerx: " + center.x);
-			 * log("centery: " + center.y);
-			 * log("newx: " + newPoint.y);
-			 * log("newy: " + newPoint.x);
-			 * 
-			 * newPoly.addPoint(newPoint.x,newPoint.y);
-			 */
 		}
 		AffineTransform.getRotateInstance(d, center.x, center.y).transform(pnts, 0, pnts, 0, pnts.length);
 		for(int i = 0; i < pnts.length; i++){

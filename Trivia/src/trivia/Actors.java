@@ -165,7 +165,6 @@ public class Actors {
 	public void addTriangle() {
 		Triangle c = new Triangle(debugMode, pos);
 		c.setCorner(200,200);
-		c.setAngle(90);
 		add(c);
 	}
 	
