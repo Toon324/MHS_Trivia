@@ -23,14 +23,14 @@ public class MainGame extends GameMode {
 	private boolean[] fleetStatus;
 
 	private enum states {
-		QUESTIONS, DISPLAY_RESPONSE, END_GAME
+		QUESTIONS, DISPLAY_RESPONSE
 	};
 
 	private states state;
 
 	private Questions qstSet;
 
-	private int score, maxFleetSize;
+	private int maxFleetSize;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
@@ -107,12 +107,9 @@ public class MainGame extends GameMode {
 						buttons.add(new Button(ans[i], 10, (engine.windowHeight-150) + (i * 35)));
 					}
 				} else {
-					state = states.END_GAME;
+					engine.setMode(engine.endGame);
 				}
 			}
-			break;
-
-		case END_GAME:
 			break;
 		}
 	}
@@ -123,18 +120,18 @@ public class MainGame extends GameMode {
 	private void runQuestion() {
 		if (buttons == null) {// if this is the first time, set up the buttons
 			if (!qstSet.nextQuestion())
-				state = states.END_GAME;
+				engine.setMode(engine.endGame);
 		}
 		if (Button.isOneClicked(buttons)) {
 			lastTime = System.currentTimeMillis();
 			state = states.DISPLAY_RESPONSE;
 			lastAnswer = qstSet.checkCorrect(buttons.toArray(new Button[0]));
 			if (lastAnswer) {
-				score += 100 / Math.pow(2,
+				engine.score += 100 / Math.pow(2,
 						Math.pow(qstSet.getTimePassed() / (double) 5000, 4));
 				addShipsToFleet(1);
 			} else {
-				score -= 90;
+				engine.score -= 90;
 				for(int i=0; i<fleetPositions.length; i++)
 				{
 					if(fleetStatus[i])
@@ -145,9 +142,9 @@ public class MainGame extends GameMode {
 						break;
 					}
 				}
-				if (score < 0)
+				if (engine.score < 0)
 				{
-					score = 0;
+					engine.score = 0;
 				}
 			}
 		}
@@ -212,10 +209,6 @@ public class MainGame extends GameMode {
 			} catch (java.lang.NullPointerException e) {
 				engine.log("No buttons in MainGame!");
 			}
-			// intentionally left out break; room is left for the score to be
-			// printed out after the previous prints
-		case END_GAME:
-			g.drawString("Your score is " + score + ".", 40, engine.windowHeight-225);
 			break;
 
 		case DISPLAY_RESPONSE:

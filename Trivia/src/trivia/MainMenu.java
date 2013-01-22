@@ -20,7 +20,6 @@ public class MainMenu extends GameMode {
 	
 	public MainMenu(GameEngine eng){
 		super(eng);
-		buttons = new ArrayList<Button>();
 		buttons.add(new Button("Start Questioning", 295, 150));
 		buttons.add(new ToggleButton("Cat1", 300, 200));
 		buttons.add(new ToggleButton("Cat2", 400, 200));

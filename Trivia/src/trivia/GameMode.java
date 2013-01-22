@@ -25,6 +25,7 @@ public abstract class GameMode {
 	 */
 	public GameMode(GameEngine eng){
 		engine = eng;
+		buttons = new ArrayList<Button>();
 		try {
 			background = ImageIO.read(MainMenu.class.getResourceAsStream("Resources\\space_background.jpg"));
 		} catch (IOException e) {

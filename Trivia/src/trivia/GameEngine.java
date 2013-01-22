@@ -15,9 +15,11 @@ public class GameEngine {
 	private GameMode mode;
 	public MainMenu mainMenu;
 	public MainGame mainGame;
+	public EndGame endGame;
 	Actors actors;
-	private int timer = 0;
+	private int timer;
 	int windowWidth, windowHeight;
+	protected int score;
 	private boolean debugMode;
 
 	/**
@@ -30,9 +32,12 @@ public class GameEngine {
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		mainGame = new MainGame(this);
+		endGame = new EndGame(this);
 		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;
+		timer = 0;
+		score = 0;
 	}
 
 	/**
