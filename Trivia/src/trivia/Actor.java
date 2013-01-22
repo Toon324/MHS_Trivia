@@ -195,66 +195,25 @@ public class Actor {
 	private Polygon rotate(Polygon myPoly, double d) {
 		Polygon newPoly = new Polygon();
 		log("computing angle " + Math.toDegrees(d));
-		Point[] pnts = new Point[myPoly.npoints];
-		for(int i=0; i < myPoly.npoints; i++)
-		{
-			log("-------");
-			pnts[i] = new Point(myPoly.xpoints[i], myPoly.ypoints[i]);
-			log("oldx: " + pnts[i].x);
-			log("oldy: " + pnts[i].y);
+		return applyAffineTransform(myPoly, AffineTransform.getRotateInstance(d, center.x, center.y));
+	}
+	
+	private Polygon applyAffineTransform(Polygon poly, AffineTransform trans){
+		Point[] points = new Point[poly.npoints];
+		for(int i = 0; i < poly.npoints; i++){
+			points[i] = new Point(poly.xpoints[i], poly.ypoints[i]);
 		}
-		AffineTransform.getRotateInstance(d, center.x, center.y).transform(pnts, 0, pnts, 0, pnts.length);
-		for(int i = 0; i < pnts.length; i++){
-			newPoly.addPoint(pnts[i].x, pnts[i].y);
-			log("centerx: " + center.x);
-			log("centery: " + center.y);
-			log("newx: " + pnts[i].y);
-			log("newy: " + pnts[i].x);
+		trans.transform(points, 0, points, 0, points.length);
+		Polygon newPoly = new Polygon();
+		for(int i = 0; i < points.length; i++){
+			newPoly.addPoint(points[i].x, points[i].y);
 		}
 		return newPoly;
 	}
 	
-	/*public Point rotatePoint(Point pt, Point center, double angleRad)
-	{
-	    double cosAngle = Math.cos(angleRad );
-	    double sinAngle = Math.sin(angleRad );
-	    double dx = (pt.x-center.x);
-	    double dy = (pt.y-center.y);
-
-	    pt.x = center.x + (int) (dx*cosAngle-dy*sinAngle);
-	    pt.y = center.y + (int) (dx*sinAngle+dy*cosAngle);
-	    return pt;
-	}*/
-
-	/**
-	 * Sets death to parameter.
-	 * 
-	 * @param d
-	 *            boolean to set death to
-	 */
 	public void setDeath(boolean d) {
 		death = d;
 	}
-	
-	/*public Polygon rotate(Polygon p, double angle, double x, double y) {  
-	    if (angle == 0) return p;
-	    AffineTransform rotation = AffineTransform.getRotateInstance(angle, x, y);  
-	    PathIterator pit = p.getPathIterator(rotation);  
-	    float[] a = new float[6]; // as per PathIterator.currentSegment() spec  
-	    Polygon rp = new Polygon();  
-	    int ty;  
-	    do {  
-	      ty = pit.currentSegment(a);  
-	      if (ty != PathIterator.SEG_CLOSE)
-	      {
-	    	  log("BeforeX: " + a[0] + " BeforeY: " + a[1]);
-	    	  rp.addPoint(Math.round(a[0]), Math.round(a[1]));  
-	    	  log("AfterX: " + Math.round(a[0]) + " AfterY: " + Math.round(a[1]));
-	      }
-	      pit.next();
-	    } while (ty!=PathIterator.SEG_CLOSE && !pit.isDone());  
-	    return rp;  
-	  }*/
 
 	/**
 	 * Allows System to print name of object. Returns the name of the Actor

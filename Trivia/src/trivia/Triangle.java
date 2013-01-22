@@ -26,7 +26,7 @@ public class Triangle extends Actor {
 		{
 			rotate(Math.toRadians(1));
 		}
-		//setCenter(center.x + 1, center.y + 1);
+		setCenter(center.x + 1, center.y + 1);
 	}
 
 }
