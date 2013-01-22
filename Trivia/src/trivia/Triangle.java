@@ -1,5 +1,7 @@
 package trivia;
 
+import java.awt.Polygon;
+
 public class Triangle extends Actor {
 	
 	int timer = 0;
@@ -7,11 +9,14 @@ public class Triangle extends Actor {
 	public Triangle(boolean debugMode, int p) {
 		super(debugMode, p);
 		setSize(30,30);
-		setCenter(200, 200);
+		Polygon poly = new Polygon();
+		poly.addPoint(0, 0);
+		poly.addPoint(width/2, -height);
+		poly.addPoint(width, 0);
+		setBasePoly(poly);
+		
+		//setCenter(200, 200);
 		speed = 1;
-		basePoly.addPoint(0, 0);
-		basePoly.addPoint(width/2, -height);
-		basePoly.addPoint(width, 0);
 	}
 	
 	public void move(int w, int h)
@@ -21,7 +26,7 @@ public class Triangle extends Actor {
 		{
 			rotate(Math.toRadians(1));
 		}
-		setCenter(center.x + 1, center.y + 1);
+		//setCenter(center.x + 1, center.y + 1);
 	}
 
 }

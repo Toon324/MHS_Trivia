@@ -39,7 +39,12 @@ public class Actor {
 		death = false;
 		pos = p;
 	}
-
+	
+	public void setBasePoly(Polygon poly){
+		basePoly = poly;
+		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
+	}
+	
 	/**
 	 * Draws the Actor.
 	 * 
@@ -140,6 +145,8 @@ public class Actor {
 	public void setSize(int x, int y) {
 		width = x;
 		height = y;
+		center.x += width/2;
+		center.y -= height/2;
 	}
 	
 	public Point getCenter()
@@ -149,11 +156,10 @@ public class Actor {
 	
 	public void setCenter(int x, int y)
 	{
+		basePoly.translate(-center.x, -center.y);
 		center.x = x;
 		center.y = y;
-		//drawPoly = new Polygon(basePoly.xpoints, basePoly.ypoints, basePoly.npoints);
-		drawPoly.translate(x, y);
-		//drawPoly = rotate(drawPoly, angle);
+		basePoly.translate(center.x, center.y);
 	}
 	
 	/**
