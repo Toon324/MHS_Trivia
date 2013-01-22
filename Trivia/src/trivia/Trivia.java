@@ -115,6 +115,18 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.applet.Applet#resize(int, int)
+	 */
+	@Override
+	public void resize(int width, int height) {
+		if (width < 300)
+			width = 300;
+		if (height < 300)
+			height = 300;
+		super.resize(width, height);
+	}
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub

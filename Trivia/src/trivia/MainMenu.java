@@ -20,12 +20,12 @@ public class MainMenu extends GameMode {
 	
 	public MainMenu(GameEngine eng){
 		super(eng);
-		buttons.add(new Button("Start Questioning", 295, 150));
-		buttons.add(new ToggleButton("Cat1", 300, 200));
-		buttons.add(new ToggleButton("Cat2", 400, 200));
-		buttons.add(new ToggleButton("Cat3", 300, 300));
-		buttons.add(new ToggleButton("Cat4", 400, 300));
-		buttons.add(new ToggleButton("Cat5", 350, 250));
+		buttons.add(new Button("Start Questioning", 290, 150));
+		buttons.add(new ToggleButton("National Officers", 290, 200));
+		buttons.add(new ToggleButton("National Partners", 290, 250));
+		buttons.add(new ToggleButton("NLC Dates and Locations", 290, 300));
+		buttons.add(new ToggleButton("Event Guidelines", 290, 350));
+		buttons.add(new ToggleButton("Parlimentary Procedure", 290, 400));
 		
 		engine.playSound("Eternity.wav", true);
 	}
@@ -53,6 +53,7 @@ public class MainMenu extends GameMode {
 		int w = engine.windowWidth, h = engine.windowHeight;
 		Button[] buts = buttons.toArray(new Button[0]);
 		
+		/*
 		if(w >= 800 && h >= 600){
 			buts[0].set(w/2 - buts[0].width/2       , h/2 - h/6 );
 			buts[1].set(w/2 - buts[1].width/2 - w/16, h/2 - h/12);
@@ -68,6 +69,7 @@ public class MainMenu extends GameMode {
 			buts[4].set(w/2 - buts[4].width/2 + 50, h/2 + 50 );
 			buts[5].set(w/2 - buts[5].width/2     , h/2      );
 		}
+		*/
 		super.paint(g);
 	}
 	
