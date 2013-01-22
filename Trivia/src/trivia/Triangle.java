@@ -27,5 +27,14 @@ public class Triangle extends Actor {
 			setCenter(center.x + 1, center.y);
 		}
 	}
+	
+	public void checkCollision(Actor other)
+	{
+		if(other instanceof Triangle)
+		{
+			return;
+		}
+		super.checkCollision(other);
+	}
 
 }

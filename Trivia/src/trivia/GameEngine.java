@@ -15,7 +15,7 @@ public class GameEngine {
 	private GameMode mode;
 	public MainMenu mainMenu;
 	public MainGame mainGame;
-	private Actors actors;
+	Actors actors;
 	private int timer = 0;
 	int windowWidth, windowHeight;
 	private boolean debugMode;
@@ -41,7 +41,6 @@ public class GameEngine {
 	public void run() {
 		timer++;
 		mode.run();
-		actors.handleActors();
 	}
 
 	/**
@@ -50,7 +49,6 @@ public class GameEngine {
 	 */
 	public void paint(Graphics g) {
 		mode.paint(g);
-		actors.drawActors(g);
 	}
 
 	/**

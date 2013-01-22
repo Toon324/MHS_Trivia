@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -17,6 +18,9 @@ import java.util.Scanner;
  * @author Cody Swendrowski, Dan Miller
  */
 public class MainGame extends GameMode {
+	
+	private Point[] fleetPositions;
+	private boolean[] fleetStatus;
 
 	private enum states {
 		QUESTIONS, DISPLAY_RESPONSE, END_GAME
@@ -26,7 +30,7 @@ public class MainGame extends GameMode {
 
 	private Questions qstSet;
 
-	private int score;
+	private int score, maxFleetSize;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
@@ -39,6 +43,42 @@ public class MainGame extends GameMode {
 	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
+		initializeFleetPositions(1);
+	}
+
+	private void initializeFleetPositions(int setup) {
+		switch (setup)
+		{
+		case 0:
+			maxFleetSize = 4;
+			Point a1 = new Point(200,50),
+			a2 = new Point(230,100), 
+			a3 = new Point(230,150), 
+			a4 = new Point(200,200);
+			Point[] atemp = {a1,a2,a3,a4};
+			boolean[] astatusTemp = {false,false,false,false};
+			fleetPositions = atemp;
+			fleetStatus = astatusTemp;
+			addShipsToFleet(maxFleetSize);
+			break;
+		case 1:
+			maxFleetSize = 8;
+			Point b1 = new Point(200,50),
+			b2 = new Point(230,100), 
+			b3 = new Point(230,150), 
+			b4 = new Point(200,200),
+			b5 = new Point(150,50),
+			b6 = new Point(150,100),
+			b7 = new Point(150,150),
+			b8 = new Point(150,200);
+			Point[] btemp = {b1,b2,b3,b4,b5,b6,b7,b8};
+			boolean[] bstatusTemp = {false,false,false,false,false,false,false,false};
+			fleetPositions = btemp;
+			fleetStatus = bstatusTemp;
+			addShipsToFleet(maxFleetSize);
+			break;
+		}
+		
 	}
 
 	/**
@@ -51,6 +91,7 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void run() {
+		engine.actors.handleActors();
 		switch (state) {
 		case QUESTIONS:
 			runQuestion();
@@ -91,8 +132,19 @@ public class MainGame extends GameMode {
 			if (lastAnswer) {
 				score += 100 / Math.pow(2,
 						Math.pow(qstSet.getTimePassed() / (double) 5000, 4));
+				addShipsToFleet(1);
 			} else {
 				score -= 90;
+				for(int i=0; i<fleetPositions.length; i++)
+				{
+					if(fleetStatus[i])
+					{
+						engine.log("added point at " + fleetPositions[i].x + " " + fleetPositions[i].y);
+						engine.actors.addSinglePoint(fleetPositions[i].x,fleetPositions[i].y);
+						fleetStatus[i] = false;
+						break;
+					}
+				}
 				if (score < 0)
 				{
 					score = 0;
@@ -107,6 +159,8 @@ public class MainGame extends GameMode {
 		
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
+		
+		engine.actors.drawActors(g);
 
 		g.setFont(f);
 		g.setColor(Color.cyan);
@@ -178,6 +232,24 @@ public class MainGame extends GameMode {
 		g.setColor(temp);
 		g.setFont(tempF);
 
+	}
+	
+	private void addShipsToFleet(int shipsToAdd)
+	{
+		if (shipsToAdd > 0)
+		{
+			for(int i=0; i<fleetPositions.length; i++)
+			{
+				if (shipsToAdd <= 0)
+					break;
+				if(!fleetStatus[i])
+				{
+					engine.actors.addTriangle(fleetPositions[i].x, fleetPositions[i].x-250, fleetPositions[i].y);
+					fleetStatus[i] = true;
+					shipsToAdd -= 1;
+				}
+			}
+		}
 	}
 
 	public String toString() {

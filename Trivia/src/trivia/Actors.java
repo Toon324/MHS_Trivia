@@ -71,6 +71,7 @@ public class Actors {
 			// removes dead objects
 			if (temp.isDead()) {
 					update--;
+					toRemove.add(temp.getPos());
 			} 
 			else // if object isn't dead, move it and check for collision
 			{
@@ -181,9 +182,9 @@ public class Actors {
 		}
 	}
 
-	public void addSinglePoint() {
+	public void addSinglePoint(int x, int y) {
 		SinglePoint sp = new SinglePoint(debugMode, pos);
-		sp.setAngle(90);
+		sp.setCenter(x,y);
 		add(sp);
 	}
 }

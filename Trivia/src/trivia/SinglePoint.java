@@ -19,5 +19,10 @@ public class SinglePoint extends Actor {
 	{
 		setAngle(angle + 90);
 	}
+	
+	public void checkCollision(Actor other)
+	{
+		return;
+	}
 
 }

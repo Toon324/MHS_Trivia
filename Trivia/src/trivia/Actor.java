@@ -128,8 +128,28 @@ public class Actor {
 	 *            Actor to check collision against
 	 */
 	public void checkCollision(Actor other) {
-		// only checks enemy collisions
-		// to be overridden
+		if (other.equals(this))
+		{
+			return;
+		}
+		log("-----------------------");
+		Polygon otherPoly = other.basePoly;
+		for(int x=0; x<basePoly.npoints; x++)
+		{
+			log("base point: " + basePoly.xpoints[x] + " " + basePoly.ypoints[x]);
+		}
+		for(int i=0; i<otherPoly.npoints; i++)
+		{
+			Point temp = new Point(otherPoly.xpoints[i],otherPoly.ypoints[i]);
+			log("temp point: " + temp.x + " " + temp.y);
+			log("Base contains Temp? " + basePoly.contains(temp));
+			log("Drawn contains Temp? " + drawPoly.contains(temp));
+			if (basePoly.contains(temp))
+			{
+				setDeath(true);
+				other.setDeath(true);
+			}
+		}
 	}
 
 	/**
