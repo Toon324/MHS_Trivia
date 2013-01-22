@@ -18,7 +18,7 @@ public class Actor {
 	private int pos;
 	private boolean debug;
 	protected boolean death;
-	protected Point corner, center;
+	protected Point center;
 	protected Polygon basePoly, drawPoly;
 
 	/**
@@ -31,7 +31,6 @@ public class Actor {
 		debug = debugMode;
 		basePoly = new Polygon();
 		angle = 0;
-		corner = new Point(0,0);
 		center = new Point(0,0);
 		width = 0;
 		height = 0;
@@ -64,8 +63,8 @@ public class Actor {
 			case PathIterator.SEG_CLOSE:
 				array[0] = firstX; array[1] = firstY;
 			case PathIterator.SEG_LINETO:
-				g.drawLine(x + corner.x, y + corner.y, (int)array[0] + corner.x, (int)array[1] + corner.y);
-				g.drawLine(x + corner.x, y + corner.y, center.x + corner.x, center.y + corner.y);
+				g.drawLine(x, y, (int)array[0], (int)array[1]);
+				g.drawLine(x, y, center.x, center.y);
 				x = (int) array[0]; y = (int) array[1];
 				break;
 			case PathIterator.SEG_MOVETO:
@@ -141,19 +140,20 @@ public class Actor {
 	public void setSize(int x, int y) {
 		width = x;
 		height = y;
-		center.x = width/2;
-		center.y = -height/2;
 	}
 	
-	public Point getCorner()
+	public Point getCenter()
 	{
-		return corner;
+		return center;
 	}
 	
-	public void setCorner(int x, int y)
+	public void setCenter(int x, int y)
 	{
-		corner.x = x;
-		corner.y = y;
+		center.x = x;
+		center.y = y;
+		//drawPoly = new Polygon(basePoly.xpoints, basePoly.ypoints, basePoly.npoints);
+		drawPoly.translate(x, y);
+		//drawPoly = rotate(drawPoly, angle);
 	}
 	
 	/**

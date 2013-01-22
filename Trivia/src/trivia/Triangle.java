@@ -7,6 +7,7 @@ public class Triangle extends Actor {
 	public Triangle(boolean debugMode, int p) {
 		super(debugMode, p);
 		setSize(30,30);
+		setCenter(200, 200);
 		speed = 1;
 		basePoly.addPoint(0, 0);
 		basePoly.addPoint(width/2, -height);
@@ -20,7 +21,7 @@ public class Triangle extends Actor {
 		{
 			rotate(Math.toRadians(1));
 		}
-		
+		setCenter(center.x + 1, center.y + 1);
 	}
 
 }
