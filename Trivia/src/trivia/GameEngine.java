@@ -15,6 +15,7 @@ public class GameEngine {
 	private GameMode mode;
 	public MainMenu mainMenu;
 	public MainGame mainGame;
+	public Instructions instructions;
 	public EndGame endGame;
 	Actors actors;
 	private int timer;
@@ -33,6 +34,7 @@ public class GameEngine {
 		mainMenu = new MainMenu(this);
 		mainGame = new MainGame(this);
 		endGame = new EndGame(this);
+		instructions = new Instructions(this);
 		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;

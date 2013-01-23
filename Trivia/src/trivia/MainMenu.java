@@ -20,19 +20,20 @@ public class MainMenu extends GameMode {
 	
 	public MainMenu(GameEngine eng){
 		super(eng);
-		buttons.add(new Button("Start Questioning", 290, 150));
+		buttons.add(new Button("Start Questioning", 290, 450));
 		buttons.add(new ToggleButton("National Officers", 290, 200));
 		buttons.add(new ToggleButton("National Partners", 290, 250));
 		buttons.add(new ToggleButton("NLC Dates and Locations", 290, 300));
 		buttons.add(new ToggleButton("Event Guidelines", 290, 350));
 		buttons.add(new ToggleButton("Parlimentary Procedure", 290, 400));
+		buttons.add(new Button("INSTRUCTIONS", 290, 150));
 		
 		engine.playSound("Eternity.wav", true);
 	}
 
 	@Override
 	public void run() {
-		List<Button> Categories = buttons.subList(1, buttons.size());
+		List<Button> Categories = buttons.subList(1, buttons.size()-1);
 		
 		buttons.get(0).setEnabled( Button.isOneClicked(Categories) );
 		
@@ -46,6 +47,10 @@ public class MainMenu extends GameMode {
 			}
 			engine.mainGame.setCategories(cats.toArray(new String[0]));
 			engine.setMode(engine.mainGame);
+		}
+		if(buttons.get(buttons.size()-1).isClicked())
+		{
+			engine.setMode(engine.instructions);
 		}
 	}
 	
