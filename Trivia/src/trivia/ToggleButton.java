@@ -33,13 +33,12 @@ public class ToggleButton extends Button {
 		height = (int) rect.getHeight();
 		
 		g.setFont(f);
-		g.setColor(Color.BLACK);
-		if (clicked) g.setColor(Color.cyan);
+		g.setColor(Color.RED);
+		if (clicked) g.setColor(Color.GREEN);
 		if (!enabled) g.setColor(Color.DARK_GRAY);
 		
 		g.fillRect(x_pos, y_pos, width, height);
-		g.setColor(Color.cyan);
-		if (clicked) g.setColor(Color.black);
+		g.setColor(Color.BLACK);
 		
 		g.drawString(text, x_pos+10, y_pos+23);
 		

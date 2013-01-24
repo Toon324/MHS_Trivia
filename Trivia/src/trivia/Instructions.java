@@ -13,7 +13,6 @@ import java.util.Scanner;
  */
 public class Instructions extends GameMode {
 
-	private Font large = new Font("Serif", Font.BOLD, 30);
 	private String[] instructions = {
 			"Click the category buttons to choose which quesitons to be tested on.",
 			"Click on the button containing your answer of choice.",
@@ -37,9 +36,10 @@ public class Instructions extends GameMode {
 	
 	public void paint(Graphics g)
 	{
+		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowWidth, null);
 		super.paint(g);
 		g.setColor(Color.cyan);
-		g.setFont(large);
+		g.setFont(engine.large);
 		
 		
 		for(int i=0; i<instructions.length; i++)
@@ -54,7 +54,7 @@ public class Instructions extends GameMode {
 	
 	private String[] sizeString(String s, Graphics g)
 	{
-		FontMetrics fm   = g.getFontMetrics(large);
+		FontMetrics fm   = g.getFontMetrics(engine.large);
 		Rectangle2D rect = fm.getStringBounds(s, g);
 		int stringWidth = (int) rect.getWidth()+60;
 		

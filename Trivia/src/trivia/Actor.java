@@ -141,9 +141,6 @@ public class Actor {
 		for(int i=0; i<otherPoly.npoints; i++)
 		{
 			Point temp = new Point(otherPoly.xpoints[i],otherPoly.ypoints[i]);
-			log("temp point: " + temp.x + " " + temp.y);
-			log("Base contains Temp? " + basePoly.contains(temp));
-			log("Drawn contains Temp? " + drawPoly.contains(temp));
 			if (basePoly.contains(temp))
 			{
 				setDeath(true);
@@ -200,9 +197,9 @@ public class Actor {
 	 *            Direction to set as.
 	 */
 	public void setAngle(double d) {
-		log("**********************************");
+		//log("**********************************");
 		d %= (2 * Math.PI);
-		log("Angle: " + Math.toDegrees(d));
+		//log("Angle: " + Math.toDegrees(d));
 		drawPoly = rotate(basePoly, d);
 		angle=d;
 	}
@@ -216,7 +213,7 @@ public class Actor {
 
 	private Polygon rotate(Polygon myPoly, double d) {
 		Polygon newPoly = new Polygon();
-		log("computing angle " + Math.toDegrees(d));
+		//log("computing angle " + Math.toDegrees(d));
 		return applyAffineTransform(myPoly, AffineTransform.getRotateInstance(d, center.x, center.y));
 	}
 	

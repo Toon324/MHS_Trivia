@@ -60,7 +60,6 @@ public abstract class GameMode {
 	 */
 	public void paint(Graphics g){
 		
-		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight, null);
 		try{
 			for(int i = 0; i < buttons.size(); i++){
 				buttons.get(i).draw(g);

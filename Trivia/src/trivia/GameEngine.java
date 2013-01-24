@@ -1,5 +1,6 @@
 package trivia;
 
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.sound.sampled.AudioInputStream;
@@ -22,6 +23,7 @@ public class GameEngine {
 	int windowWidth, windowHeight;
 	protected int score;
 	private boolean debugMode;
+	Font large = new Font("Serif", Font.BOLD, 30);
 
 	/**
 	 * Creates a new GameEngine
