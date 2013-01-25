@@ -3,6 +3,11 @@ package trivia;
 import java.awt.Color;
 import java.awt.Graphics;
 
+/**
+ * 
+ * @author Cody Swendrowski, Dan Miller
+ *
+ */
 public class EndGame extends GameMode {
 
 	public EndGame(GameEngine eng) {
