@@ -32,6 +32,7 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 	public void init()
 	{
 		addMouseListener(this);
+		addKeyListener(this);
 		actors = new Actors(debugMode);
 		actors.setSize(WIDTH, HEIGHT);
 		engine = new GameEngine(actors, debugMode);
@@ -129,17 +130,17 @@ public class Trivia extends Applet implements Runnable, MouseListener, KeyListen
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+			System.exit(0);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
