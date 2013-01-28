@@ -1,5 +1,6 @@
 package trivia;
 
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.sound.sampled.AudioInputStream;
@@ -15,12 +16,14 @@ public class GameEngine {
 	private GameMode mode;
 	public MainMenu mainMenu;
 	public MainGame mainGame;
+	public Instructions instructions;
 	public EndGame endGame;
 	Actors actors;
 	private int timer;
 	int windowWidth, windowHeight;
 	protected int score;
 	private boolean debugMode;
+	Font large = new Font("Serif", Font.BOLD, 30);
 
 	/**
 	 * Creates a new GameEngine
@@ -33,6 +36,7 @@ public class GameEngine {
 		mainMenu = new MainMenu(this);
 		mainGame = new MainGame(this);
 		endGame = new EndGame(this);
+		instructions = new Instructions(this);
 		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;

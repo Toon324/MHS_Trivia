@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +53,35 @@ public class Button
 		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
 		width = (int) rect.getWidth() + 20;
 		height = (int) rect.getHeight();
+		Polygon leftTri = new Polygon();
+		Polygon rightTri = new Polygon();
+		leftTri.addPoint(x_pos-1, y_pos-1);
+		leftTri.addPoint(x_pos-20, y_pos + ((height)/2));
+		leftTri.addPoint(x_pos-1, y_pos + height+1);
+		
+		rightTri.addPoint(x_pos+width+1, y_pos-1);
+		rightTri.addPoint(x_pos+width+20, y_pos + ((height)/2));
+		rightTri.addPoint(x_pos+width+1, y_pos + height+1);
+		g.setColor(Color.cyan);
+		g.fillPolygon(leftTri);
+		g.fillPolygon(rightTri);
+		g.fillRect(x_pos-1, y_pos-1, width+2, height+2);
 		
 		g.setColor(Color.BLACK);
 		if(!enabled) g.setColor(Color.DARK_GRAY);
 		
+		leftTri = new Polygon();
+		rightTri = new Polygon();
+		leftTri.addPoint(x_pos, y_pos);
+		leftTri.addPoint(x_pos-19, y_pos + ((height)/2));
+		leftTri.addPoint(x_pos, y_pos + height);
+		
+		rightTri.addPoint(x_pos+width, y_pos);
+		rightTri.addPoint(x_pos+width+19, y_pos + ((height)/2));
+		rightTri.addPoint(x_pos+width, y_pos + height);
+		
+		g.fillPolygon(leftTri);
+		g.fillPolygon(rightTri);
 		g.fillRect(x_pos, y_pos, width, height);
 		g.setColor(Color.cyan);
 		g.drawString(text, x_pos+10, y_pos+23);

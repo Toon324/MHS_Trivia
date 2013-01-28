@@ -104,7 +104,7 @@ public class MainGame extends GameMode {
 					buttons = new ArrayList<Button>();
 					String[] ans = qstSet.getAnsArray();
 					for (int i = 0; i < ans.length; i++) {
-						buttons.add(new Button(ans[i], 10, (engine.windowHeight-150) + (i * 35)));
+						buttons.add(new Button(ans[i], 20, (engine.windowHeight-150) + (i * 35)));
 					}
 				} else {
 					engine.setMode(engine.endGame);

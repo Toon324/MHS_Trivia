@@ -3,14 +3,10 @@
  */
 package trivia;
 
+import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
-import javax.imageio.ImageIO;
 
 /**
  * @author Cody Swendrowski
@@ -20,19 +16,20 @@ public class MainMenu extends GameMode {
 	
 	public MainMenu(GameEngine eng){
 		super(eng);
-		buttons.add(new Button("Start Questioning", 290, 150));
-		buttons.add(new ToggleButton("National Officers", 290, 200));
-		buttons.add(new ToggleButton("National Partners", 290, 250));
-		buttons.add(new ToggleButton("NLC Dates and Locations", 290, 300));
-		buttons.add(new ToggleButton("Event Guidelines", 290, 350));
-		buttons.add(new ToggleButton("Parlimentary Procedure", 290, 400));
+		buttons.add(new Button("Start Questioning", 50, 500));
+		buttons.add(new ToggleButton("National Officers", 150, 200));
+		buttons.add(new ToggleButton("National Partners", 150, 250));
+		buttons.add(new ToggleButton("NLC Dates and Locations", 150, 300));
+		buttons.add(new ToggleButton("Event Guidelines", 150, 350));
+		buttons.add(new ToggleButton("Parlimentary Procedure", 150, 400));
+		buttons.add(new Button("INSTRUCTIONS", 500, 500));
 		
 		engine.playSound("Eternity.wav", true);
 	}
 
 	@Override
 	public void run() {
-		List<Button> Categories = buttons.subList(1, buttons.size());
+		List<Button> Categories = buttons.subList(1, buttons.size()-1);
 		
 		buttons.get(0).setEnabled( Button.isOneClicked(Categories) );
 		
@@ -46,6 +43,10 @@ public class MainMenu extends GameMode {
 			}
 			engine.mainGame.setCategories(cats.toArray(new String[0]));
 			engine.setMode(engine.mainGame);
+		}
+		if(buttons.get(buttons.size()-1).isClicked())
+		{
+			engine.setMode(engine.instructions);
 		}
 	}
 	
@@ -70,6 +71,10 @@ public class MainMenu extends GameMode {
 			buts[5].set(w/2 - buts[5].width/2     , h/2      );
 		}
 		*/
+		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowWidth, null);
+		g.setColor(Color.cyan);
+		g.setFont(engine.large);
+		g.drawString("CATEGORIES", 140, 150);
 		super.paint(g);
 	}
 	
