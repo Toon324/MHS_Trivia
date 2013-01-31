@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 /**
  * @author Cody Swendrowski, Dan Miller
- *
+ * 
  */
 public class Instructions extends GameMode {
 
@@ -17,7 +17,7 @@ public class Instructions extends GameMode {
 			"Click the category buttons to choose which quesitons to be tested on.",
 			"Click on the button containing your answer of choice.",
 			"The longer you take to answer, the less points you get for being right." };
-	
+
 	/**
 	 * @param eng
 	 */
@@ -25,63 +25,51 @@ public class Instructions extends GameMode {
 		super(eng);
 		buttons.add(new Button("Main Menu", 200, 500));
 	}
-	
-	public void run()
-	{
-		if (buttons.get(0).isClicked())
-		{
+
+	public void run(int ms) {
+		if (buttons.get(0).isClicked()) {
 			engine.setMode(engine.mainMenu);
 		}
 	}
-	
-	public void paint(Graphics g)
-	{
-		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowWidth, null);
+
+	public void paint(Graphics g) {
+		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowWidth,
+				null);
 		super.paint(g);
 		g.setColor(Color.cyan);
 		g.setFont(engine.large);
-		
-		
-		for(int i=0; i<instructions.length; i++)
-		{
+
+		for (int i = 0; i < instructions.length; i++) {
 			String[] instruction = sizeString(instructions[i], g);
-			for(int x=0; x<instruction.length; x++)
-			{
-				g.drawString(instruction[x], 10, (i+1)*100+(x*30));
+			for (int x = 0; x < instruction.length; x++) {
+				g.drawString(instruction[x], 10, (i + 1) * 100 + (x * 30));
 			}
 		}
 	}
-	
-	private String[] sizeString(String s, Graphics g)
-	{
-		FontMetrics fm   = g.getFontMetrics(engine.large);
+
+	private String[] sizeString(String s, Graphics g) {
+		FontMetrics fm = g.getFontMetrics(engine.large);
 		Rectangle2D rect = fm.getStringBounds(s, g);
-		int stringWidth = (int) rect.getWidth()+60;
-		
-		if (stringWidth < engine.windowWidth)
-		{
-			String[] toReturn = {s};
+		int stringWidth = (int) rect.getWidth() + 60;
+
+		if (stringWidth < engine.windowWidth) {
+			String[] toReturn = { s };
 			return toReturn;
-		}
-		else //If question goes outside the screen, split it
+		} else // If question goes outside the screen, split it
 		{
 			StringBuilder part1 = new StringBuilder();
 			StringBuilder part2 = new StringBuilder();
 			Scanner splitter = new Scanner(s);
-			while (splitter.hasNext())
-			{
+			while (splitter.hasNext()) {
 				rect = fm.getStringBounds(part1.toString(), g);
-				if (rect.getWidth()+60 < engine.windowWidth -50)
-				{
+				if (rect.getWidth() + 60 < engine.windowWidth - 50) {
 					part1.append(" " + splitter.next());
-				}
-				else
-				{
+				} else {
 					part2.append(" " + splitter.next());
 				}
 			}
 			splitter.close();
-			String[] toReturn = {part1.toString(),part2.toString()};
+			String[] toReturn = { part1.toString(), part2.toString() };
 			return toReturn;
 		}
 	}

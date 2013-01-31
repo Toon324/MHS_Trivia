@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 /**
  * Generic class for all objects in the game.
@@ -13,12 +15,18 @@ import java.awt.geom.PathIterator;
  * @author Cody Swendrowski, Dan Miller
  */
 public class Actor {
-	protected int width, height, speed, score;
 	protected double angle;
-	private int pos;
+
 	private boolean debug;
+	private Actors actors;
 	protected boolean death;
-	protected Point center;
+	protected Point2D.Float center;
+	protected Color drawClr;
+
+	// derivative motion values
+	public double rotateVel;// radians/s
+	public Point2D.Float vectVel;// pixels/s
+
 	protected Polygon basePoly, drawPoly;
 
 	/**
@@ -27,24 +35,26 @@ public class Actor {
 	 * @param p
 	 *            Position in ArrayList
 	 */
-	public Actor(boolean debugMode, int p) {
+	public Actor(boolean debugMode) {
 		debug = debugMode;
 		basePoly = new Polygon();
+		vectVel = new Point2D.Float(0, 0);
+		rotateVel = 0;
 		angle = 0;
-		center = new Point(0,0);
-		width = 0;
-		height = 0;
-		score = 0;
-		speed = 3;
+		center = new Point2D.Float(0, 0);
 		death = false;
-		pos = p;
+		drawClr = Color.cyan;
 	}
-	
-	public void setBasePoly(Polygon poly){
+
+	public void giveActors(Actors act) {
+		actors = act;
+	}
+
+	public void setBasePoly(Polygon poly) {
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
-	
+
 	/**
 	 * Draws the Actor.
 	 * 
@@ -54,26 +64,44 @@ public class Actor {
 	 *            Graphics to be drawn with
 	 */
 	public void draw(Graphics g) {
-		g.setColor(Color.cyan);
-		if(drawPoly == null) drawPoly = basePoly;
-		
-		
+		g.setColor(drawClr);
+		if (drawPoly == null)
+			drawPoly = basePoly;
+
+		drawPoly(g, drawPoly, new Point((int) center.x, (int) center.y), true);
+		g.setColor(Color.red);
+		if (viewArea != null && !viewArea.isEmpty())
+			for (Polygon p : viewArea)
+				drawPoly(g, p, null, false);
+	}
+
+	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
+			boolean centerLines) {
+		if (p == null)
+			return;
+
 		int x = 0, y = 0, firstX = 0, firstY = 0;
 		int res;
 		float array[] = new float[6];
-		PathIterator iter = drawPoly.getPathIterator(new AffineTransform());
-		while(!iter.isDone()){
+		PathIterator iter = p.getPathIterator(new AffineTransform());
+		while (!iter.isDone()) {
 			res = iter.currentSegment(array);
-			switch(res){
+			switch (res) {
 			case PathIterator.SEG_CLOSE:
-				array[0] = firstX; array[1] = firstY;
+				array[0] = firstX;
+				array[1] = firstY;
 			case PathIterator.SEG_LINETO:
-				g.drawLine(x, y, (int)array[0], (int)array[1]);
-				g.drawLine(x, y, center.x, center.y);
-				x = (int) array[0]; y = (int) array[1];
+				g.drawLine(x, y, (int) array[0], (int) array[1]);
+
+				if (centerLines)
+					g.drawLine(x, y, (int) thisCenter.x, (int) thisCenter.y);
+
+				x = (int) array[0];
+				y = (int) array[1];
 				break;
 			case PathIterator.SEG_MOVETO:
-				x = (int) array[0]; y = (int) array[1];
+				x = (int) array[0];
+				y = (int) array[1];
 				firstX = x;
 				firstY = y;
 				break;
@@ -90,26 +118,11 @@ public class Actor {
 	 * @param h
 	 *            Height of window to draw in
 	 */
-	public void move(int w, int h) {
-	}
-
-	/**
-	 * Returns known position in Actors.
-	 * 
-	 * @return position in Actors
-	 */
-	public int getPos() {
-		return pos;
-	}
-
-	/**
-	 * Sets known position in Actors.
-	 * 
-	 * @param p
-	 *            int position to set
-	 */
-	public void setPos(int p) {
-		pos = p;
+	public void move(int ms) {
+		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
+				* vectVel.y);
+		if (rotateVel != 0)
+			rotate((ms / 1000F) * rotateVel);
 	}
 
 	/**
@@ -129,58 +142,69 @@ public class Actor {
 	 */
 	public void checkCollision(Actor other) {
 		if (other.equals(this))
-		{
 			return;
-		}
-		log("-----------------------");
+
 		Polygon otherPoly = other.basePoly;
-		for(int x=0; x<basePoly.npoints; x++)
-		{
-			log("base point: " + basePoly.xpoints[x] + " " + basePoly.ypoints[x]);
-		}
-		for(int i=0; i<otherPoly.npoints; i++)
-		{
-			Point temp = new Point(otherPoly.xpoints[i],otherPoly.ypoints[i]);
-			if (basePoly.contains(temp))
-			{
+		for (int i = 0; i < otherPoly.npoints; i++) {
+			if (basePoly.contains(new Point(otherPoly.xpoints[i],
+					otherPoly.ypoints[i]))) {
 				setDeath(true);
 				other.setDeath(true);
 			}
 		}
 	}
 
-	/**
-	 * Returns speed value of Actor.
-	 * 
-	 * @return speed
-	 */
-	public int getSpeed() {
-		return speed;
+	ArrayList<Polygon> viewArea;
+
+	protected ArrayList<Actor> getActorsInView(double viewAngle,
+			double viewRads, double viewDist) {
+		ArrayList<Actor> valids = new ArrayList<Actor>();
+		ArrayList<Actor> all = actors.getArray();
+
+		Polygon tmpArea = new Polygon(
+				new int[] {
+						(int) center.x,
+						(int) (Math.cos(viewAngle + viewRads) * viewDist + center.x),
+						(int) (Math.cos(viewAngle - viewRads) * viewDist + center.x) },
+				new int[] {
+						(int) center.y,
+						(int) (Math.sin(viewAngle + viewRads) * viewDist + center.y),
+						(int) (Math.sin(viewAngle - viewRads) * viewDist + center.y) },
+				3);
+
+		viewArea.add(tmpArea);
+
+		int[] xPnts, yPnts;
+		for (Actor a : all) {
+			xPnts = a.drawPoly.xpoints;
+			yPnts = a.drawPoly.ypoints;
+
+			for (int i = 0; i < a.drawPoly.npoints; i++) {
+				if (tmpArea.contains(xPnts[i], yPnts[i])) {
+					valids.add(a);
+					break;
+				}
+			}
+		}
+
+		return valids;
 	}
 
-	
-	public void setSize(int x, int y) {
-		width = x;
-		height = y;
-		center.x += width/2;
-		center.y -= height/2;
-	}
-	
-	public Point getCenter()
-	{
+	public Point2D.Float getCenter() {
 		return center;
 	}
-	
-	public void setCenter(int x, int y)
-	{
-		if(drawPoly != null) drawPoly.translate(-center.x, -center.y);
-		basePoly.translate(-center.x, -center.y);
+
+	public void setCenter(float x, float y) {
+		if (drawPoly != null)
+			drawPoly.translate((int) -center.x, (int) -center.y);
+		basePoly.translate((int) -center.x, (int) -center.y);
 		center.x = x;
 		center.y = y;
-		if(drawPoly != null) drawPoly.translate(center.x, center.y);
-		basePoly.translate(center.x, center.y);
+		if (drawPoly != null)
+			drawPoly.translate((int) center.x, (int) center.y);
+		basePoly.translate((int) center.x, (int) center.y);
 	}
-	
+
 	/**
 	 * Returns the direction that the Actor is facing in radians.
 	 * 
@@ -197,14 +221,13 @@ public class Actor {
 	 *            Direction to set as.
 	 */
 	public void setAngle(double d) {
-		//log("**********************************");
 		d %= (2 * Math.PI);
-		//log("Angle: " + Math.toDegrees(d));
+		// log("Angle: " + Math.toDegrees(d));
 		drawPoly = rotate(basePoly, d);
-		angle=d;
+		angle = d;
 	}
-	
-	public void rotate(double d){
+
+	public void rotate(double d) {
 		d %= (2 * Math.PI);
 		angle += d;
 		angle %= (2 * Math.PI);
@@ -212,24 +235,23 @@ public class Actor {
 	}
 
 	private Polygon rotate(Polygon myPoly, double d) {
-		Polygon newPoly = new Polygon();
-		//log("computing angle " + Math.toDegrees(d));
-		return applyAffineTransform(myPoly, AffineTransform.getRotateInstance(d, center.x, center.y));
+		return applyAffineTransform(myPoly,
+				AffineTransform.getRotateInstance(d, center.x, center.y));
 	}
-	
-	private Polygon applyAffineTransform(Polygon poly, AffineTransform trans){
+
+	private Polygon applyAffineTransform(Polygon poly, AffineTransform trans) {
 		Point[] points = new Point[poly.npoints];
-		for(int i = 0; i < poly.npoints; i++){
+		for (int i = 0; i < poly.npoints; i++) {
 			points[i] = new Point(poly.xpoints[i], poly.ypoints[i]);
 		}
 		trans.transform(points, 0, points, 0, points.length);
 		Polygon newPoly = new Polygon();
-		for(int i = 0; i < points.length; i++){
+		for (int i = 0; i < points.length; i++) {
 			newPoly.addPoint(points[i].x, points[i].y);
 		}
 		return newPoly;
 	}
-	
+
 	public void setDeath(boolean d) {
 		death = d;
 	}
@@ -242,13 +264,32 @@ public class Actor {
 	public String toString() {
 		return "Actor";
 	}
-	
-	private void log(String s)
-	{
-		if(debug)
-		{
+
+	private void log(String s) {
+		if (debug) {
 			System.out.println(s);
 		}
 	}
 
+	protected static float getAccelToReach(float xDist, float currentVel,
+			float MAX) {
+		/*
+		 * Time for velocity to reach 0 if it started to slow down:
+		 * (currentVel/MAX_ACCEL)
+		 * 
+		 * Distance to the next solution for y = 0 that will be traveled in t
+		 * time if acceleration is reversed: currentVel * t - (MAX_ACCEL/2) *
+		 * t^2
+		 */
+		byte velSign = (byte) ((((Float.floatToIntBits(currentVel) >> 31) & (1)) * 2 - 1) * -1);
+		double t = currentVel / MAX;
+		float possibleDist = (float) (currentVel * t - (MAX / 2)
+				* Math.pow(t, 2));
+
+		if (possibleDist >= xDist * velSign)
+			velSign *= -1;
+		if (Math.abs(xDist) <= 2 && currentVel <= MAX)
+			return -currentVel;
+		return MAX * velSign;
+	}
 }

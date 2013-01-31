@@ -13,89 +13,63 @@ import javax.sound.sampled.Clip;
  * @author Cody Swendrowski, Dan Miller
  */
 public class Actors {
-	
+
 	private final int MAX_ACTORS = 50;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
-	private int pos, width, height;
 	private Boolean debugMode = false;
 
 	/*
-	//Networking
-	private InetAddress serverName;
-    private int port = 324;
-    private ServerSocket socket;
-    private Socket connection;
-    private DataInputStream input;
-    private DataOutputStream output;
-    private boolean hasConnection = false;
-    */
+	 * //Networking private InetAddress serverName; private int port = 324;
+	 * private ServerSocket socket; private Socket connection; private
+	 * DataInputStream input; private DataOutputStream output; private boolean
+	 * hasConnection = false;
+	 */
 
 	/**
 	 * Creates a new container of Actor.
 	 */
 	public Actors(Boolean debug) {
-		pos = 0;
 		debugMode = debug;
 	}
 
 	/**
 	 * Adds a created Actor to actors.
 	 * 
-	 * @param a Actor to be added
+	 * @param a
+	 *            Actor to be added
 	 */
 	public void add(Actor a) {
-		if (pos >= MAX_ACTORS) {
+		if (actors.size() >= MAX_ACTORS) {
 			return;
 		}
 		actors.add(a);
-		pos++;
+		a.giveActors(this);
 	}
-	
+
 	/**
 	 * Moves and checks for death all actors which are alive. Removes all dead
 	 * actors.
 	 */
-	public void handleActors() {
-		int update = 0; // used to update positions
-		//Point[] toAdd = new Point[10]; //Actors to add
-		//int add1 = 0; // manages adding
-		ArrayList<Integer> toRemove = new ArrayList<Integer>(); // dead objects
-																// to be removed
-		
-		// Moves objects and checks if dead
-		for (Iterator<Actor> iter = actors.iterator(); iter.hasNext();) {
-			Actor temp = iter.next();
-			// updates the object's position in the array
-			temp.setPos(temp.getPos() + update);
+	public void handleActors(int ms) {
+		ArrayList<Actor> toRemove = new ArrayList<Actor>(); // dead objects
+															// to be removed
+		// collects dead actors in an array
+		for (Actor a : actors) {
+			if (a.isDead())
+				toRemove.add(a);
+		}
+		// removes dead actors from the main array
+		for (Actor a : toRemove) {
+			if (!actors.remove(a))
+				log("Error in removing actor " + a);
+		}
 
-			// removes dead objects
-			if (temp.isDead()) {
-					update--;
-					toRemove.add(temp.getPos());
-			} 
-			else // if object isn't dead, move it and check for collision
-			{
-				temp.move(width,height);
-				} 
-
-				// check for collisions
-				for (Iterator<Actor> iter2 = actors.iterator(); iter2.hasNext();) {
-					Actor o = iter2.next();
-					if (!o.isDead()) {
-						((Actor) temp).checkCollision(o);
-					}
-				}
-			}
-
-			// removes dead actors
-			for (Iterator<Integer> iter = toRemove.iterator(); iter.hasNext();) {
-				int temp = iter.next().intValue();
-				try {
-					actors.remove(temp);
-					pos--;
-					// System.out.println(actors.get(temp).toString() + " removed");
-			} catch (Exception e) {
-				e.printStackTrace();
+		// Moves objects and checks for collisions
+		for (Actor a : actors) {
+			a.move(ms);
+			// check for collisions
+			for (Actor b : actors) {
+				a.checkCollision(b);
 			}
 		}
 	}
@@ -109,7 +83,7 @@ public class Actors {
 	 *            ImageObserver to be reported to
 	 */
 	public void drawActors(Graphics g) {
-		
+
 		for (Iterator<Actor> iter = actors.iterator(); iter.hasNext();) {
 			Actor temp = iter.next();
 			temp.draw(g);
@@ -125,69 +99,28 @@ public class Actors {
 		return actors;
 	}
 
-	/**
-	 * Returns current ArrayList position.
-	 * 
-	 * @return pos
-	 */
-	public int getPos() {
-		return pos;
-	}
-
-	/**
-	 * Used for debugging.
-	 * 
-	 * @param p
-	 *            Position of Actor to return
-	 * @return Actor p
-	 */
-	public Actor get(int p) {
-		for (Iterator<Actor> iter = actors.iterator(); iter.hasNext();) {
-			if (iter.next().getPos() == p) {
-				return iter.next();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Sets the known width and height of area to draw in.
-	 * 
-	 * @param w
-	 *            Width
-	 * @param h
-	 *            Height
-	 */
-	public void setSize(int w, int h) {
-		width = w;
-		height = h;
-	}
-	
-	public void addTriangle(int targetX, int x, int y) {
-		Triangle c = new Triangle(debugMode, pos, targetX);
-		c.rotate(Math.toRadians(90));
-		c.setCenter(x,y);
+	public void addTriangle(Point dest, int x, int y) {
+		Triangle c = new Triangle(debugMode);
+		c.setDestination(dest);
+		c.setCenter(x, y);
 		add(c);
 	}
-	
+
+	public void addSquare(int x, int y) {
+		Square c = new Square(debugMode);
+		c.setCenter(x, y);
+		add(c);
+	}
+
 	/**
-	 * Debug tool.
-	 * Used to print a String.
-	 * @param s String to print.
+	 * Debug tool. Used to print a String.
+	 * 
+	 * @param s
+	 *            String to print.
 	 */
 	private void log(String s) {
-		if (debugMode)
-		{
+		if (debugMode) {
 			System.out.println(s);
 		}
 	}
-
-	public void addSinglePoint(int x, int y) {
-		SinglePoint sp = new SinglePoint(debugMode, pos);
-		sp.setCenter(x,y);
-		add(sp);
-	}
 }
-
-
-

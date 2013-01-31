@@ -2,14 +2,17 @@ package trivia;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * @author Cody Swendrowski, Dan Miller
- * Handles all the game logic and painting based on the current game mode.
+ * @author Cody Swendrowski, Dan Miller Handles all the game logic and painting
+ *         based on the current game mode.
  */
 public class GameEngine {
 
@@ -19,28 +22,34 @@ public class GameEngine {
 	public Instructions instructions;
 	public EndGame endGame;
 	Actors actors;
-	private int timer;
+	private long millis;
 	int windowWidth, windowHeight;
 	protected int score;
 	private boolean debugMode;
 	Font large = new Font("Serif", Font.BOLD, 30);
 
+	ArrayList<Long> stepTimes;
+
 	/**
 	 * Creates a new GameEngine
-	 * @param actors Array of actors to pass logic to.
-	 * @param debug If true, prints out debug messages.
+	 * 
+	 * @param actors
+	 *            Array of actors to pass logic to.
+	 * @param debug
+	 *            If true, prints out debug messages.
 	 */
 	public GameEngine(Actors actors, Boolean debug) {
 		this.actors = actors;
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
-		mainGame = new MainGame(this);
 		endGame = new EndGame(this);
 		instructions = new Instructions(this);
 		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;
-		timer = 0;
+		millis = System.currentTimeMillis();
+		stepTimes = new ArrayList<Long>();
+		stepTimes.add(millis);
 		score = 0;
 	}
 
@@ -48,13 +57,31 @@ public class GameEngine {
 	 * Runs the game logic based on the current game mode.
 	 */
 	public void run() {
-		timer++;
-		mode.run();
+		long lastMillis = millis;
+		millis = System.currentTimeMillis();
+		stepTimes.add(millis - lastMillis);
+		stepTimes.add(millis - lastMillis);
+		if (stepTimes.size() > 10)
+			stepTimes.remove(0);
+
+		mode.run((int) (millis - lastMillis));
+
+		// System.out.printf("FPS: %-5.2f%n",(1000/average(stepTimes)));
+	}
+
+	private double average(ArrayList<Long> list) {
+		double avg = 0;
+		for (long l : list) {
+			avg += l;
+		}
+		return (avg / list.size());
 	}
 
 	/**
 	 * Paints the game based on the current game mode.
-	 * @param g Graphics to paint with.
+	 * 
+	 * @param g
+	 *            Graphics to paint with.
 	 */
 	public void paint(Graphics g) {
 		mode.paint(g);
@@ -62,6 +89,7 @@ public class GameEngine {
 
 	/**
 	 * Sets the current game mode.
+	 * 
 	 * @param newMode
 	 */
 	public void setMode(GameMode newMode) {
@@ -69,28 +97,31 @@ public class GameEngine {
 	}
 
 	/**
-	 * Called when a click occurs, sends the click to the current
-	 * gameMode.
+	 * Called when a click occurs, sends the click to the current gameMode.
 	 * 
 	 * @param x
 	 * @param y
 	 */
-	public void clickedAt(int x, int y) {
-		mode.clicked(x, y);
+	public void clickedAt(MouseEvent e) {
+		mode.clicked(e.getX(), e.getY());
 	}
-	
-	public void setWindowSize(int width, int height)
-	{
+
+	public void MouseMoved(MouseEvent e) {
+		mode.mouseMoved(e.getX(), e.getY());
+	}
+
+	public void setWindowSize(int width, int height) {
 		windowWidth = width;
 		windowHeight = height;
 	}
-	
+
 	/**
 	 * Uses AudioSystem to get a clip of name s and play it.
 	 * 
 	 * @param s
 	 *            Name of sound clip to play
-	 * @param loop If true, loops sound forever
+	 * @param loop
+	 *            If true, loops sound forever
 	 */
 	public void playSound(String s, boolean loop) {
 		try {
@@ -99,12 +130,9 @@ public class GameEngine {
 					.getAudioInputStream(Actors.class
 							.getResourceAsStream("Resources\\" + s));
 			clip.open(inputStream);
-			if (loop)
-			{
+			if (loop) {
 				clip.loop(clip.LOOP_CONTINUOUSLY);
-			}
-			else
-			{
+			} else {
 				clip.start();
 			}
 			log("Now playing " + s);

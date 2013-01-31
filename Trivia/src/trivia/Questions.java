@@ -5,54 +5,57 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class Questions {
-	
+
 	private String[] filePaths;
 	private String[] questions;
 	private String[][] answers;
 	private int[] answerKey;
-	
+
 	private int currentQuestion;
 	private long lastQuestionTime = 0;
-	
-	public Questions(String path, String[] names){
+
+	public Questions(String path, String[] names) {
 		filePaths = new String[names.length];
-		for(int i = 0; i < names.length; i++){
+		for (int i = 0; i < names.length; i++) {
 			filePaths[i] = path + names[i] + ".txt";
 		}
-		
+
 		proccessQuestions(readFile(filePaths));
-		
+
 		currentQuestion = -1;
 	}
-	
-	public String getQuestion(){
-		try{
+
+	public String getQuestion() {
+		try {
 			return questions[currentQuestion];
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
 	}
-	
-	public String[] getAnsArray(){
-		try{
+
+	public String[] getAnsArray() {
+		try {
 			return answers[currentQuestion];
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new String[] {e.getMessage()};
+			return new String[] { e.getMessage() };
 		}
 	}
-	
-	public long getTimePassed(){
+
+	public long getTimePassed() {
 		return System.currentTimeMillis() - lastQuestionTime;
 	}
-	
+
 	/**
-	 * Checks to find the first clicked button and returns if it is the correct answer or not
-	 * @param buts The buttons to check
+	 * Checks to find the first clicked button and returns if it is the correct
+	 * answer or not
+	 * 
+	 * @param buts
+	 *            The buttons to check
 	 * @return The correctness of the answer
 	 */
-	public boolean checkCorrect(Button[] buts){
+	public boolean checkCorrect(Button[] buts) {
 		for (int i = 0; i < buts.length; i++) {
 			if (buts[i].isClicked()) {
 				// if the current button is the answer
@@ -67,9 +70,10 @@ public class Questions {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Moves to the next question
+	 * 
 	 * @return true if there is another question, false otherwise
 	 */
 	public boolean nextQuestion() {
@@ -80,7 +84,7 @@ public class Questions {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Reads in a file to an array
 	 * 
@@ -90,8 +94,8 @@ public class Questions {
 	private ArrayList<String> readFile(String[] filePaths) {
 
 		ArrayList<String> input = new ArrayList<String>();
-		
-		for(int i = 0; i < filePaths.length; i++){
+
+		for (int i = 0; i < filePaths.length; i++) {
 			Scanner scanner = new Scanner(
 					Trivia.class.getResourceAsStream(filePaths[i]));
 			scanner.useDelimiter("\n");
@@ -108,43 +112,46 @@ public class Questions {
 		}
 		return input;
 	}
-	
-	
+
 	/**
-	 * Takes the read in file, randomizes the questions and answers, and puts the results into global variables questions, answers, and the answer key into ansKey
-	 * Preconditions:
-	 * 		The text file input has questions seperated by lines, and on each line the items are seperated by "|", with the first item being the question, the second the correct answer, and all the rest incorrect answers
+	 * Takes the read in file, randomizes the questions and answers, and puts
+	 * the results into global variables questions, answers, and the answer key
+	 * into ansKey Preconditions: The text file input has questions seperated by
+	 * lines, and on each line the items are seperated by "|", with the first
+	 * item being the question, the second the correct answer, and all the rest
+	 * incorrect answers
+	 * 
 	 * @param input
 	 */
 	private void proccessQuestions(ArrayList<String> input) {
-		
+
 		ArrayList<String> questList = new ArrayList<String>();
 		ArrayList<ArrayList<String>> ansList = new ArrayList<ArrayList<String>>();
 		ArrayList<Integer> ansKeyList = new ArrayList<Integer>();
-		
-		//Variables for use inside the loops
+
+		// Variables for use inside the loops
 		String line, item;
 		int lineCount = 0;
 		int itemCnt = 0;
 		Iterator<String> iter = input.iterator();
-		
+
 		while (iter.hasNext()) {
 			line = iter.next();
-			
-			//Scanner used to separate out each line based on the tab character
+
+			// Scanner used to separate out each line based on the tab character
 			Scanner scan = new Scanner(line);
 			scan.useDelimiter("\\t");
 			itemCnt = 0;
-			
+
 			while (scan.hasNext()) {
 				item = scan.next();
-				
+
 				if (itemCnt > 1) {
 					ansList.get(lineCount).add(item);
-				} else if (itemCnt == 1){
+				} else if (itemCnt == 1) {
 					ansKeyList.add(Integer.parseInt(item) - 1);
 					itemCnt++;
-				} else if (itemCnt == 0){
+				} else if (itemCnt == 0) {
 					questList.add(item);
 					ansList.add(new ArrayList<String>());
 					itemCnt++;
@@ -153,37 +160,43 @@ public class Questions {
 			scan.close();
 			lineCount++;
 		}
-		
-		
+
 		questions = new String[questList.size()];
 		answerKey = new int[questList.size()];
-		
+
 		answers = new String[questList.size()][];
-		
-		//sort arrays are used to determine where each value should be pulled from either questList or ansList and put into the result array
+
+		// sort arrays are used to determine where each value should be pulled
+		// from either questList or ansList and put into the result array
 		int[] sort1 = genUniqueRandArray(questList.size());
 		int[] sort2;
-		for(int i = 0; i < sort1.length; i++){
+		for (int i = 0; i < sort1.length; i++) {
 			questions[i] = questList.get(sort1[i]);
-			
+
 			answers[i] = new String[ansList.get(sort1[i]).size()];
 			sort2 = genUniqueRandArray(answers[i].length);
-			
-			for(int j = 0; j < answers[i].length; j++){
+
+			for (int j = 0; j < answers[i].length; j++) {
 				answers[i][j] = ansList.get(sort1[i]).get(sort2[j]);
-				if(sort2[j] == ansKeyList.get(sort1[i])){
-					//if this is pulling the same answer as determined in the list, set the answer key to this index as the correct answer
+				if (sort2[j] == ansKeyList.get(sort1[i])) {
+					// if this is pulling the same answer as determined in the
+					// list, set the answer key to this index as the correct
+					// answer
 					answerKey[i] = j;
 				}
 			}
 		}
-		
+
 	}
 
 	/**
-	 * Utility used to generate an array of a certain length which contains numbers from 0 to length - 1, with each number occuring only once
-	 * @param len: length of the result array
-	 * @return Array of random numbers ranging from 0 to len - 1, with no number occuring twice
+	 * Utility used to generate an array of a certain length which contains
+	 * numbers from 0 to length - 1, with each number occuring only once
+	 * 
+	 * @param len
+	 *            : length of the result array
+	 * @return Array of random numbers ranging from 0 to len - 1, with no number
+	 *         occuring twice
 	 */
 	private int[] genUniqueRandArray(int len) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -197,13 +210,13 @@ public class Questions {
 				list.add(addNumber);
 			}
 		}
-		
+
 		Iterator<Integer> iter = list.iterator();
 		int[] result = new int[len];
-		for(int i = 0; i< result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = iter.next().intValue();
 		}
 		return result;
 	}
-	
+
 }

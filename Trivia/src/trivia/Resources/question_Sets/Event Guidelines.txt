@@ -1,5 +1,5 @@
-What type of game must be created for Computer Game and Simulation Programming?	2	Driving	Trivia	Space	Free Reponse
+What type of game must be created for Computer Game and Simulation Programming?	2	Driving	Trivia	Space	Free Response
 How many members from a chapter may compete in Cyber Security?	2	1	2	3	4
 How many minutes does a team get in Management Decision Making to prepare?	3	5	10	20	30
-How many teams go to nationals for Virtual Buisness Challenge?	1	8	5	10	12
+How many teams go to nationals for Virtual Business Challenge?	1	8	5	10	12
 Speeches for Public Speaking II can not go over what time limit?	3	3:00	4:29	5:29	6:00
