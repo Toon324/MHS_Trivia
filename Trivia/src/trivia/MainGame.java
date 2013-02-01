@@ -18,10 +18,6 @@ import java.util.Scanner;
  */
 public class MainGame extends GameMode {
 
-	private Point[] fleetPositions;
-	private Point[] fleetDests;
-	private boolean[] fleetStatus;
-
 	private enum states {
 		QUESTIONS, DISPLAY_RESPONSE
 	};
@@ -31,6 +27,8 @@ public class MainGame extends GameMode {
 	private Questions qstSet;
 
 	private int maxFleetSize;
+	private int fleetSize;
+	
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
@@ -45,42 +43,30 @@ public class MainGame extends GameMode {
 	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
-		initializeFleetPositions(1);
+		maxFleetSize = 100;
 	}
 
-	private void initializeFleetPositions(int setup) {
-		switch (setup) {
-		case 0:
-			maxFleetSize = 4;
-			boolean[] astatusTemp = { false, false, false, false };
-			fleetPositions = new Point[] { new Point(200, 50),
-					new Point(230, 100), new Point(230, 150),
-					new Point(200, 200) };
-			fleetStatus = astatusTemp;
-			addShipsToFleet(maxFleetSize);
-			break;
-		case 1:
-			maxFleetSize = 8;
-			// relative fleet positions
-			// edit the points in this array directly to change to destinations
-			// of the corresponding ships
-			fleetPositions = new Point[] { new Point(10, -75),
-					new Point(40, -25), new Point(40, 25), new Point(10, 75),
-					new Point(-40, -75), new Point(-40, -25),
-					new Point(-40, 25), new Point(-40, 75) };
-			fleetStatus = new boolean[] { false, false, false, false, false,
-					false, false, false };
-			fleetDests = new Point[fleetPositions.length];
-
-			for (int i = 0; i < fleetDests.length; i++)
-				fleetDests[i] = new Point(fleetPositions[i].x,
-						fleetPositions[i].y);
-
-			addShipsToFleet(maxFleetSize);
-			break;
-		}
-
-	}
+	/*
+	 * private void initializeFleetPositions(int setup) { switch (setup) { case
+	 * 0: maxFleetSize = 4; boolean[] astatusTemp = { false, false, false, false
+	 * }; fleetPositions = new Point[] { new Point(200, 50), new Point(230,
+	 * 100), new Point(230, 150), new Point(200, 200) }; fleetStatus =
+	 * astatusTemp; addShipsToFleet(maxFleetSize); break; case 1: maxFleetSize =
+	 * 8; // relative fleet positions // edit the points in this array directly
+	 * to change to destinations // of the corresponding ships fleetPositions =
+	 * new Point[] { new Point(10, -75), new Point(40, -25), new Point(40, 25),
+	 * new Point(10, 75), new Point(-40, -75), new Point(-40, -25), new
+	 * Point(-40, 25), new Point(-40, 75) }; fleetStatus = new boolean[] {
+	 * false, false, false, false, false, false, false, false }; fleetDests =
+	 * new Point[fleetPositions.length];
+	 * 
+	 * for (int i = 0; i < fleetDests.length; i++) fleetDests[i] = new
+	 * Point(fleetPositions[i].x, fleetPositions[i].y);
+	 * 
+	 * addShipsToFleet(maxFleetSize); break; }
+	 * 
+	 * }
+	 */
 
 	/**
 	 * Loads questions based on which categories are set to be true.
@@ -94,6 +80,15 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void run(int ms) {
+		//intentionally modifies the object, rather than re-instantianizing
+		Actor.envSize.x = engine.windowWidth;
+		Actor.envSize.y = engine.windowHeight - 250;
+
+		if(fleetSize < maxFleetSize){
+			addShips(1);
+			fleetSize++;
+		}
+		
 		engine.actors.handleActors(ms);
 		Particle.runParticles(ms);
 		switch (state) {
@@ -121,10 +116,6 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void mouseMoved(int x, int y) {
-		for (int i = 0; i < fleetPositions.length; i++) {
-			fleetDests[i].x = x + fleetPositions[i].x;
-			fleetDests[i].y = y + fleetPositions[i].y;
-		}
 	}
 
 	/**
@@ -143,7 +134,7 @@ public class MainGame extends GameMode {
 			if (lastAnswer) {
 				engine.score += 100 / Math.pow(2,
 						Math.pow(qstSet.getTimePassed() / (double) 5000, 4));
-				addShipsToFleet(1);
+				addShips(1);
 				Triangle.MAX_ACCEL *= 2;
 			} else {
 				engine.score -= 90;
@@ -233,18 +224,14 @@ public class MainGame extends GameMode {
 
 	}
 
-	private void addShipsToFleet(int shipsToAdd) {
-		for (int i = 0; i < fleetPositions.length && shipsToAdd > 0; i++) {
-			if (!fleetStatus[i]) {
-				engine.actors.addTriangle(fleetDests[i],
-						(int) (Math.random() * engine.windowWidth),
-						(int) (Math.random() * engine.windowHeight));
-				engine.actors.addSquare(
-						(int) (Math.random() * engine.windowWidth),
-						(int) (Math.random() * engine.windowHeight));
-				fleetStatus[i] = true;
-				shipsToAdd -= 1;
-			}
+	private void addShips(int shipsToAdd) {
+		for (; shipsToAdd > 0; shipsToAdd--) {
+			engine.actors.addTriangle(
+					(int) (Math.random() * engine.windowWidth),
+					(int) (Math.random() * engine.windowHeight));
+			engine.actors.addSquare(
+					(int) (Math.random() * engine.windowWidth),
+					(int) (Math.random() * engine.windowHeight));
 		}
 	}
 

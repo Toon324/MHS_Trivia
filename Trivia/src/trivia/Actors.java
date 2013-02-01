@@ -14,7 +14,7 @@ import javax.sound.sampled.Clip;
  */
 public class Actors {
 
-	private final int MAX_ACTORS = 50;
+	private final int MAX_ACTORS = 1000;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
 	private Boolean debugMode = false;
 
@@ -99,9 +99,8 @@ public class Actors {
 		return actors;
 	}
 
-	public void addTriangle(Point dest, int x, int y) {
+	public void addTriangle(int x, int y) {
 		Triangle c = new Triangle(debugMode);
-		c.setDestination(dest);
 		c.setCenter(x, y);
 		add(c);
 	}

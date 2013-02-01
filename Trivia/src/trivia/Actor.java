@@ -18,13 +18,15 @@ import aiControls.*;
  */
 public abstract class Actor {
 	protected double angle;
-
+	
 	private boolean debug;
 	private Actors actors;
+	
+	protected static Point envSize = new Point(0, 0);
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
-	protected AI_Control aiCtrl;
+	protected ArrayList<AI_Control> aiCtrl;
 	
 	
 	// derivative motion values
@@ -48,7 +50,8 @@ public abstract class Actor {
 		center = new Point2D.Float(0, 0);
 		death = false;
 		drawClr = Color.cyan;
-		aiCtrl = new RandomWander(this);
+		aiCtrl = new ArrayList<AI_Control>();
+		aiCtrl.add(new RandomWander(this, envSize));
 	}
 
 	public void setActors(Actors act) {
@@ -60,8 +63,11 @@ public abstract class Actor {
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
 	
-	public void setAI_Control(AI_Control ctrl){
-		aiCtrl = ctrl;
+	public void addAI_Control(AI_Control ctrl){
+		aiCtrl.add(ctrl);
+	}
+	public void clearAI_Control(){
+		aiCtrl = new ArrayList<AI_Control>();
 	}
 	public Point2D.Float getCenter(){
 		return center;
@@ -140,7 +146,9 @@ public abstract class Actor {
 	 *            Height of window to draw in
 	 */
 	public void move(int ms) {
-		aiCtrl.run(ms);
+		for(AI_Control ai : aiCtrl)
+			ai.run(ms);
+		
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
 				* vectVel.y);
 		if (rotateVel != 0)

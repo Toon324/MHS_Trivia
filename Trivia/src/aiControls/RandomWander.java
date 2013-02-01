@@ -9,11 +9,14 @@ public class RandomWander extends AI_Control {
 
 	Point currentDest;
 	Point2D.Float velocityVect;
-
-	public RandomWander(Actor a) {
+	Point envSize;
+	
+	
+	public RandomWander(Actor a, Point env) {
 		super(a);
-		currentDest = new Point((int) (Math.random() * 500),
-				(int) (Math.random() * 500));
+		envSize = env;
+		currentDest = new Point((int) (Math.random() * envSize.x),
+				(int) (Math.random() * envSize.y));
 	}
 
 	@Override
@@ -28,8 +31,8 @@ public class RandomWander extends AI_Control {
 				* Actor.getAccelToReach(currentDest.y - center.y,
 						velocityVect.y, actor.getMaxAccel());
 		if (center.distance(currentDest) <= 10) {
-			currentDest = new Point((int) (Math.random() * 500),
-					(int) (Math.random() * 500));
+			currentDest = new Point((int) (Math.random() * envSize.x),
+					(int) (Math.random() * envSize.y));
 		}
 	}
 

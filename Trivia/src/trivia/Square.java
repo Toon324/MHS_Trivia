@@ -36,11 +36,12 @@ public class Square extends Actor {
 		setBasePoly(poly);
 		viewAngle = Math.PI / 16;
 		viewDist = 150;
-		aiCtrl = new RotateSearch(this);
+		aiCtrl.add(new RotateSearch(this));
 		drawClr = Color.red;
 	}
 
 	public void move(int ms) {
+		
 		if(currentDest == null)
 			currentDest = new Point((int) ((Math.random() * 200 - 100) + center.x), (int) ((Math.random() * 200 - 100) + center.y));
 

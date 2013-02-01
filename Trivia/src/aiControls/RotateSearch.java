@@ -21,8 +21,8 @@ public class RotateSearch extends AI_Control {
 
 		currentTrueAngle += actor.getRotateVel() * (ms / 1000F);
 		if (startAngle + 1.8 * Math.PI <= currentTrueAngle) {
-			System.out.println("Finished rotate");
-			actor.setAI_Control(new RotateSearch(actor));//do it again
+			startAngle = actor.getAngle();//do it again
+			currentTrueAngle = startAngle;
 		}
 	}
 
