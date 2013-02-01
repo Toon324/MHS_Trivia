@@ -291,12 +291,6 @@ public abstract class Actor {
 		return "Actor";
 	}
 
-	private void log(String s) {
-		if (debug) {
-			System.out.println(s);
-		}
-	}
-
 	public static float getAccelToReach(float xDist, float currentVel,
 			float MAX) {
 		/*

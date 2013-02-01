@@ -2,9 +2,6 @@ package trivia;
 
 import java.awt.*;
 import java.util.*;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 
 /**
  * Container for all Actors. Handles updating and drawing of all contained

@@ -1,5 +1,6 @@
 package trivia;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -29,6 +30,7 @@ public class GameEngine {
 	Font large = new Font("Serif", Font.BOLD, 30);
 
 	ArrayList<Long> stepTimes;
+	double FPS;
 
 	/**
 	 * Creates a new GameEngine
@@ -65,8 +67,8 @@ public class GameEngine {
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
-
-		// System.out.printf("FPS: %-5.2f%n",(1000/average(stepTimes)));
+		
+		FPS = (1000/average(stepTimes));
 	}
 
 	private double average(ArrayList<Long> list) {
@@ -85,6 +87,11 @@ public class GameEngine {
 	 */
 	public void paint(Graphics g) {
 		mode.paint(g);
+		g.setFont(large);
+		g.setColor(Color.blue);
+		if(debugMode){
+			g.drawString(String.format("%6.2f", FPS), 10, 30);
+		}
 	}
 
 	/**

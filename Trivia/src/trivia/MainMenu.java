@@ -52,8 +52,8 @@ public class MainMenu extends GameMode {
 	}
 
 	public void paint(Graphics g) {
-		int w = engine.windowWidth, h = engine.windowHeight;
-		Button[] buts = buttons.toArray(new Button[0]);
+		//int w = engine.windowWidth, h = engine.windowHeight;
+		//Button[] buts = buttons.toArray(new Button[0]);
 
 		/*
 		 * if(w >= 800 && h >= 600){ buts[0].set(w/2 - buts[0].width/2 , h/2 -
