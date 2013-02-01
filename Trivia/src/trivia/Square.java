@@ -7,6 +7,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 import java.util.ArrayList;
 
+import aiControls.RotateSearch;
+
 /**
  * Fights with a heavy reliance on random movement and shots, will fire a shot
  * whenever one of its spokes lines up with an enemy
@@ -34,7 +36,7 @@ public class Square extends Actor {
 		setBasePoly(poly);
 		viewAngle = Math.PI / 16;
 		viewDist = 150;
-		rotateVel = Math.PI;
+		aiCtrl = new RotateSearch(this);
 		drawClr = Color.red;
 	}
 
@@ -94,5 +96,10 @@ public class Square extends Actor {
 		//System.out.printf("Shot vel: (%.4f, %.4f)\n", shotVel.x, shotVel.y);
 		Particle.addParticle((Float) center.clone(),
 				shotVel, shotShape, Color.magenta, 2F, 1F);
+	}
+
+	@Override
+	public float getMaxAccel() {
+		return MAX_ACCEL;
 	}
 }

@@ -43,7 +43,7 @@ public class Actors {
 			return;
 		}
 		actors.add(a);
-		a.giveActors(this);
+		a.setActors(this);
 	}
 
 	/**

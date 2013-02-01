@@ -9,12 +9,14 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import aiControls.*;
+
 /**
  * Generic class for all objects in the game.
  * 
  * @author Cody Swendrowski, Dan Miller
  */
-public class Actor {
+public abstract class Actor {
 	protected double angle;
 
 	private boolean debug;
@@ -22,10 +24,12 @@ public class Actor {
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
-
+	protected AI_Control aiCtrl;
+	
+	
 	// derivative motion values
-	public double rotateVel;// radians/s
-	public Point2D.Float vectVel;// pixels/s
+	protected double rotateVel;// radians/s
+	protected Point2D.Float vectVel;// pixels/s
 
 	protected Polygon basePoly, drawPoly;
 
@@ -44,9 +48,10 @@ public class Actor {
 		center = new Point2D.Float(0, 0);
 		death = false;
 		drawClr = Color.cyan;
+		aiCtrl = new RandomWander(this);
 	}
 
-	public void giveActors(Actors act) {
+	public void setActors(Actors act) {
 		actors = act;
 	}
 
@@ -54,7 +59,23 @@ public class Actor {
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
-
+	
+	public void setAI_Control(AI_Control ctrl){
+		aiCtrl = ctrl;
+	}
+	public Point2D.Float getCenter(){
+		return center;
+	}
+	public Point2D.Float getVelocity(){
+		return vectVel;
+	}
+	public void accelerateRotation(double accel){
+		rotateVel += accel;
+	}
+	public double getRotateVel(){
+		return rotateVel;
+	}
+	public abstract float getMaxAccel();
 	/**
 	 * Draws the Actor.
 	 * 
@@ -119,6 +140,7 @@ public class Actor {
 	 *            Height of window to draw in
 	 */
 	public void move(int ms) {
+		aiCtrl.run(ms);
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
 				* vectVel.y);
 		if (rotateVel != 0)
@@ -188,10 +210,6 @@ public class Actor {
 		}
 
 		return valids;
-	}
-
-	public Point2D.Float getCenter() {
-		return center;
 	}
 
 	public void setCenter(float x, float y) {
@@ -271,7 +289,7 @@ public class Actor {
 		}
 	}
 
-	protected static float getAccelToReach(float xDist, float currentVel,
+	public static float getAccelToReach(float xDist, float currentVel,
 			float MAX) {
 		/*
 		 * Time for velocity to reach 0 if it started to slow down:

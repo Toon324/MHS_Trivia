@@ -90,4 +90,9 @@ public class Triangle extends Actor {
 		super.checkCollision(other);
 	}
 
+	@Override
+	public float getMaxAccel() {
+		return MAX_ACCEL;
+	}
+
 }
