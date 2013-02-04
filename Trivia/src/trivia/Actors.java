@@ -1,6 +1,7 @@
 package trivia;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.*;
 
 /**
@@ -106,6 +107,12 @@ public class Actors {
 		Square c = new Square(debugMode);
 		c.setCenter(x, y);
 		add(c);
+	}
+	
+	public void addParticle(Point2D.Float center, Point2D.Float vectorSpeed, double alphaDecayRate, double speedDecayRate, Color c)
+	{
+		Particle p = new Particle(debugMode, vectorSpeed, alphaDecayRate, speedDecayRate, c);
+		p.setCenter(center);
 	}
 
 	/**

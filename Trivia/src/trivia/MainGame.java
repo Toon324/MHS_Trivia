@@ -89,7 +89,7 @@ public class MainGame extends GameMode {
 		}
 		
 		engine.actors.handleActors(ms);
-		Particle.runParticles(ms);
+		//Particle.runParticles(ms);
 		switch (state) {
 		case QUESTIONS:
 			runQuestion();
@@ -154,7 +154,7 @@ public class MainGame extends GameMode {
 		Font tempF = g.getFont();
 
 		engine.actors.drawActors(g);
-		Particle.drawParticles(g);
+		//Particle.drawParticles(g);
 
 		g.setFont(f);
 		g.setColor(Color.cyan);

@@ -19,15 +19,15 @@ import aiControls.*;
 public abstract class Actor {
 	protected double angle;
 	
-	private boolean debug;
-	private Actors actors;
+	protected boolean debug;
+	protected Actors actors;
 	
 	protected static Point envSize = new Point(0, 0);
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
 	protected ArrayList<AI_Control> aiCtrl;
-	
+	protected float speed;
 	
 	// derivative motion values
 	protected double rotateVel;// radians/s

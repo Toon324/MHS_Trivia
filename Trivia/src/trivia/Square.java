@@ -95,8 +95,7 @@ public class Square extends Actor {
 		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
 		Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
 		//System.out.printf("Shot vel: (%.4f, %.4f)\n", shotVel.x, shotVel.y);
-		Particle.addParticle((Float) center.clone(),
-				shotVel, shotShape, Color.magenta, 2F, 1F);
+		actors.addParticle((Point2D.Float) (center.clone()), shotVel, 0.0, 0.0, Color.magenta);
 	}
 
 	@Override
