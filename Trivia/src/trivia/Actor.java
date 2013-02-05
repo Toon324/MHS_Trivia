@@ -27,7 +27,7 @@ public abstract class Actor {
 	protected Point2D.Float center;
 	protected Color drawClr;
 	protected ArrayList<AI_Control> aiCtrl;
-	protected float speed;
+	protected GameEngine engine;
 	
 	// derivative motion values
 	protected double rotateVel;// radians/s
@@ -41,7 +41,7 @@ public abstract class Actor {
 	 * @param p
 	 *            Position in ArrayList
 	 */
-	public Actor(boolean debugMode) {
+	public Actor(boolean debugMode, GameEngine e) {
 		debug = debugMode;
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
@@ -49,6 +49,7 @@ public abstract class Actor {
 		angle = 0;
 		center = new Point2D.Float(0, 0);
 		death = false;
+		engine = e;
 		drawClr = Color.cyan;
 		aiCtrl = new ArrayList<AI_Control>();
 		aiCtrl.add(new RandomWander(this, envSize));
@@ -221,7 +222,7 @@ public abstract class Actor {
 	}
 
 	public void setCenter(float x, float y) {
-		if (x < 0 || y < 0) {
+		if (x < 0 || y < 0 || x > engine.windowWidth || y > engine.windowHeight) {
 			death = true;
 			return;
 		}
@@ -229,7 +230,6 @@ public abstract class Actor {
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
 		center = new Point2D.Float(x,y);
-		System.out.println("New center: " + center.x + ", " + center.y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);

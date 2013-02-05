@@ -24,8 +24,8 @@ public class Square extends Actor {
 	private double viewAngle;
 	private double viewDist;
 
-	public Square(boolean debugMode) {
-		super(debugMode);
+	public Square(boolean debugMode,GameEngine e) {
+		super(debugMode,e);
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;

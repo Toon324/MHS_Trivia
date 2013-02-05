@@ -24,14 +24,14 @@ public class Particle extends Actor {
 	 * @param debugMode
 	 * @param p
 	 */
-	public Particle(boolean debugMode) {
-		super(debugMode);
+	public Particle(boolean debugMode, GameEngine e) {
+		super(debugMode,e);
 		alpha = 255;
 	}
 	
-	public Particle(boolean debugMode, Point2D.Float vectorSpeed, double alphaDecayRate, double speedDecayRate, Color c)
+	public Particle(boolean debugMode, GameEngine e, Point2D.Float vectorSpeed, double alphaDecayRate, double speedDecayRate, Color c)
 	{
-		super(debugMode);
+		super(debugMode,e);
 		alpha = 255;
 		vector = vectorSpeed;
 		alphaDecay = alphaDecayRate;
@@ -50,11 +50,9 @@ public class Particle extends Actor {
 	
 	public void move(int ms)
 	{
-		speed -= speedDecay;
+		//vector.x -= speedDecay;
+		//vector.y -= speedDecay;
 		//alpha -= alphaDecay;
-		System.out.println("Center : " + center.x + ", " + center.y);
-		System.out.println("Vector : " + vector.x + ", " + vector.y);
-		//System.out.println("Moved vector: " + (center.x + vector.x) + ", " + (center.y + vector.y));
 		setCenter(center.x+vector.x, center.y+vector.y);
 	}
 
@@ -92,5 +90,10 @@ public class Particle extends Actor {
 	public float getMaxAccel() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	public String toString()
+	{
+		return "Particle";
 	}
 }

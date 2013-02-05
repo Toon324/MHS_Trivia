@@ -14,6 +14,7 @@ public class Actors {
 
 	private final int MAX_ACTORS = 1000;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
+	private ArrayList<Actor> toAdd = new ArrayList<Actor>();
 	private Boolean debugMode = false;
 	private GameEngine engine;
 
@@ -41,8 +42,8 @@ public class Actors {
 		if (actors.size() >= MAX_ACTORS) {
 			return;
 		}
-		actors.add(a);
-		a.setActors(this);
+		//engine.log("Added " + a.toString() + " to toAdd");
+		toAdd.add(a);
 	}
 
 	/**
@@ -51,18 +52,30 @@ public class Actors {
 	 */
 	public void handleActors(int ms) {
 		ArrayList<Actor> toRemove = new ArrayList<Actor>(); // dead objects to be removed
-		ArrayList<Point2D.Float> toAdd = new ArrayList<Point2D.Float>();
-		// collects dead actors in an array
+		ArrayList<Point2D.Float> particles = new ArrayList<Point2D.Float>();
+		
+		// adds Actors toAdd
+		for (Actor a : toAdd) {
+			//engine.log("Adding " + a.toString());
+			a.setActors(this);
+			actors.add(a);
+		}
+		
+		// collects dead actors in an array and moves live ones, checking for collisions
 		for (Actor a : actors) {
 			if (a.isDead())
 			{
 				toRemove.add(a);
-				if (a.getCenter() == null)
-				{
-					engine.log("Null center: Actor " + a.toString());
-					break;
+				if (!(a instanceof Particle))
+					particles.add(a.getCenter());
+			}
+			else {
+				a.move(ms);
+				// check for collisions
+				for (Actor b : actors) {
+					if (!a.equals(b));
+						a.checkCollision(b);
 				}
-				toAdd.add(a.getCenter());
 			}
 				
 		}
@@ -73,19 +86,11 @@ public class Actors {
 		}
 		
 		// Spawns particle explosions
-		for (Point2D.Float p : toAdd) {
+		for (Point2D.Float p : particles) {
 			engine.particleEngine.spawnRandomExplosion(p);
 		}
 
-		engine.log("-----------------------------------------");
-		// Moves objects and checks for collisions
-		for (Actor a : actors) {
-			a.move(ms);
-			// check for collisions
-			for (Actor b : actors) {
-				a.checkCollision(b);
-			}
-		}
+		//engine.log("-----------------------------------------");
 	}
 
 	/**
@@ -113,20 +118,20 @@ public class Actors {
 	}
 
 	public void addTriangle(int x, int y) {
-		Triangle c = new Triangle(debugMode);
+		Triangle c = new Triangle(debugMode, engine);
 		c.setCenter(x, y);
 		add(c);
 	}
 
 	public void addSquare(int x, int y) {
-		Square c = new Square(debugMode);
+		Square c = new Square(debugMode, engine);
 		c.setCenter(x, y);
 		add(c);
 	}
 	
 	public void addParticle(Point2D.Float center, Point2D.Float vectorSpeed, double alphaDecayRate, double speedDecayRate, Color c)
 	{
-		Particle p = new Particle(debugMode, vectorSpeed, alphaDecayRate, speedDecayRate, c);
+		Particle p = new Particle(debugMode, engine, vectorSpeed, alphaDecayRate, speedDecayRate, c);
 		p.setCenter(center);
 		add(p);
 	}

@@ -15,8 +15,8 @@ public class Triangle extends Actor {
 	private double viewAngle;// angle that the view will deviate on both sides
 	private int viewDist;
 
-	public Triangle(boolean debugMode) {
-		super(debugMode);
+	public Triangle(boolean debugMode,GameEngine e) {
+		super(debugMode,e);
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;

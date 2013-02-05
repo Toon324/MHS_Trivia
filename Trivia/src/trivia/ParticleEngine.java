@@ -21,20 +21,20 @@ public class ParticleEngine {
 	public void spawnRandomExplosion(Point2D.Float center)
 	{
 		Random gen = new Random();
-		int num = gen.nextInt(16)+1;
-		engine.log("Num: " + num);
+		int num = gen.nextInt(14)+3;
+		//engine.log("Num: " + num);
 		double angleInc = (2*Math.PI)/num;
-		int speed = gen.nextInt(2)+1;
+		float speed = gen.nextFloat();
 		double speedDecay = gen.nextDouble();
 		Color c = new Color(gen.nextFloat(),gen.nextFloat(),gen.nextFloat(),1.0f);
 		c.brighter();
 		for (int x=0; x< num; x++)
 		{
 			Point2D.Float vector = new Point2D.Float();
-			engine.log("Angle " + Math.toDegrees(angleInc*x));
+			//engine.log("Angle " + Math.toDegrees(angleInc*x));
 			vector.x = (float) (speed*Math.cos(angleInc*x));
 			vector.y = (float) (speed*Math.sin(angleInc*x));
-			engine.log("Vector " + vector.x + ", " + vector.y);
+			//engine.log("Vector " + vector.x + ", " + vector.y);
 			engine.actors.addParticle(center, vector, 1/speed, speedDecay, c);
 		}
 	}
