@@ -55,8 +55,10 @@ public class Actors {
 		ArrayList<Point2D.Float> particles = new ArrayList<Point2D.Float>();
 		
 		// adds Actors toAdd
-		for (Actor a : toAdd) {
+		Object[] addArray = toAdd.toArray();
+		for (int x=0; x<addArray.length; x++) {
 			//engine.log("Adding " + a.toString());
+			Actor a = (Actor) addArray[x];
 			a.setActors(this);
 			actors.add(a);
 		}
@@ -102,7 +104,6 @@ public class Actors {
 	 *            ImageObserver to be reported to
 	 */
 	public void drawActors(Graphics g) {
-
 		for (Actor a : actors) {
 			a.draw(g);
 		}

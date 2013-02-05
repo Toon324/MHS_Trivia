@@ -43,9 +43,12 @@ public class Particle extends Actor {
 	{
 		//log("Drawn at " + center.x + " " + center.y);
 		
-		color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
-		g.setColor(color);
-		g.fillOval((int)(center.x),(int) (center.y), 10, 10);
+		for (int a=0; a<= 150; a += 10)
+		{
+			color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha/(a+1));
+			g.setColor(color);
+			g.fillRect((int)(center.x - vector.x * a),(int) (center.y - vector.y*a), 4, 4);
+		}
 	}
 	
 	public void move(int ms)
