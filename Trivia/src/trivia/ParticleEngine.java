@@ -21,7 +21,7 @@ public class ParticleEngine {
 	public void spawnRandomExplosion(Point2D.Float center)
 	{
 		Random gen = new Random();
-		int num = gen.nextInt(14)+3;
+		int num = gen.nextInt(11)+3;
 		//engine.log("Num: " + num);
 		double angleInc = (2*Math.PI)/num;
 		float speed = gen.nextFloat();

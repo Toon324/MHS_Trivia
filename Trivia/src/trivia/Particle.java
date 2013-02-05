@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 
 /**
  * @author Cody Swendrowski, Dan Miller
@@ -43,7 +42,7 @@ public class Particle extends Actor {
 	{
 		//log("Drawn at " + center.x + " " + center.y);
 		
-		for (int a=0; a<= 150; a += 10)
+		for (int a=0; a<= 200; a += 25)
 		{
 			color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha/(a+1));
 			g.setColor(color);
@@ -84,8 +83,17 @@ public class Particle extends Actor {
 	{
 		vector = vectorSpeed;
 	}
+	
+	@Override
+	public void setCenter(float x, float y) {
+		if (x < 0 || y < 0 || x > engine.windowWidth || y > engine.windowHeight) {
+			death = true;
+			return;
+		}
+		super.setCenter(x, y);
+	}
 
-	public void setCenter(Float center) {
+	public void setCenter(Point2D.Float center) {
 		this.center = center;
 	}
 

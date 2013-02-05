@@ -3,6 +3,8 @@ package trivia;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Container for all Actors. Handles updating and drawing of all contained
@@ -17,6 +19,7 @@ public class Actors {
 	private ArrayList<Actor> toAdd = new ArrayList<Actor>();
 	private Boolean debugMode = false;
 	private GameEngine engine;
+	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
 	/*
 	 * //Networking private InetAddress serverName; private int port = 324;
@@ -89,7 +92,7 @@ public class Actors {
 		
 		// Spawns particle explosions
 		for (Point2D.Float p : particles) {
-			engine.particleEngine.spawnRandomExplosion(p);
+			//engine.particleEngine.spawnRandomExplosion(p);
 		}
 
 		//engine.log("-----------------------------------------");
@@ -105,7 +108,8 @@ public class Actors {
 	 */
 	public void drawActors(Graphics g) {
 		for (Actor a : actors) {
-			a.draw(g);
+			PainterThread p = new PainterThread(a,g);
+			threadPool.execute(p);
 		}
 	}
 

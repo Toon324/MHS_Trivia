@@ -207,25 +207,31 @@ public abstract class Actor {
 
 		int[] xPnts, yPnts;
 		for (Actor a : all) {
-			xPnts = a.drawPoly.xpoints;
-			yPnts = a.drawPoly.ypoints;
-
-			for (int i = 0; i < a.drawPoly.npoints; i++) {
-				if (tmpArea.contains(xPnts[i], yPnts[i])) {
-					valids.add(a);
-					break;
+			Polygon poly = a.drawPoly;
+			if (poly == null)
+			{
+				engine.log("Null poly in actor " + a.toString());
+			}
+			else
+			{
+				xPnts = poly.xpoints;
+				yPnts = a.drawPoly.ypoints;
+				
+				for (int i = 0; i < a.drawPoly.npoints; i++) {
+					if (tmpArea.contains(xPnts[i], yPnts[i])) {
+						valids.add(a);
+						break;
+					}
 				}
 			}
+			
+			
 		}
 
 		return valids;
 	}
 
 	public void setCenter(float x, float y) {
-		if (x < 0 || y < 0 || x > engine.windowWidth || y > engine.windowHeight) {
-			death = true;
-			return;
-		}
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
