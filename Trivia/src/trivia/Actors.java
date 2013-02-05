@@ -15,6 +15,7 @@ public class Actors {
 	private final int MAX_ACTORS = 1000;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
 	private Boolean debugMode = false;
+	private GameEngine engine;
 
 	/*
 	 * //Networking private InetAddress serverName; private int port = 324;
@@ -49,19 +50,34 @@ public class Actors {
 	 * actors.
 	 */
 	public void handleActors(int ms) {
-		ArrayList<Actor> toRemove = new ArrayList<Actor>(); // dead objects
-															// to be removed
+		ArrayList<Actor> toRemove = new ArrayList<Actor>(); // dead objects to be removed
+		ArrayList<Point2D.Float> toAdd = new ArrayList<Point2D.Float>();
 		// collects dead actors in an array
 		for (Actor a : actors) {
 			if (a.isDead())
+			{
 				toRemove.add(a);
+				if (a.getCenter() == null)
+				{
+					engine.log("Null center: Actor " + a.toString());
+					break;
+				}
+				toAdd.add(a.getCenter());
+			}
+				
 		}
 		// removes dead actors from the main array
 		for (Actor a : toRemove) {
 			if (!actors.remove(a))
 				log("Error in removing actor " + a);
 		}
+		
+		// Spawns particle explosions
+		for (Point2D.Float p : toAdd) {
+			engine.particleEngine.spawnRandomExplosion(p);
+		}
 
+		engine.log("-----------------------------------------");
 		// Moves objects and checks for collisions
 		for (Actor a : actors) {
 			a.move(ms);
@@ -82,9 +98,8 @@ public class Actors {
 	 */
 	public void drawActors(Graphics g) {
 
-		for (Iterator<Actor> iter = actors.iterator(); iter.hasNext();) {
-			Actor temp = iter.next();
-			temp.draw(g);
+		for (Actor a : actors) {
+			a.draw(g);
 		}
 	}
 
@@ -113,6 +128,12 @@ public class Actors {
 	{
 		Particle p = new Particle(debugMode, vectorSpeed, alphaDecayRate, speedDecayRate, c);
 		p.setCenter(center);
+		add(p);
+	}
+	
+	public void setEngine(GameEngine e)
+	{
+		engine = e;
 	}
 
 	/**

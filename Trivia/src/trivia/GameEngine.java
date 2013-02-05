@@ -22,6 +22,8 @@ public class GameEngine {
 	public MainGame mainGame;
 	public Instructions instructions;
 	public EndGame endGame;
+	public Sandbox sandbox;
+	public ParticleEngine particleEngine;
 	Actors actors;
 	private long millis;
 	int windowWidth, windowHeight;
@@ -42,9 +44,12 @@ public class GameEngine {
 	 */
 	public GameEngine(Actors actors, Boolean debug) {
 		this.actors = actors;
+		actors.setEngine(this);
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		endGame = new EndGame(this);
+		sandbox = new Sandbox(this);
+		particleEngine = new ParticleEngine(this);
 		instructions = new Instructions(this);
 		mode = mainMenu;
 		windowWidth = 800;
@@ -53,6 +58,15 @@ public class GameEngine {
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
+	}
+
+	public ParticleEngine getParticleEngine() {
+		if (particleEngine == null)
+		{
+			log("PE is null");
+			particleEngine = new ParticleEngine(this);
+		}
+		return particleEngine;
 	}
 
 	/**

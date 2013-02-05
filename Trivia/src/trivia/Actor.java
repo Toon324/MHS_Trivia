@@ -221,11 +221,15 @@ public abstract class Actor {
 	}
 
 	public void setCenter(float x, float y) {
+		if (x < 0 || y < 0) {
+			death = true;
+			return;
+		}
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
-		center.x = x;
-		center.y = y;
+		center = new Point2D.Float(x,y);
+		System.out.println("New center: " + center.x + ", " + center.y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);

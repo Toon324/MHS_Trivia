@@ -48,11 +48,14 @@ public class Particle extends Actor {
 		g.fillOval((int)(center.x),(int) (center.y), 10, 10);
 	}
 	
-	public void move(int w, int h)
+	public void move(int ms)
 	{
 		speed -= speedDecay;
 		//alpha -= alphaDecay;
-		setCenter((int)(center.x+vector.x), (int)(center.y+vector.y));
+		System.out.println("Center : " + center.x + ", " + center.y);
+		System.out.println("Vector : " + vector.x + ", " + vector.y);
+		//System.out.println("Moved vector: " + (center.x + vector.x) + ", " + (center.y + vector.y));
+		setCenter(center.x+vector.x, center.y+vector.y);
 	}
 
 	public void setVectorSpeed(int x, int y)
@@ -81,18 +84,13 @@ public class Particle extends Actor {
 		vector = vectorSpeed;
 	}
 
-	@Override
-	public float getMaxAccel() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	public void setCenter(Float center) {
 		this.center = center;
 	}
 
-	public static void runParticles(int ms) {
+	@Override
+	public float getMaxAccel() {
 		// TODO Auto-generated method stub
-		
+		return 0;
 	}
 }

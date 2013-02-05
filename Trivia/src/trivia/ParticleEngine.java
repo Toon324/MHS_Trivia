@@ -28,13 +28,14 @@ public class ParticleEngine {
 		double speedDecay = gen.nextDouble();
 		Color c = new Color(gen.nextFloat(),gen.nextFloat(),gen.nextFloat(),1.0f);
 		c.brighter();
-		for (int x=0; x<= num; x++)
+		for (int x=0; x< num; x++)
 		{
 			Point2D.Float vector = new Point2D.Float();
 			engine.log("Angle " + Math.toDegrees(angleInc*x));
 			vector.x = (float) (speed*Math.cos(angleInc*x));
 			vector.y = (float) (speed*Math.sin(angleInc*x));
-			engine.actors.addParticle(vector, center, 1/speed, speedDecay, c);
+			engine.log("Vector " + vector.x + ", " + vector.y);
+			engine.actors.addParticle(center, vector, 1/speed, speedDecay, c);
 		}
 	}
 

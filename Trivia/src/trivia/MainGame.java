@@ -84,7 +84,7 @@ public class MainGame extends GameMode {
 		Actor.envSize.y = engine.windowHeight - 250;
 
 		if(fleetSize < maxFleetSize){
-			addShips(1);
+			//addShips(1);
 			fleetSize++;
 		}
 		
