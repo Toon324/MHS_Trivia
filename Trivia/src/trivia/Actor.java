@@ -99,8 +99,8 @@ public abstract class Actor {
 		drawPoly(g, drawPoly, new Point((int) center.x, (int) center.y), true);
 		g.setColor(Color.red);
 		if (viewArea != null && !viewArea.isEmpty())
-			for (Polygon p : viewArea)
-				drawPoly(g, p, null, false);
+			for (Object p : viewArea.toArray())
+				drawPoly(g, (Polygon) p, null, false);
 	}
 
 	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
@@ -172,7 +172,7 @@ public abstract class Actor {
 	 *            Actor to check collision against
 	 */
 	public void checkCollision(Actor other) {
-		if (other.equals(this))
+		if (other.equals(this) || other instanceof Particle)
 			return;
 
 		Polygon otherPoly = other.basePoly;
@@ -207,6 +207,8 @@ public abstract class Actor {
 
 		int[] xPnts, yPnts;
 		for (Actor a : all) {
+			if (a instanceof Particle)
+				break;
 			Polygon poly = a.drawPoly;
 			if (poly == null)
 			{

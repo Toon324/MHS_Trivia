@@ -77,10 +77,7 @@ public class Actors {
 			else {
 				a.move(ms);
 				// check for collisions
-				for (Actor b : actors) {
-					if (!a.equals(b));
-						a.checkCollision(b);
-				}
+				threadPool.execute(new CollisionThread(a,actors.toArray()));
 			}
 				
 		}
