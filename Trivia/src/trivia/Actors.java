@@ -133,9 +133,9 @@ public class Actors {
 		add(c);
 	}
 	
-	public void addParticle(Point2D.Float center, Point2D.Float vectorSpeed, double alphaDecayRate, double speedDecayRate, Color c)
+	public void addParticle(Point2D.Float center, Point2D.Float vectorSpeed, Color c)
 	{
-		Particle p = new Particle(debugMode, engine, vectorSpeed, alphaDecayRate, speedDecayRate, c);
+		Particle p = new Particle(debugMode, engine, vectorSpeed, c);
 		p.setCenter(center);
 		add(p);
 	}
