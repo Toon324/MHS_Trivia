@@ -41,7 +41,7 @@ public class Particle extends Actor {
 	{
 		//log("Drawn at " + center.x + " " + center.y);
 		
-		for (int a=0; a<= 200; a += 25)
+		for (int a=0; a<= 130; a += 15)
 		{
 			color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha/(a+1));
 			g.setColor(color);
@@ -54,7 +54,7 @@ public class Particle extends Actor {
 		//vector.x -= speedDecay;
 		//vector.y -= speedDecay;
 		//alpha -= alphaDecay;
-		setCenter(center.x+vector.x, center.y+vector.y);
+		setCenter(center.x+(vector.x*(ms/100f)), center.y+(vector.y*(ms/100f)));
 	}
 
 	public void setVectorSpeed(int x, int y)
