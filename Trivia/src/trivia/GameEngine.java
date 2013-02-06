@@ -25,7 +25,7 @@ public class GameEngine {
 	public Sandbox sandbox;
 	public ParticleEngine particleEngine;
 	Actors actors;
-	private long millis;
+	private long millis, lastMillis, lastBench;
 	int windowWidth, windowHeight;
 	protected int score;
 	private boolean debugMode;
@@ -33,6 +33,7 @@ public class GameEngine {
 
 	ArrayList<Long> stepTimes;
 	double FPS;
+	int frames;
 
 	/**
 	 * Creates a new GameEngine
@@ -55,6 +56,8 @@ public class GameEngine {
 		windowWidth = 800;
 		windowHeight = 600;
 		millis = System.currentTimeMillis();
+		lastMillis = millis;
+		lastBench = millis;
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
@@ -73,7 +76,6 @@ public class GameEngine {
 	 * Runs the game logic based on the current game mode.
 	 */
 	public void run() {
-		long lastMillis = millis;
 		millis = System.currentTimeMillis();
 		stepTimes.add(millis - lastMillis);
 		stepTimes.add(millis - lastMillis);
@@ -81,8 +83,14 @@ public class GameEngine {
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
-		
-		FPS = (1000/average(stepTimes));
+		lastMillis = millis;
+		frames++;
+		if (millis - lastBench >= 1000)
+		{
+			FPS = frames;
+			frames = 0;
+			lastBench = millis;
+		}	
 	}
 
 	private double average(ArrayList<Long> list) {
