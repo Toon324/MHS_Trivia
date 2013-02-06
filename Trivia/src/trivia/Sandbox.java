@@ -5,13 +5,14 @@ import java.awt.geom.Point2D;
 
 /**
  * A mode used for testing of new features.
- * @author Cody Swendrowski
- *
+ * 
+ * @author Cody Swendrowski, Dan Miller
  */
 public class Sandbox extends GameMode {
 
 	/**
-	 * @param eng
+	 * Creates a new Sandbox controller.
+	 * @param eng GameEngine to utilize
 	 */
 	public Sandbox(GameEngine eng) {
 		super(eng);

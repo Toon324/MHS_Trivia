@@ -37,7 +37,6 @@ public class ParticleEngine {
 		// engine.log("Num: " + num);
 		double angleInc = (2 * Math.PI) / num;
 		float speed = gen.nextFloat() + .2f;
-		double speedDecay = gen.nextDouble();
 		Color c = new Color(gen.nextFloat(), gen.nextFloat(), gen.nextFloat(),
 				1.0f);
 		c.brighter();
@@ -50,5 +49,4 @@ public class ParticleEngine {
 			engine.actors.addParticle(center, vector, c);
 		}
 	}
-
 }

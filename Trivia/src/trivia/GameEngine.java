@@ -12,8 +12,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * @author Cody Swendrowski, Dan Miller Handles all the game logic and painting
+ * Handles all the game logic and painting
  *         based on the current game mode.
+ *         
+ * @author Cody Swendrowski, Dan Miller 
  */
 public class GameEngine {
 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package trivia;
 
 import java.awt.Color;
@@ -9,11 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Cody Swendrowski
+ * Allows player to select which categories to pull questions from. Also allows
+ * player to play game, or view the instructions.
  * 
+ * @author Cody Swendrowski, Dan Miller
  */
 public class MainMenu extends GameMode {
 
+	/**
+	 * Creates a new MainMenu controller.
+	 * 
+	 * @param eng
+	 *            GameEngine to utilize
+	 */
 	public MainMenu(GameEngine eng) {
 		super(eng);
 		buttons.add(new Button("Start Questioning", 50, 500));
@@ -52,8 +57,8 @@ public class MainMenu extends GameMode {
 	}
 
 	public void paint(Graphics g) {
-		//int w = engine.windowWidth, h = engine.windowHeight;
-		//Button[] buts = buttons.toArray(new Button[0]);
+		// int w = engine.windowWidth, h = engine.windowHeight;
+		// Button[] buts = buttons.toArray(new Button[0]);
 
 		/*
 		 * if(w >= 800 && h >= 600){ buts[0].set(w/2 - buts[0].width/2 , h/2 -
