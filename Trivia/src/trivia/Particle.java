@@ -39,7 +39,7 @@ public class Particle {
 	 * @return true if it should be removed, false if it should remain in the list
 	 */
 	private boolean run(int ms){
-		setCenter(center.x + velocity.x, center.y + velocity.y);
+		setCenter(center.x + (velocity.x * (ms/1000F)), center.y + (velocity.y * (ms/1000F)));
 		double newDec = Math.pow(decay, (ms/1000F));
 		velocity.x /= (newDec);
 		velocity.y /= (newDec);

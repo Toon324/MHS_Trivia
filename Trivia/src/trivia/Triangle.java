@@ -12,8 +12,6 @@ public class Triangle extends Actor {
 	Point currentDest;
 	static float MAX_ACCEL = 500F;// Pixels/s/s
 
-	private double viewAngle;// angle that the view will deviate on both sides
-	private int viewDist;
 
 	public Triangle(boolean debugMode) {
 		super(debugMode);
@@ -27,7 +25,6 @@ public class Triangle extends Actor {
 		viewAngle = Math.PI / 8;
 		viewDist = 200;
 		drawClr = Color.cyan;
-		aiCtrl.add(new RotateSearch(this));
 	}
 
 	public void setDestination(Point pnt) {

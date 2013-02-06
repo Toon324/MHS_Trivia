@@ -21,8 +21,6 @@ public class Square extends Actor {
 
 	Point currentDest;
 	static float MAX_ACCEL = 1000F;
-	private double viewAngle;
-	private double viewDist;
 
 	public Square(boolean debugMode) {
 		super(debugMode);
@@ -36,12 +34,14 @@ public class Square extends Actor {
 		setBasePoly(poly);
 		viewAngle = Math.PI / 16;
 		viewDist = 150;
+		clearAI_Control();
 		aiCtrl.add(new RotateSearch(this));
 		drawClr = Color.red;
 	}
 
 	public void move(int ms) {
 		
+		/*
 		if(currentDest == null)
 			currentDest = new Point((int) ((Math.random() * 200 - 100) + center.x), (int) ((Math.random() * 200 - 100) + center.y));
 
@@ -80,7 +80,7 @@ public class Square extends Actor {
 						MAX_ACCEL);
 		vectVel.y += (ms / 1000F)
 				* getAccelToReach(currentDest.y - center.y, vectVel.y,
-						MAX_ACCEL);
+						MAX_ACCEL);*/
 		super.move(ms);
 	}
 	
@@ -89,16 +89,23 @@ public class Square extends Actor {
 	 * @param spoke
 	 */
 	
-	private void fireShot(int spoke){
-		double speed = 5;
+	public void fireShot(int spoke){
+		double speed = 300;
 		double shotAngle = (spoke*Math.PI/2 + angle) % (Math.PI*2);
 		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
 		Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
 		//System.out.printf("Shot vel: (%.4f, %.4f)\n", shotVel.x, shotVel.y);
 		Particle.addParticle((Float) center.clone(),
-				shotVel, shotShape, Color.magenta, 2F, 1F);
+				shotVel, shotShape, Color.magenta, 2F, 50F);
 	}
 
+	public ArrayList<Actor> getActorsInView(){
+		ArrayList<Actor> list = new ArrayList<Actor>();
+		for(int i = 0; i < 360; i += 90){
+			list.addAll(getActorsInView(Math.toRadians((Math.toDegrees(angle) + i) % 360), viewAngle, viewDist));
+		}
+		return list;
+	}
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;
