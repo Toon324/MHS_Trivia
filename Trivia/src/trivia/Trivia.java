@@ -61,12 +61,12 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 			repaint();
 
 			try {
-				long timeIn = System.currentTimeMillis();
+				//long timeIn = System.currentTimeMillis();
 				wait(); // wait for applet to draw
-				long timeOut = System.currentTimeMillis();
-				while (timeOut - timeIn < 10) {
-					timeOut = System.currentTimeMillis();
-				}
+				//long timeOut = System.currentTimeMillis();
+				//while (timeOut - timeIn < 10) {
+				//	timeOut = System.currentTimeMillis();
+				//}
 			} catch (Exception ex) {
 				log(ex.toString());
 			}

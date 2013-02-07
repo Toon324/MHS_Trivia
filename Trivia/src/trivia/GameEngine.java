@@ -61,7 +61,7 @@ public class GameEngine {
 	public void run() {
 		long lastMillis = millis;
 		millis = System.currentTimeMillis();
-		stepTimes.add(millis - lastMillis);
+		log("added " + (millis - lastMillis));
 		stepTimes.add(millis - lastMillis);
 		if (stepTimes.size() > 10)
 			stepTimes.remove(0);
@@ -73,10 +73,13 @@ public class GameEngine {
 
 	private double average(ArrayList<Long> list) {
 		double avg = 0;
+		int num = 0;
 		for (long l : list) {
 			avg += l;
+			num++;
 		}
-		return (avg / list.size());
+		log("average: " + (avg/num));
+		return (avg / num);
 	}
 
 	/**
