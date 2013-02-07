@@ -67,7 +67,8 @@ public class Actors {
 		}
 		
 		// collects dead actors in an array and moves live ones, checking for collisions
-		for (Actor a : actors) {
+		for (Object b : actors.toArray()) {
+			Actor a = (Actor) (b);
 			if (a.isDead())
 			{
 				toRemove.add(a);
@@ -82,7 +83,8 @@ public class Actors {
 				
 		}
 		// removes dead actors from the main array
-		for (Actor a : toRemove) {
+		for (Object b : toRemove.toArray()) {
+			Actor a = (Actor) (b);
 			if (!actors.remove(a))
 				log("Error in removing actor " + a);
 		}
@@ -104,8 +106,8 @@ public class Actors {
 	 *            ImageObserver to be reported to
 	 */
 	public void drawActors(Graphics g) {
-		for (Actor a : actors) {
-			PainterThread p = new PainterThread(a,g);
+		for (Object a : actors.toArray()) {
+			PainterThread p = new PainterThread((Actor)(a),g);
 			threadPool.execute(p);
 		}
 	}
