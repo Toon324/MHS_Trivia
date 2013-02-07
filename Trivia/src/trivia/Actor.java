@@ -18,6 +18,8 @@ import aiControls.*;
  */
 public abstract class Actor {
 	protected double angle;
+	protected double viewAngle;
+	protected int viewDist;
 	
 	private boolean debug;
 	private Actors actors;
@@ -52,6 +54,8 @@ public abstract class Actor {
 		drawClr = Color.cyan;
 		aiCtrl = new ArrayList<AI_Control>();
 		aiCtrl.add(new RandomWander(this, envSize));
+		
+		viewArea = new ArrayList<Polygon>();
 	}
 
 	public void setActors(Actors act) {
@@ -63,8 +67,19 @@ public abstract class Actor {
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
 	
+	public Polygon getDrawnPoly(){
+		return drawPoly;
+	}
+	public boolean hasAIClass(Class<?> cls){
+		for(AI_Control a : aiCtrl)
+			if (a.getClass() == cls) return true;
+		return false;
+	}
 	public void addAI_Control(AI_Control ctrl){
 		aiCtrl.add(ctrl);
+	}
+	public void removeAI_Control(AI_Control ctrl){
+		aiCtrl.remove(ctrl);
 	}
 	public void clearAI_Control(){
 		aiCtrl = new ArrayList<AI_Control>();
@@ -100,6 +115,7 @@ public abstract class Actor {
 		if (viewArea != null && !viewArea.isEmpty())
 			for (Polygon p : viewArea)
 				drawPoly(g, p, null, false);
+		viewArea = new ArrayList<Polygon>();
 	}
 
 	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
@@ -146,7 +162,8 @@ public abstract class Actor {
 	 *            Height of window to draw in
 	 */
 	public void move(int ms) {
-		for(AI_Control ai : aiCtrl)
+		AI_Control[] tmp = aiCtrl.toArray(new AI_Control[0]);
+		for(AI_Control ai : tmp)
 			ai.run(ms);
 		
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
@@ -183,7 +200,11 @@ public abstract class Actor {
 			}
 		}
 	}
-
+	
+	public ArrayList<Actor> getActorsInView(){
+		return getActorsInView(angle, viewAngle, viewDist);
+	}
+	
 	ArrayList<Polygon> viewArea;
 
 	protected ArrayList<Actor> getActorsInView(double viewAngle,
@@ -206,6 +227,7 @@ public abstract class Actor {
 
 		int[] xPnts, yPnts;
 		for (Actor a : all) {
+			if(a == this) continue;
 			xPnts = a.drawPoly.xpoints;
 			yPnts = a.drawPoly.ypoints;
 

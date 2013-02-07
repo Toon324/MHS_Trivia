@@ -42,7 +42,7 @@ public class MainGame extends GameMode {
 	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
-		maxFleetSize = 100;
+		maxFleetSize = 10;
 	}
 
 	/*

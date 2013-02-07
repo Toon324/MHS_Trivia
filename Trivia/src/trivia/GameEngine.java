@@ -61,7 +61,6 @@ public class GameEngine {
 	public void run() {
 		long lastMillis = millis;
 		millis = System.currentTimeMillis();
-		log("added " + (millis - lastMillis));
 		stepTimes.add(millis - lastMillis);
 		if (stepTimes.size() > 10)
 			stepTimes.remove(0);

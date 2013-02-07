@@ -1,12 +1,15 @@
 package aiControls;
 
+import java.util.ArrayList;
+
 import trivia.Actor;
+import trivia.Square;
 
 public class RotateSearch extends AI_Control {
 
 	double startAngle, currentTrueAngle;
 
-	public RotateSearch(Actor a) {
+	public RotateSearch(Square a) {
 		super(a);
 		startAngle = a.getAngle();
 		currentTrueAngle = startAngle;
@@ -23,6 +26,11 @@ public class RotateSearch extends AI_Control {
 		if (startAngle + 1.8 * Math.PI <= currentTrueAngle) {
 			startAngle = actor.getAngle();//do it again
 			currentTrueAngle = startAngle;
+		}
+		ArrayList<Actor> seenActors = actor.getActorsInView();
+		if(!seenActors.isEmpty() && !seenActors.contains(this) && !actor.hasAIClass(SquareAttack.class)){
+			actor.addAI_Control(new SquareAttack(((Square) actor), seenActors.get(
+					(int)(Math.random() * seenActors.size()))));
 		}
 	}
 
