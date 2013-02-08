@@ -80,8 +80,8 @@ public class MainGame extends GameMode {
 	@Override
 	public void run(int ms) {
 		//intentionally modifies the object, rather than re-instantianizing
-		Actor.envSize.x = engine.windowWidth;
-		Actor.envSize.y = engine.windowHeight - 250;
+		GameEngine.envSize.x = engine.windowWidth;
+		GameEngine.envSize.y = engine.windowHeight - 250;
 
 		if(fleetSize < maxFleetSize){
 			addShips(1);
@@ -226,11 +226,11 @@ public class MainGame extends GameMode {
 	private void addShips(int shipsToAdd) {
 		for (; shipsToAdd > 0; shipsToAdd--) {
 			engine.actors.addTriangle(
-					(int) (Math.random() * engine.windowWidth),
-					(int) (Math.random() * engine.windowHeight));
+					(int) (Math.random() * GameEngine.envSize.x),
+					(int) (Math.random() * GameEngine.envSize.y));
 			engine.actors.addSquare(
-					(int) (Math.random() * engine.windowWidth),
-					(int) (Math.random() * engine.windowHeight));
+					(int) (Math.random() * GameEngine.envSize.x),
+					(int) (Math.random() * GameEngine.envSize.y));
 		}
 	}
 

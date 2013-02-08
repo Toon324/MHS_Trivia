@@ -7,7 +7,7 @@ import trivia.Square;
 
 public class RotateSearch extends AI_Control {
 
-	double startAngle, currentTrueAngle;
+	private double startAngle, currentTrueAngle;
 
 	public RotateSearch(Square a) {
 		super(a);
@@ -18,6 +18,9 @@ public class RotateSearch extends AI_Control {
 	@Override
 	public void run(int ms) {
 		double rotateVel = actor.getRotateVel();
+		if(rotateVel < 4 * Math.PI)
+			actor.accelerateRotation(0.5 * (ms/1000F));
+		/*
 		actor.accelerateRotation(Actor.getAccelToReach((float) (startAngle + 2
 				* Math.PI - currentTrueAngle), (float) rotateVel, 1)
 				* (ms / 1000F));
@@ -26,11 +29,13 @@ public class RotateSearch extends AI_Control {
 		if (startAngle + 1.8 * Math.PI <= currentTrueAngle) {
 			startAngle = actor.getAngle();//do it again
 			currentTrueAngle = startAngle;
-		}
+		}*/
 		ArrayList<Actor> seenActors = actor.getActorsInView();
 		if(!seenActors.isEmpty() && !seenActors.contains(this) && !actor.hasAIClass(SquareAttack.class)){
-			actor.addAI_Control(new SquareAttack(((Square) actor), seenActors.get(
-					(int)(Math.random() * seenActors.size()))));
+			SquareAttack tmp = new SquareAttack(((Square) actor), seenActors.get(
+					(int)(Math.random() * seenActors.size())));
+			actor.addAI_Control(tmp);
+			tmp.run(ms);
 		}
 	}
 

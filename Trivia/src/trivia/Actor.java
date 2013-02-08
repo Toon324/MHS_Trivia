@@ -21,10 +21,8 @@ public abstract class Actor {
 	protected double viewAngle;
 	protected int viewDist;
 	
-	private boolean debug;
 	private Actors actors;
 	
-	protected static Point envSize = new Point(0, 0);
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
@@ -44,7 +42,6 @@ public abstract class Actor {
 	 *            Position in ArrayList
 	 */
 	public Actor(boolean debugMode) {
-		debug = debugMode;
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
 		rotateVel = 0;
@@ -53,7 +50,7 @@ public abstract class Actor {
 		death = false;
 		drawClr = Color.cyan;
 		aiCtrl = new ArrayList<AI_Control>();
-		aiCtrl.add(new RandomWander(this, envSize));
+		aiCtrl.add(new RandomWander(this, GameEngine.envSize));
 		
 		viewArea = new ArrayList<Polygon>();
 	}

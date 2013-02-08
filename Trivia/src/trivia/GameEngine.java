@@ -3,6 +3,7 @@ package trivia;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +29,7 @@ public class GameEngine {
 	protected int score;
 	private boolean debugMode;
 	Font large = new Font("Serif", Font.BOLD, 30);
+	public static Point envSize = new Point(0, 0);
 
 	ArrayList<Long> stepTimes;
 	double FPS;
@@ -77,7 +79,6 @@ public class GameEngine {
 			avg += l;
 			num++;
 		}
-		log("average: " + (avg/num));
 		return (avg / num);
 	}
 

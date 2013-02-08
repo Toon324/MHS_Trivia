@@ -10,7 +10,7 @@ import aiControls.*;
 public class Triangle extends Actor {
 
 	Point currentDest;
-	static float MAX_ACCEL = 500F;// Pixels/s/s
+	static float MAX_ACCEL = 100F;// Pixels/s/s
 
 
 	public Triangle(boolean debugMode) {

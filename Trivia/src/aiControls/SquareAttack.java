@@ -32,7 +32,9 @@ public class SquareAttack extends AI_Control {
 			for(int j = 0; j < targetPoly.npoints; j++){
 				pntAngle = (-Math.atan2(targetPoly.xpoints[j] - cen.x, targetPoly.ypoints[j] - cen.y) + Math.PI * 5/2) % (Math.PI * 2);
 				//System.out.println("Angle: " + Math.toDegrees(pntAngle) + "Corner Angle: " + Math.toDegrees(cornerAngle));
-				if(pntAngle > cornerAngle){
+				double difference = (pntAngle - cornerAngle) % (Math.PI * 2);
+				if( Math.abs(difference) < 90)
+				if((pntAngle - cornerAngle) % (Math.PI * 2) > 0){
 					left = true;
 				}else{
 					right = true;
@@ -45,7 +47,6 @@ public class SquareAttack extends AI_Control {
 			}
 		}
 		if(!fired){
-			System.out.println("Removed firing AI");
 			actor.removeAI_Control(this);
 		}
 	}
