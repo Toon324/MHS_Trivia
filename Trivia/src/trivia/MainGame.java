@@ -8,6 +8,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import aiControls.TriangleFleet;
+
 /**
  * Pulls questions from text files based on which categories are selected.
  * Displays those questions and answers. Right answers are give points based on
@@ -22,7 +24,9 @@ public class MainGame extends GameMode {
 	};
 
 	private states state;
-
+	private ArrayList<TriangleFleet> fleets;
+	
+	
 	private Questions qstSet;
 
 	private int maxFleetSize;
@@ -41,31 +45,12 @@ public class MainGame extends GameMode {
 	 */
 	public MainGame(GameEngine eng) {
 		super(eng);
+		fleets = new ArrayList<TriangleFleet>();
+		TriangleFleet fleet = new TriangleFleet();
+		fleets.add(fleet);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
 		maxFleetSize = 10;
 	}
-
-	/*
-	 * private void initializeFleetPositions(int setup) { switch (setup) { case
-	 * 0: maxFleetSize = 4; boolean[] astatusTemp = { false, false, false, false
-	 * }; fleetPositions = new Point[] { new Point(200, 50), new Point(230,
-	 * 100), new Point(230, 150), new Point(200, 200) }; fleetStatus =
-	 * astatusTemp; addShipsToFleet(maxFleetSize); break; case 1: maxFleetSize =
-	 * 8; // relative fleet positions // edit the points in this array directly
-	 * to change to destinations // of the corresponding ships fleetPositions =
-	 * new Point[] { new Point(10, -75), new Point(40, -25), new Point(40, 25),
-	 * new Point(10, 75), new Point(-40, -75), new Point(-40, -25), new
-	 * Point(-40, 25), new Point(-40, 75) }; fleetStatus = new boolean[] {
-	 * false, false, false, false, false, false, false, false }; fleetDests =
-	 * new Point[fleetPositions.length];
-	 * 
-	 * for (int i = 0; i < fleetDests.length; i++) fleetDests[i] = new
-	 * Point(fleetPositions[i].x, fleetPositions[i].y);
-	 * 
-	 * addShipsToFleet(maxFleetSize); break; }
-	 * 
-	 * }
-	 */
 
 	/**
 	 * Loads questions based on which categories are set to be true.
@@ -86,6 +71,10 @@ public class MainGame extends GameMode {
 		if(fleetSize < maxFleetSize){
 			addShips(1);
 			fleetSize++;
+		}
+		
+		for(TriangleFleet tf : fleets){
+			tf.nextStep(ms);
 		}
 		
 		engine.actors.handleActors(ms);
@@ -200,7 +189,7 @@ public class MainGame extends GameMode {
 					but.draw(g);
 				}
 			} catch (java.lang.NullPointerException e) {
-				engine.log("No buttons in MainGame!");
+				GameEngine.log("No buttons in MainGame!");
 			}
 			break;
 
@@ -224,13 +213,19 @@ public class MainGame extends GameMode {
 	}
 
 	private void addShips(int shipsToAdd) {
+		Actor t, s;
 		for (; shipsToAdd > 0; shipsToAdd--) {
-			engine.actors.addTriangle(
+			t = new Triangle();
+			t.setCenter(
 					(int) (Math.random() * GameEngine.envSize.x),
 					(int) (Math.random() * GameEngine.envSize.y));
-			engine.actors.addSquare(
+			engine.actors.add(t);
+			fleets.get((int)(Math.random() * fleets.size())).addTriangle((Triangle) t);
+			s = new Square();
+			s.setCenter(
 					(int) (Math.random() * GameEngine.envSize.x),
 					(int) (Math.random() * GameEngine.envSize.y));
+			engine.actors.add(s);
 		}
 	}
 

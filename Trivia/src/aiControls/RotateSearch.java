@@ -31,7 +31,7 @@ public class RotateSearch extends AI_Control {
 			currentTrueAngle = startAngle;
 		}*/
 		ArrayList<Actor> seenActors = actor.getActorsInView();
-		if(!seenActors.isEmpty() && !seenActors.contains(this) && !actor.hasAIClass(SquareAttack.class)){
+		if( !(seenActors.isEmpty() || seenActors.contains(this) || actor.hasAIClass(SquareAttack.class)) ){
 			SquareAttack tmp = new SquareAttack(((Square) actor), seenActors.get(
 					(int)(Math.random() * seenActors.size())));
 			actor.addAI_Control(tmp);

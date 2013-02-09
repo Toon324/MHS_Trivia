@@ -93,16 +93,4 @@ public class Actors {
 	public ArrayList<Actor> getArray() {
 		return actors;
 	}
-
-	public void addTriangle(int x, int y) {
-		Triangle c = new Triangle();
-		c.setCenter(x, y);
-		add(c);
-	}
-
-	public void addSquare(int x, int y) {
-		Square c = new Square();
-		c.setCenter(x, y);
-		add(c);
-	}
 }
