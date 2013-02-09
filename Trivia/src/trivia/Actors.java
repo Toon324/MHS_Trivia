@@ -13,7 +13,6 @@ public class Actors {
 
 	private final int MAX_ACTORS = 1000;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
-	private Boolean debugMode = false;
 
 	/*
 	 * //Networking private InetAddress serverName; private int port = 324;
@@ -25,8 +24,7 @@ public class Actors {
 	/**
 	 * Creates a new container of Actor.
 	 */
-	public Actors(Boolean debug) {
-		debugMode = debug;
+	public Actors() {
 	}
 
 	/**
@@ -58,7 +56,7 @@ public class Actors {
 		// removes dead actors from the main array
 		for (Actor a : toRemove) {
 			if (!actors.remove(a))
-				log("Error in removing actor " + a);
+				GameEngine.log("Error in removing actor " + a);
 		}
 
 		// Moves objects and checks for collisions
@@ -97,26 +95,14 @@ public class Actors {
 	}
 
 	public void addTriangle(int x, int y) {
-		Triangle c = new Triangle(debugMode);
+		Triangle c = new Triangle();
 		c.setCenter(x, y);
 		add(c);
 	}
 
 	public void addSquare(int x, int y) {
-		Square c = new Square(debugMode);
+		Square c = new Square();
 		c.setCenter(x, y);
 		add(c);
-	}
-
-	/**
-	 * Debug tool. Used to print a String.
-	 * 
-	 * @param s
-	 *            String to print.
-	 */
-	private void log(String s) {
-		if (debugMode) {
-			System.out.println(s);
-		}
 	}
 }

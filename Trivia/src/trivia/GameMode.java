@@ -32,7 +32,7 @@ public abstract class GameMode {
 			background = ImageIO.read(MainMenu.class
 					.getResourceAsStream("Resources\\space_background.jpg"));
 		} catch (IOException e) {
-			eng.log("Can not load background image.");
+			GameEngine.log("Can not load background image.");
 		}
 	}
 
@@ -59,7 +59,7 @@ public abstract class GameMode {
 				buttons.get(i).checkClick(x, y);
 			}
 		} catch (java.lang.NullPointerException e) {
-			engine.log("No defined buttons in " + this.toString());
+			GameEngine.log("No defined buttons in " + this.toString());
 		}
 	}
 
@@ -76,7 +76,7 @@ public abstract class GameMode {
 				buttons.get(i).draw(g);
 			}
 		} catch (java.lang.NullPointerException e) {
-			engine.log("No defined buttons in " + this.toString());
+			GameEngine.log("No defined buttons in " + this.toString());
 		}
 	}
 

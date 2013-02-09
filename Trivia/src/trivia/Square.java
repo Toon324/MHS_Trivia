@@ -22,8 +22,8 @@ public class Square extends Actor {
 	Point currentDest;
 	static float MAX_ACCEL = 1000F;
 
-	public Square(boolean debugMode) {
-		super(debugMode);
+	public Square() {
+		super();
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;

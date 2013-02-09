@@ -12,9 +12,9 @@ import java.awt.event.MouseMotionListener;
 public class Trivia extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
-	private Thread th = new Thread(this); // Game thread
+	private Thread th; // Game thread
+	private Thread close;
 	private GameEngine engine;
-	private Boolean debugMode = false;
 	private Actors actors;
 
 	/**
@@ -23,8 +23,10 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	 * @param debug
 	 *            If True, game prints out debug information.
 	 */
-	public Trivia(Boolean debug) {
-		debugMode = debug;
+	public Trivia() {
+		close = new Thread(new CloseHook(this));
+		th = new Thread(this);
+		Runtime.getRuntime().addShutdownHook(close);
 	}
 
 	/**
@@ -34,12 +36,28 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	public void init() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		actors = new Actors(debugMode);
-		engine = new GameEngine(actors, debugMode);
+		actors = new Actors();
+		engine = new GameEngine(actors);
 		engine.setWindowSize(getWidth(), getHeight());
 		engine.setMode(engine.instructions);
 	}
+	
+	public class CloseHook implements Runnable{
+		Trivia t;
+		public CloseHook(Trivia tri){t = tri;}
 
+		@Override
+		public void run() {
+			t.onClose();
+			try {
+				this.finalize();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/**
 	 * Starts the game thread. Must be called from out of this class.
 	 */
@@ -68,7 +86,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 				//	timeOut = System.currentTimeMillis();
 				//}
 			} catch (Exception ex) {
-				log(ex.toString());
+				System.out.println(ex.toString());
 			}
 		}
 	}
@@ -161,24 +179,16 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * Debug tool. Used to print a String if Debug mode is enabled.
-	 * 
-	 * @param s
-	 *            String to print.
-	 */
-	private void log(String s) {
-		if (debugMode) {
-			System.out.println(s);
-		}
-	}
-
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	public void onClose(){
+		engine.onClose();
+	}
+	
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		engine.MouseMoved(arg0);

@@ -12,9 +12,8 @@ public class Triangle extends Actor {
 	Point currentDest;
 	static float MAX_ACCEL = 100F;// Pixels/s/s
 
-
-	public Triangle(boolean debugMode) {
-		super(debugMode);
+	public Triangle() {
+		super();
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;

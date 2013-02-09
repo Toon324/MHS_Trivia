@@ -41,7 +41,7 @@ public abstract class Actor {
 	 * @param p
 	 *            Position in ArrayList
 	 */
-	public Actor(boolean debugMode) {
+	public Actor() {
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
 		rotateVel = 0;

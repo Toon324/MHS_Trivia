@@ -12,9 +12,8 @@ import javax.swing.JFrame;
  */
 public class Window {
 	public static void main(String[] args) {
-		Boolean debugMode = true;
 		// Sets up game
-		Trivia game = new Trivia(debugMode);
+		Trivia game = new Trivia();
 		JFrame frame = new JFrame("Trivia");
 
 		// Initializes game

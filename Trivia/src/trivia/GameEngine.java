@@ -5,6 +5,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -27,13 +32,27 @@ public class GameEngine {
 	private long millis;
 	int windowWidth, windowHeight;
 	protected int score;
-	private boolean debugMode;
 	Font large = new Font("Serif", Font.BOLD, 30);
+	
 	public static Point envSize = new Point(0, 0);
-
+	public static PrintWriter debugWriter;
+	public static boolean debugMode;
+	
 	ArrayList<Long> stepTimes;
 	double FPS;
 
+	static{
+		debugMode = true;
+		File file = new File("src\\trivia\\Resources\\log.txt");
+		try {
+			if(!file.exists()) file.createNewFile();
+			debugWriter = new PrintWriter(new FileWriter(file.getAbsoluteFile()));
+		} catch (IOException e) {
+			System.out.println("Error creating debug output stream\n" + System.getProperty("user.dir"));
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Creates a new GameEngine
 	 * 
@@ -42,9 +61,8 @@ public class GameEngine {
 	 * @param debug
 	 *            If true, prints out debug messages.
 	 */
-	public GameEngine(Actors actors, Boolean debug) {
+	public GameEngine(Actors actors) {
 		this.actors = actors;
-		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		endGame = new EndGame(this);
 		instructions = new Instructions(this);
@@ -55,6 +73,7 @@ public class GameEngine {
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
+		
 	}
 
 	/**
@@ -141,7 +160,7 @@ public class GameEngine {
 							.getResourceAsStream("Resources\\" + s));
 			clip.open(inputStream);
 			if (loop) {
-				clip.loop(clip.LOOP_CONTINUOUSLY);
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
 			} else {
 				clip.start();
 			}
@@ -150,6 +169,11 @@ public class GameEngine {
 			log("Could not load sound clip " + s + " Error: " + e.toString());
 		}
 	}
+	
+	public void onClose(){
+		log("Closing writer");
+		debugWriter.close();
+	}
 
 	/**
 	 * Debug tool. Used to print a String if Debug mode is enabled.
@@ -157,9 +181,10 @@ public class GameEngine {
 	 * @param s
 	 *            String to print.
 	 */
-	public void log(String s) {
+	public static void log(String s) {
 		if (debugMode) {
 			System.out.println(s);
 		}
+		debugWriter.println(s);
 	}
 }
