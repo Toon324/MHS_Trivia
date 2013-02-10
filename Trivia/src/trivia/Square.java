@@ -13,7 +13,7 @@ import aiControls.RotateSearch;
  * Fights with a heavy reliance on random movement and shots, will fire a shot
  * whenever one of its spokes lines up with an enemy
  * 
- * @author dsmiller95
+ * @author Cody Swendrowski, Dan Miller
  * 
  */
 
@@ -22,8 +22,8 @@ public class Square extends Actor {
 	Point currentDest;
 	static float MAX_ACCEL = 1000F;
 
-	public Square() {
-		super();
+	public Square(boolean debugMode,GameEngine e) {
+		super(debugMode,e);
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;
@@ -95,8 +95,7 @@ public class Square extends Actor {
 		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
 		Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
 		//System.out.printf("Shot vel: (%.4f, %.4f)\n", shotVel.x, shotVel.y);
-		Particle.addParticle((Float) center.clone(),
-				shotVel, shotShape, Color.magenta, 2F, 50F);
+		actors.addParticle((Point2D.Float) (center.clone()), shotVel, Color.magenta);
 	}
 
 	public ArrayList<Actor> getActorsInView(){

@@ -5,21 +5,21 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * @author Cody Swendrowski, Dan Miller Handles all the game logic and painting
+ * Handles all the game logic and painting
  *         based on the current game mode.
+ *         
+ * @author Cody Swendrowski, Dan Miller 
  */
 public class GameEngine {
 
@@ -28,6 +28,8 @@ public class GameEngine {
 	public MainGame mainGame;
 	public Instructions instructions;
 	public EndGame endGame;
+	public Sandbox sandbox;
+	public ParticleEngine particleEngine;
 	Actors actors;
 	private long millis;
 	int windowWidth, windowHeight;
@@ -40,6 +42,7 @@ public class GameEngine {
 	
 	ArrayList<Long> stepTimes;
 	double FPS;
+	int frames;
 
 	static{
 		debugMode = true;
@@ -61,10 +64,14 @@ public class GameEngine {
 	 * @param debug
 	 *            If true, prints out debug messages.
 	 */
-	public GameEngine(Actors actors) {
+	public GameEngine(Actors actors, boolean debug) {
 		this.actors = actors;
+		actors.setEngine(this);
+		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		endGame = new EndGame(this);
+		sandbox = new Sandbox(this);
+		particleEngine = new ParticleEngine(this);
 		instructions = new Instructions(this);
 		mode = mainMenu;
 		windowWidth = 800;
@@ -73,7 +80,15 @@ public class GameEngine {
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
-		
+	}
+
+	public ParticleEngine getParticleEngine() {
+		if (particleEngine == null)
+		{
+			log("PE is null");
+			particleEngine = new ParticleEngine(this);
+		}
+		return particleEngine;
 	}
 
 	/**
@@ -87,8 +102,7 @@ public class GameEngine {
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
-		
-		FPS = (1000/average(stepTimes));
+		FPS = average(stepTimes);	
 	}
 
 	private double average(ArrayList<Long> list) {

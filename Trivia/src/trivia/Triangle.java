@@ -12,8 +12,11 @@ public class Triangle extends Actor {
 	Point currentDest;
 	static float MAX_ACCEL = 100F;// Pixels/s/s
 
-	public Triangle() {
-		super();
+	private double viewAngle;// angle that the view will deviate on both sides
+	private int viewDist;
+
+	public Triangle(boolean debugMode,GameEngine e) {
+		super(debugMode,e);
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;

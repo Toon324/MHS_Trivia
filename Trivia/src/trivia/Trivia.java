@@ -37,9 +37,9 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		actors = new Actors();
-		engine = new GameEngine(actors);
+		engine = new GameEngine(actors, true);
 		engine.setWindowSize(getWidth(), getHeight());
-		engine.setMode(engine.instructions);
+		engine.setMode(engine.sandbox);
 	}
 	
 	public class CloseHook implements Runnable{
@@ -79,12 +79,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 			repaint();
 
 			try {
-				//long timeIn = System.currentTimeMillis();
 				wait(); // wait for applet to draw
-				//long timeOut = System.currentTimeMillis();
-				//while (timeOut - timeIn < 10) {
-				//	timeOut = System.currentTimeMillis();
-				//}
 			} catch (Exception ex) {
 				System.out.println(ex.toString());
 			}
@@ -156,7 +151,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		engine.clickedAt(e);
 	}
 
 	@Override
@@ -171,7 +166,6 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		engine.clickedAt(e);
 	}
 
 	@Override

@@ -21,13 +21,14 @@ public abstract class Actor {
 	protected double viewAngle;
 	protected int viewDist;
 	
-	private Actors actors;
+	protected boolean debug;
+	protected Actors actors;
 	
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
 	protected ArrayList<AI_Control> aiCtrl;
-	
+	protected GameEngine engine;
 	
 	// derivative motion values
 	protected double rotateVel;// radians/s
@@ -41,13 +42,16 @@ public abstract class Actor {
 	 * @param p
 	 *            Position in ArrayList
 	 */
-	public Actor() {
+
+	public Actor(boolean debugMode, GameEngine e) {
+		debug = debugMode;
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
 		rotateVel = 0;
 		angle = 0;
 		center = new Point2D.Float(0, 0);
 		death = false;
+		engine = e;
 		drawClr = Color.cyan;
 		aiCtrl = new ArrayList<AI_Control>();
 		aiCtrl.add(new RandomWander(this, GameEngine.envSize));
@@ -110,9 +114,8 @@ public abstract class Actor {
 		drawPoly(g, drawPoly, new Point((int) center.x, (int) center.y), true);
 		g.setColor(Color.red);
 		if (viewArea != null && !viewArea.isEmpty())
-			for (Polygon p : viewArea)
-				drawPoly(g, p, null, false);
-		viewArea = new ArrayList<Polygon>();
+			for (Object p : viewArea.toArray())
+				drawPoly(g, (Polygon) p, null, false);
 	}
 
 	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
@@ -185,7 +188,7 @@ public abstract class Actor {
 	 *            Actor to check collision against
 	 */
 	public void checkCollision(Actor other) {
-		if (other.equals(this))
+		if (other.equals(this) || other instanceof Particle)
 			return;
 
 		Polygon otherPoly = other.basePoly;
@@ -224,6 +227,8 @@ public abstract class Actor {
 
 		int[] xPnts, yPnts;
 		for (Actor a : all) {
+			if (a instanceof Particle)
+				break;
 			if(a == this) continue;
 			xPnts = a.drawPoly.xpoints;
 			yPnts = a.drawPoly.ypoints;
@@ -235,7 +240,6 @@ public abstract class Actor {
 				}
 			}
 		}
-
 		return valids;
 	}
 
@@ -243,8 +247,7 @@ public abstract class Actor {
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
-		center.x = x;
-		center.y = y;
+		center = new Point2D.Float(x,y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);

@@ -69,7 +69,7 @@ public class MainGame extends GameMode {
 		GameEngine.envSize.y = engine.windowHeight - 250;
 
 		if(fleetSize < maxFleetSize){
-			addShips(1);
+			//addShips(1);
 			fleetSize++;
 		}
 		
@@ -78,7 +78,7 @@ public class MainGame extends GameMode {
 		}
 		
 		engine.actors.handleActors(ms);
-		Particle.runParticles(ms);
+		//Particle.runParticles(ms);
 		switch (state) {
 		case QUESTIONS:
 			runQuestion();
@@ -143,7 +143,7 @@ public class MainGame extends GameMode {
 		Font tempF = g.getFont();
 
 		engine.actors.drawActors(g);
-		Particle.drawParticles(g);
+		//Particle.drawParticles(g);
 
 		g.setFont(f);
 		g.setColor(Color.cyan);
@@ -215,17 +215,8 @@ public class MainGame extends GameMode {
 	private void addShips(int shipsToAdd) {
 		Actor t, s;
 		for (; shipsToAdd > 0; shipsToAdd--) {
-			t = new Triangle();
-			t.setCenter(
-					(int) (Math.random() * GameEngine.envSize.x),
-					(int) (Math.random() * GameEngine.envSize.y));
-			engine.actors.add(t);
-			fleets.get((int)(Math.random() * fleets.size())).addTriangle((Triangle) t);
-			s = new Square();
-			s.setCenter(
-					(int) (Math.random() * GameEngine.envSize.x),
-					(int) (Math.random() * GameEngine.envSize.y));
-			engine.actors.add(s);
+			engine.actors.addTriangle((int) (Math.random() * GameEngine.envSize.x), (int) (Math.random() * GameEngine.envSize.y));
+			engine.actors.addSquare((int)(Math.random() * GameEngine.envSize.x),(int) (Math.random() * GameEngine.envSize.y));
 		}
 	}
 
