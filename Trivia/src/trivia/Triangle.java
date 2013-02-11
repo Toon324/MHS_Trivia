@@ -4,19 +4,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 
 public class Triangle extends Actor {
 
 	Point currentDest;
 	static float MAX_ACCEL = 100F;// Pixels/s/s
+	private int destination;
 
-	private double viewAngle;// angle that the view will deviate on both sides
-	private int viewDist;
-
-	public Triangle(boolean debugMode,GameEngine e) {
+	public Triangle(boolean debugMode,GameEngine e, int dest) {
 		super(debugMode,e);
 		Polygon poly = new Polygon();
-
+		destination = dest;
+		vectVel = new Point2D.Float(2,0);
 		int width = 30, height = 30;
 		poly.addPoint(-width / 2, -height / 2);
 		poly.addPoint(width / 2, 0);
@@ -36,6 +37,12 @@ public class Triangle extends Actor {
 			return;
 		}
 		super.checkCollision(other);
+	}
+	
+	public void move(int ms)
+	{
+		if (center.x + vectVel.x*(ms/1000) <= destination)
+			center.x += vectVel.x*(ms/1000);
 	}
 
 	@Override

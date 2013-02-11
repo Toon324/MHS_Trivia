@@ -94,13 +94,6 @@ public class Square extends Actor {
 		actors.addParticle((Point2D.Float) (center.clone()), shotVel, Color.magenta);
 	}
 
-	public ArrayList<Actor> getActorsInView(){
-		ArrayList<Actor> list = new ArrayList<Actor>();
-		for(int i = 0; i < 360; i += 90){
-			list.addAll(getActorsInView(Math.toRadians((Math.toDegrees(angle) + i) % 360), viewAngle, viewDist));
-		}
-		return list;
-	}
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;

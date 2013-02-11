@@ -32,6 +32,7 @@ public class GameEngine {
 	public ParticleEngine particleEngine;
 	Actors actors;
 	private long millis;
+	private int timer = 0;
 	int windowWidth, windowHeight;
 	protected int score;
 	Font large = new Font("Serif", Font.BOLD, 30);

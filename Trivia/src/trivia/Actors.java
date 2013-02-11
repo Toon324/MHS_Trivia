@@ -55,7 +55,7 @@ public class Actors {
 	public void handleActors(int ms) {
 		ArrayList<Actor> toRemove = new ArrayList<Actor>(); // dead objects to be removed
 		ArrayList<Point2D.Float> particles = new ArrayList<Point2D.Float>();
-		
+
 		// adds Actors toAdd
 		Object[] addArray = toAdd.toArray();
 		for (int x=0; x<addArray.length; x++) {
@@ -120,8 +120,8 @@ public class Actors {
 		return actors;
 	}
 
-	public void addTriangle(int x, int y) {
-		Triangle c = new Triangle(debugMode, engine);
+	public void addTriangle(int x, int y, int destination) {
+		Triangle c = new Triangle(debugMode, engine, destination);
 		c.setCenter(x, y);
 		add(c);
 	}
@@ -151,8 +151,7 @@ public class Actors {
 	 *            String to print.
 	 */
 	private void log(String s) {
-		if (debugMode) {
+		if (debugMode) 
 			System.out.println(s);
-		}
 	}
 }

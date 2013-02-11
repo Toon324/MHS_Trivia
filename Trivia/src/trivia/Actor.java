@@ -50,8 +50,6 @@ public abstract class Actor {
 		death = false;
 		engine = e;
 		drawClr = Color.cyan;
-
-		viewArea = new ArrayList<Polygon>();
 	}
 
 	public void setActors(Actors act) {
@@ -99,10 +97,6 @@ public abstract class Actor {
 			drawPoly = basePoly;
 
 		drawPoly(g, drawPoly, new Point((int) center.x, (int) center.y), true);
-		g.setColor(Color.red);
-		if (viewArea != null && !viewArea.isEmpty())
-			for (Object p : viewArea.toArray())
-				drawPoly(g, (Polygon) p, null, false);
 	}
 
 	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
@@ -182,49 +176,6 @@ public abstract class Actor {
 				other.setDeath(true);
 			}
 		}
-	}
-
-	public ArrayList<Actor> getActorsInView() {
-		return getActorsInView(angle, viewAngle, viewDist);
-	}
-
-	ArrayList<Polygon> viewArea;
-
-	protected ArrayList<Actor> getActorsInView(double viewAngle,
-			double viewRads, double viewDist) {
-		ArrayList<Actor> valids = new ArrayList<Actor>();
-		ArrayList<Actor> all = actors.getArray();
-
-		Polygon tmpArea = new Polygon(
-				new int[] {
-						(int) center.x,
-						(int) (Math.cos(viewAngle + viewRads) * viewDist + center.x),
-						(int) (Math.cos(viewAngle - viewRads) * viewDist + center.x) },
-				new int[] {
-						(int) center.y,
-						(int) (Math.sin(viewAngle + viewRads) * viewDist + center.y),
-						(int) (Math.sin(viewAngle - viewRads) * viewDist + center.y) },
-				3);
-
-		viewArea.add(tmpArea);
-
-		int[] xPnts, yPnts;
-		for (Actor a : all) {
-			if (a instanceof Particle)
-				break;
-			if (a == this)
-				continue;
-			xPnts = a.drawPoly.xpoints;
-			yPnts = a.drawPoly.ypoints;
-
-			for (int i = 0; i < a.drawPoly.npoints; i++) {
-				if (tmpArea.contains(xPnts[i], yPnts[i])) {
-					valids.add(a);
-					break;
-				}
-			}
-		}
-		return valids;
 	}
 
 	public void setCenter(float x, float y) {
