@@ -21,7 +21,6 @@ public class Actors {
 	private GameEngine engine;
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
-
 	/*
 	 * //Networking private InetAddress serverName; private int port = 324;
 	 * private ServerSocket socket; private Socket connection; private

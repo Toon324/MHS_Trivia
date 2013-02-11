@@ -8,8 +8,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import aiControls.TriangleFleet;
-
 /**
  * Pulls questions from text files based on which categories are selected.
  * Displays those questions and answers. Right answers are give points based on
@@ -23,9 +21,7 @@ public class MainGame extends GameMode {
 		QUESTIONS, DISPLAY_RESPONSE
 	};
 
-	private states state;
-	private ArrayList<TriangleFleet> fleets;
-	
+	private states state;	
 	
 	private Questions qstSet;
 
@@ -45,9 +41,6 @@ public class MainGame extends GameMode {
 	 */
 	public MainGame(GameEngine eng) {
 		super(eng);
-		fleets = new ArrayList<TriangleFleet>();
-		TriangleFleet fleet = new TriangleFleet();
-		fleets.add(fleet);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
 		maxFleetSize = 10;
 	}
@@ -71,10 +64,6 @@ public class MainGame extends GameMode {
 		if(fleetSize < maxFleetSize){
 			//addShips(1);
 			fleetSize++;
-		}
-		
-		for(TriangleFleet tf : fleets){
-			tf.nextStep(ms);
 		}
 		
 		engine.actors.handleActors(ms);
@@ -213,7 +202,6 @@ public class MainGame extends GameMode {
 	}
 
 	private void addShips(int shipsToAdd) {
-		Actor t, s;
 		for (; shipsToAdd > 0; shipsToAdd--) {
 			engine.actors.addTriangle((int) (Math.random() * GameEngine.envSize.x), (int) (Math.random() * GameEngine.envSize.y));
 			engine.actors.addSquare((int)(Math.random() * GameEngine.envSize.x),(int) (Math.random() * GameEngine.envSize.y));

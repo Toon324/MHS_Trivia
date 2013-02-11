@@ -9,8 +9,6 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import aiControls.*;
-
 /**
  * Generic class for all objects in the game.
  * 
@@ -20,16 +18,15 @@ public abstract class Actor {
 	protected double angle;
 	protected double viewAngle;
 	protected int viewDist;
-	
+
 	protected boolean debug;
 	protected Actors actors;
-	
+
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
-	protected ArrayList<AI_Control> aiCtrl;
 	protected GameEngine engine;
-	
+
 	// derivative motion values
 	protected double rotateVel;// radians/s
 	protected Point2D.Float vectVel;// pixels/s
@@ -53,9 +50,7 @@ public abstract class Actor {
 		death = false;
 		engine = e;
 		drawClr = Color.cyan;
-		aiCtrl = new ArrayList<AI_Control>();
-		aiCtrl.add(new RandomWander(this, GameEngine.envSize));
-		
+
 		viewArea = new ArrayList<Polygon>();
 	}
 
@@ -67,37 +62,29 @@ public abstract class Actor {
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
-	
-	public Polygon getDrawnPoly(){
+
+	public Polygon getDrawnPoly() {
 		return drawPoly;
 	}
-	public boolean hasAIClass(Class<?> cls){
-		for(AI_Control a : aiCtrl)
-			if (a.getClass() == cls) return true;
-		return false;
-	}
-	public void addAI_Control(AI_Control ctrl){
-		aiCtrl.add(ctrl);
-	}
-	public void removeAI_Control(AI_Control ctrl){
-		aiCtrl.remove(ctrl);
-	}
-	public void clearAI_Control(){
-		aiCtrl = new ArrayList<AI_Control>();
-	}
-	public Point2D.Float getCenter(){
+
+	public Point2D.Float getCenter() {
 		return center;
 	}
-	public Point2D.Float getVelocity(){
+
+	public Point2D.Float getVelocity() {
 		return vectVel;
 	}
-	public void accelerateRotation(double accel){
+
+	public void accelerateRotation(double accel) {
 		rotateVel += accel;
 	}
-	public double getRotateVel(){
+
+	public double getRotateVel() {
 		return rotateVel;
 	}
+
 	public abstract float getMaxAccel();
+
 	/**
 	 * Draws the Actor.
 	 * 
@@ -162,10 +149,6 @@ public abstract class Actor {
 	 *            Height of window to draw in
 	 */
 	public void move(int ms) {
-		AI_Control[] tmp = aiCtrl.toArray(new AI_Control[0]);
-		for(AI_Control ai : tmp)
-			ai.run(ms);
-		
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
 				* vectVel.y);
 		if (rotateVel != 0)
@@ -200,11 +183,11 @@ public abstract class Actor {
 			}
 		}
 	}
-	
-	public ArrayList<Actor> getActorsInView(){
+
+	public ArrayList<Actor> getActorsInView() {
 		return getActorsInView(angle, viewAngle, viewDist);
 	}
-	
+
 	ArrayList<Polygon> viewArea;
 
 	protected ArrayList<Actor> getActorsInView(double viewAngle,
@@ -229,7 +212,8 @@ public abstract class Actor {
 		for (Actor a : all) {
 			if (a instanceof Particle)
 				break;
-			if(a == this) continue;
+			if (a == this)
+				continue;
 			xPnts = a.drawPoly.xpoints;
 			yPnts = a.drawPoly.ypoints;
 
@@ -247,7 +231,7 @@ public abstract class Actor {
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
-		center = new Point2D.Float(x,y);
+		center = new Point2D.Float(x, y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);
@@ -313,8 +297,7 @@ public abstract class Actor {
 		return "Actor";
 	}
 
-	public static float getAccelToReach(float xDist, float currentVel,
-			float MAX) {
+	public static float getAccelToReach(float xDist, float currentVel, float MAX) {
 		/*
 		 * Time for velocity to reach 0 if it started to slow down:
 		 * (currentVel/MAX_ACCEL)
