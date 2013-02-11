@@ -149,7 +149,7 @@ public abstract class Actor {
 	 *            Actor to check collision against
 	 */
 	public void checkCollision(Actor other) {
-		if (other.equals(this) || other instanceof Particle)
+		if (other.equals(this) || other.center.x - center.x > 20 || other.center.y - center.y > 20 || drawClr.toString().equalsIgnoreCase(other.drawClr.toString()))
 			return;
 
 		Polygon otherPoly = other.basePoly;

@@ -14,39 +14,33 @@ import java.awt.geom.Point2D.Float;
 public class Particle extends Actor {
 
 	private int alpha;
-	private Color color;
-	private Point2D.Float vector;
-
-	/**
-	 * @param debugMode
-	 * @param p
-	 */
-	public Particle(boolean debugMode, GameEngine e) {
-		super(debugMode, e);
-		alpha = 255;
-	}
 
 	public Particle(boolean debugMode, GameEngine e, Point2D.Float vectorSpeed, Color c) {
 		super(debugMode, e);
 		alpha = 255;
-		vector = vectorSpeed;
-		color = c;
+		vectVel = vectorSpeed;
+		drawClr = c;
+		basePoly.addPoint(0, 0);
+		basePoly.addPoint(4, 0);
+		basePoly.addPoint(4, 4);
+		basePoly.addPoint(0, 4);
 	}
 
 	public void draw(Graphics g) {
 		// Draws a fading tail behind the Particle
-		for (int a = 0; a <= 130; a += 15) {
-			color = new Color(color.getRed(), color.getGreen(),
-					color.getBlue(), alpha / (a + 1));
-			g.setColor(color);
-			g.fillRect((int) (center.x - vector.x * a),
-					(int) (center.y - vector.y * a), 4, 4);
+		for (int a = 0; a <= 10; a += 1) {
+			drawClr = new Color(drawClr.getRed(), drawClr.getGreen(),
+					drawClr.getBlue(), alpha / (a + 1));
+			g.setColor(drawClr);
+			g.fillRect((int) (center.x - vectVel.x/6 * a),
+					(int) (center.y - vectVel.y/6 * a), 4, 4);
+			//engine.log("Drawn at " + (center.x - vectVel.x*a) + ", " + (center.y - vectVel.y*a));
 		}
 	}
 
 	public void move(int ms) {
-		setCenter(center.x + (vector.x * (ms / 100f)), center.y
-				+ (vector.y * (ms / 100f)));
+		setCenter(center.x + (vectVel.x * (ms / 100f)), center.y
+				+ (vectVel.y * (ms / 100f)));
 	}
 
 	@Override
@@ -61,6 +55,10 @@ public class Particle extends Actor {
 	@Override
 	public float getMaxAccel() {
 		return 0;
+	}
+	
+	public void checkCollision(Actor other) {
+		return; //Particle does not collide
 	}
 
 	public String toString() {

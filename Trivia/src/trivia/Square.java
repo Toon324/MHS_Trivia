@@ -15,11 +15,10 @@ import java.util.ArrayList;
  * 
  */
 
-public class Square extends Actor {
+public class Square extends FightingActor {
 
 	Point currentDest;
 	static float MAX_ACCEL = 1000F;
-	private int destination;
 
 	public Square(boolean debugMode,GameEngine e, int dest) {
 		super(debugMode,e);
@@ -34,37 +33,19 @@ public class Square extends Actor {
 		setBasePoly(poly);
 		drawClr = Color.orange;
 		death = false;
-	}
-
-	public void move(int ms) {
-		if (center.x + vectVel.x*(ms/1000f) >= destination)
-			super.move(ms);
-	}
-	
-	/**
-	 * Fires a shot from the given spoke, 0-3
-	 * @param spoke
-	 */
-	
-	public void fireShot(int spoke){
-		double speed = 300;
-		double shotAngle = 90;
-		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
-		Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
-		//System.out.printf("Shot vel: (%.4f, %.4f)\n", shotVel.x, shotVel.y);
-		actors.addParticle((Point2D.Float) (center.clone()), shotVel, Color.magenta);
-	}
-
-	@Override
-	public float getMaxAccel() {
-		return MAX_ACCEL;
+		shotVel.x = -40;
 	}
 	
 	public void checkCollision(Actor other) {
-		if (other.equals(this) || other instanceof Square)
+		if (other instanceof Square)
 			return;
-		else
-			super.checkCollision(other);
+		super.checkCollision(other);
+	}
+	
+	public void move(int ms) {
+		if (center.x + vectVel.x*(ms/1000f) >= destination)
+			super.move(ms);
+		fire();
 	}
 	
 	public String toString()

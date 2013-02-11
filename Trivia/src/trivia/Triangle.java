@@ -5,11 +5,9 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
 
-public class Triangle extends Actor {
+public class Triangle extends FightingActor {
 
 	Point currentDest;
-	static float MAX_ACCEL = 100F;// Pixels/s/s
-	private int destination;
 
 	public Triangle(boolean debugMode,GameEngine e, int dest) {
 		super(debugMode,e);
@@ -21,11 +19,18 @@ public class Triangle extends Actor {
 		poly.addPoint(width / 2, 0);
 		poly.addPoint(-width / 2, height / 2);
 		setBasePoly(poly);
+		shotVel.x = 40;
 		drawClr = Color.cyan;
 	}
 
 	public void setDestination(Point pnt) {
 		currentDest = pnt;
+	}
+	
+	public void move(int ms) {
+		if (center.x + vectVel.x*(ms/1000f) <= destination)
+			super.move(ms);
+		fire();
 	}
 
 	public void checkCollision(Actor other) {
@@ -33,18 +38,6 @@ public class Triangle extends Actor {
 			return;
 		}
 		super.checkCollision(other);
-	}
-	
-	public void move(int ms)
-	{
-		//GameEngine.log(this.toString() + " at " + center.x + ", " + center.y + " S: " + (ms/1000f));
-		if (center.x + vectVel.x*(ms/1000f) <= destination) 
-			super.move(ms);
-	}
-
-	@Override
-	public float getMaxAccel() {
-		return MAX_ACCEL;
 	}
 	
 	public String toString() {

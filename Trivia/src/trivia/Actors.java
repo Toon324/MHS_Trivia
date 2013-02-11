@@ -2,6 +2,7 @@ package trivia;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,7 +61,6 @@ public class Actors {
 		Object[] addArray = toAdd.toArray();
 		for (int x=0; x<addArray.length; x++) {
 			Actor a = (Actor) addArray[x];
-			engine.log("Adding " + a.toString());
 			a.setActors(this);
 			actors.add(a);
 		}
@@ -155,5 +155,11 @@ public class Actors {
 	private void log(String s) {
 		if (debugMode) 
 			System.out.println(s);
+	}
+
+	public void fireBullet(Point2D.Float center, Color drawClr, Point2D.Float velocity) {
+		Bullet b = new Bullet(debugMode, engine, velocity, drawClr);
+		b.setCenter(center.x, center.y);
+		add(b);
 	}
 }
