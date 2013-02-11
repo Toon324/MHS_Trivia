@@ -59,15 +59,17 @@ public class Actors {
 		// adds Actors toAdd
 		Object[] addArray = toAdd.toArray();
 		for (int x=0; x<addArray.length; x++) {
-			//engine.log("Adding " + a.toString());
 			Actor a = (Actor) addArray[x];
+			engine.log("Adding " + a.toString());
 			a.setActors(this);
 			actors.add(a);
 		}
+		toAdd.clear();
 		
 		// collects dead actors in an array and moves live ones, checking for collisions
 		for (Object b : actors.toArray()) {
 			Actor a = (Actor) (b);
+			//engine.log("Handling " + a.toString());
 			if (a.isDead())
 			{
 				toRemove.add(a);
@@ -85,7 +87,7 @@ public class Actors {
 		for (Object b : toRemove.toArray()) {
 			Actor a = (Actor) (b);
 			if (!actors.remove(a))
-				GameEngine.log("Error in removing actor " + a);
+				GameEngine.log("Error in removing actor " + a.toString());
 		}
 		
 		// Spawns particle explosions
@@ -120,14 +122,14 @@ public class Actors {
 		return actors;
 	}
 
-	public void addTriangle(int x, int y, int destination) {
+	public void addTriangle(int destination, int x, int y) {
 		Triangle c = new Triangle(debugMode, engine, destination);
 		c.setCenter(x, y);
 		add(c);
 	}
 
-	public void addSquare(int x, int y) {
-		Square c = new Square(debugMode, engine);
+	public void addSquare(int destination, int x, int y) {
+		Square c = new Square(debugMode, engine, destination);
 		c.setCenter(x, y);
 		add(c);
 	}

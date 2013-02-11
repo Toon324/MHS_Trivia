@@ -1,11 +1,9 @@
 package trivia;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 
 public class Triangle extends Actor {
 
@@ -17,14 +15,12 @@ public class Triangle extends Actor {
 		super(debugMode,e);
 		Polygon poly = new Polygon();
 		destination = dest;
-		vectVel = new Point2D.Float(2,0);
+		vectVel = new Point2D.Float(50,0);
 		int width = 30, height = 30;
 		poly.addPoint(-width / 2, -height / 2);
 		poly.addPoint(width / 2, 0);
 		poly.addPoint(-width / 2, height / 2);
 		setBasePoly(poly);
-		viewAngle = Math.PI / 8;
-		viewDist = 200;
 		drawClr = Color.cyan;
 	}
 
@@ -41,13 +37,18 @@ public class Triangle extends Actor {
 	
 	public void move(int ms)
 	{
-		if (center.x + vectVel.x*(ms/1000) <= destination)
-			center.x += vectVel.x*(ms/1000);
+		//GameEngine.log(this.toString() + " at " + center.x + ", " + center.y + " S: " + (ms/1000f));
+		if (center.x + vectVel.x*(ms/1000f) <= destination) 
+			super.move(ms);
 	}
 
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;
+	}
+	
+	public String toString() {
+		return "Triangle";
 	}
 
 }

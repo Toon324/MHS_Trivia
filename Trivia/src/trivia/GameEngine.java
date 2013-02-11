@@ -103,7 +103,7 @@ public class GameEngine {
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
-		FPS = average(stepTimes);	
+		FPS = 1000/ average(stepTimes);	
 	}
 
 	private double average(ArrayList<Long> list) {

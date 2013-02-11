@@ -15,9 +15,6 @@ import java.util.ArrayList;
  * @author Cody Swendrowski, Dan Miller
  */
 public abstract class Actor {
-	protected double angle;
-	protected double viewAngle;
-	protected int viewDist;
 
 	protected boolean debug;
 	protected Actors actors;
@@ -28,7 +25,6 @@ public abstract class Actor {
 	protected GameEngine engine;
 
 	// derivative motion values
-	protected double rotateVel;// radians/s
 	protected Point2D.Float vectVel;// pixels/s
 
 	protected Polygon basePoly, drawPoly;
@@ -44,8 +40,6 @@ public abstract class Actor {
 		debug = debugMode;
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
-		rotateVel = 0;
-		angle = 0;
 		center = new Point2D.Float(0, 0);
 		death = false;
 		engine = e;
@@ -71,14 +65,6 @@ public abstract class Actor {
 
 	public Point2D.Float getVelocity() {
 		return vectVel;
-	}
-
-	public void accelerateRotation(double accel) {
-		rotateVel += accel;
-	}
-
-	public double getRotateVel() {
-		return rotateVel;
 	}
 
 	public abstract float getMaxAccel();
@@ -145,8 +131,6 @@ public abstract class Actor {
 	public void move(int ms) {
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
 				* vectVel.y);
-		if (rotateVel != 0)
-			rotate((ms / 1000F) * rotateVel);
 	}
 
 	/**
@@ -186,53 +170,6 @@ public abstract class Actor {
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);
-	}
-
-	/**
-	 * Returns the direction that the Actor is facing in radians.
-	 * 
-	 * @return dir
-	 */
-	public double getAngle() {
-		return angle;
-	}
-
-	/**
-	 * Sets the direction that the Actor is facing in radians.
-	 * 
-	 * @param d
-	 *            Direction to set as.
-	 */
-	public void setAngle(double d) {
-		d %= (2 * Math.PI);
-		// log("Angle: " + Math.toDegrees(d));
-		drawPoly = rotate(basePoly, d);
-		angle = d;
-	}
-
-	public void rotate(double d) {
-		d %= (2 * Math.PI);
-		angle += d;
-		angle %= (2 * Math.PI);
-		drawPoly = rotate(basePoly, angle);
-	}
-
-	private Polygon rotate(Polygon myPoly, double d) {
-		return applyAffineTransform(myPoly,
-				AffineTransform.getRotateInstance(d, center.x, center.y));
-	}
-
-	private Polygon applyAffineTransform(Polygon poly, AffineTransform trans) {
-		Point[] points = new Point[poly.npoints];
-		for (int i = 0; i < poly.npoints; i++) {
-			points[i] = new Point(poly.xpoints[i], poly.ypoints[i]);
-		}
-		trans.transform(points, 0, points, 0, points.length);
-		Polygon newPoly = new Polygon();
-		for (int i = 0; i < points.length; i++) {
-			newPoly.addPoint(points[i].x, points[i].y);
-		}
-		return newPoly;
 	}
 
 	public void setDeath(boolean d) {

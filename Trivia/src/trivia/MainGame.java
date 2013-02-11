@@ -46,7 +46,7 @@ public class MainGame extends GameMode {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
 		maxFleetSize = 10;
-		initializeFleetPositions(1);
+		initializeFleetPositions(0);
 	}
 
 	private void initializeFleetPositions(int setup) {
@@ -55,9 +55,9 @@ public class MainGame extends GameMode {
 		case 0:
 			maxFleetSize = 4;
 			Point a1 = new Point(200,50),
-			a2 = new Point(230,100), 
-			a3 = new Point(230,150), 
-			a4 = new Point(200,200);
+			a2 = new Point(230,120), 
+			a3 = new Point(230,190), 
+			a4 = new Point(200,260);
 			Point[] atemp = {a1,a2,a3,a4};
 			boolean[] astatusTemp = {false,false,false,false};
 			fleetPositions = atemp;
@@ -184,7 +184,6 @@ public class MainGame extends GameMode {
 			g.setColor(Color.gray);
 			g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 					engine.windowHeight);
-			g.setColor(Color.cyan);
 
 			// Draws question
 			FontMetrics fm = g.getFontMetrics(f);
@@ -252,6 +251,7 @@ public class MainGame extends GameMode {
 				if(!fleetStatus[i])
 				{
 					engine.actors.addTriangle(fleetPositions[i].x, fleetPositions[i].x-250, fleetPositions[i].y);
+					engine.actors.addSquare(engine.windowWidth-fleetPositions[i].x, engine.windowWidth-fleetPositions[i].x+250, fleetPositions[i].y);
 					fleetStatus[i] = true;
 					shipsToAdd -= 1;
 				}
