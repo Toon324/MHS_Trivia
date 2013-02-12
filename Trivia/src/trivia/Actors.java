@@ -95,9 +95,13 @@ public class Actors {
 		// removes dead actors from the main array
 		for (Object b : toRemove.toArray()) {
 			Actor a = (Actor) (b);
-			if (a instanceof FightingActor) {
-				FightingActor f = (FightingActor) (a);
-				engine.mainGame.setPositionToFalse(f.destination, (int) f.center.y);
+			if (a instanceof Triangle) {
+				Triangle f = (Triangle) (a);
+				engine.mainGame.setTrianglePositionToFalse(f.destination, (int) f.center.y);
+			}
+			else if (a instanceof Square) {
+				Square f = (Square) (a);
+				engine.mainGame.setSquarePositionToFalse(f.destination, (int) f.center.y);
 			}
 			if (!actors.remove(a))
 				GameEngine.log("Error in removing actor " + a.toString());

@@ -43,6 +43,7 @@ public class Square extends FightingActor {
 	}
 	
 	public void move(int ms) {
+		//engine.log("Square at " + center.x + ", " + center.y);
 		if (center.x + vectVel.x*(ms/1000f) >= destination)
 			super.move(ms);
 	}

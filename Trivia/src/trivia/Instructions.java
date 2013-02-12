@@ -23,7 +23,7 @@ public class Instructions extends GameMode {
 	 */
 	public Instructions(GameEngine eng) {
 		super(eng);
-		buttons.add(new Button("Main Menu", 200, 500));
+		buttons.add(new Button("Main Menu", 250, 500));
 	}
 
 	public void run(int ms) {

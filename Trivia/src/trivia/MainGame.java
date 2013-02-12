@@ -19,7 +19,7 @@ import java.util.Scanner;
 public class MainGame extends GameMode {
 	
 	private Point[] fleetPositions;
-	private boolean[] fleetStatus;
+	private boolean[] triangleFleetStatus, squareFleetStatus;
 
 	private enum states {
 		QUESTIONS, DISPLAY_RESPONSE
@@ -46,7 +46,7 @@ public class MainGame extends GameMode {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
 		maxFleetSize = 10;
-		initializeFleetPositions(0);
+		initializeFleetPositions(1);
 	}
 
 	private void initializeFleetPositions(int setup) {
@@ -61,8 +61,10 @@ public class MainGame extends GameMode {
 			Point[] atemp = {a1,a2,a3,a4};
 			boolean[] astatusTemp = {false,false,false,false};
 			fleetPositions = atemp;
-			fleetStatus = astatusTemp;
-			addShipsToFleet(maxFleetSize);
+			triangleFleetStatus = astatusTemp.clone();
+			squareFleetStatus = astatusTemp.clone();
+			addShipsToTriangleFleet(maxFleetSize);
+			addShipsToSquareFleet(maxFleetSize);
 			break;
 		case 1:
 			maxFleetSize = 8;
@@ -77,8 +79,10 @@ public class MainGame extends GameMode {
 			Point[] btemp = {b1,b2,b3,b4,b5,b6,b7,b8};
 			boolean[] bstatusTemp = {false,false,false,false,false,false,false,false};
 			fleetPositions = btemp;
-			fleetStatus = bstatusTemp;
-			addShipsToFleet(maxFleetSize);
+			triangleFleetStatus = bstatusTemp.clone();
+			squareFleetStatus = bstatusTemp.clone();
+			addShipsToTriangleFleet(maxFleetSize);
+			addShipsToSquareFleet(maxFleetSize);
 			break;
 		}
 	}
@@ -152,10 +156,12 @@ public class MainGame extends GameMode {
 				int toAdd = (int) (100 / Math.pow(2,
 						Math.pow(qstSet.getTimePassed() / (double) 5000, 4)));
 				engine.score += toAdd;
+				if (toAdd < 50)
+					toAdd = 50;
 				engine.actors.setEvade(toAdd);
-				addShipsToFleet(1);
+				addShipsToTriangleFleet(1);
+				addShipsToSquareFleet(1);
 			} else {
-
 				engine.score -= 90;
 				if (engine.score < 0) 
 					engine.score = 0;
@@ -163,6 +169,8 @@ public class MainGame extends GameMode {
 				{
 					engine.score = 0;
 				}
+				addShipsToSquareFleet(1);
+				engine.actors.setEvade(50);
 			}
 		}
 	}
@@ -188,9 +196,11 @@ public class MainGame extends GameMode {
 		case QUESTIONS:
 
 			// Draws question background
-			g.setColor(Color.gray);
+			g.setColor(engine.transGray);
 			g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 					engine.windowHeight);
+			
+			g.setColor(Color.cyan);
 
 			// Draws question
 			FontMetrics fm = g.getFontMetrics(f);
@@ -229,7 +239,7 @@ public class MainGame extends GameMode {
 			break;
 
 		case DISPLAY_RESPONSE:
-			g.setColor(Color.gray);
+			g.setColor(engine.transGray);
 			g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 					engine.windowHeight);
 			g.setColor(Color.cyan);
@@ -247,16 +257,25 @@ public class MainGame extends GameMode {
 
 	}
 	
-	public void setPositionToFalse(int x, int y) {
+	public void setTrianglePositionToFalse(int x, int y) {
 		int num = 0;
 		for (Point p : fleetPositions) {
 			if (p.x == x && p.y == y)
-				fleetStatus[num] = false;
+				triangleFleetStatus[num] = false;
 			num++;
 		}
 	}
 	
-	private void addShipsToFleet(int shipsToAdd)
+	public void setSquarePositionToFalse(int x, int y) {
+		int num = 0;
+		for (Point p : fleetPositions) {
+			if (engine.windowWidth-p.x == x && p.y == y)
+				squareFleetStatus[num] = false;
+			num++;
+		}
+	}
+	
+	private void addShipsToTriangleFleet(int shipsToAdd)
 	{
 		if (shipsToAdd > 0)
 		{
@@ -264,11 +283,28 @@ public class MainGame extends GameMode {
 			{
 				if (shipsToAdd <= 0)
 					break;
-				if(!fleetStatus[i])
+				if(!triangleFleetStatus[i])
 				{
 					engine.actors.addTriangle(fleetPositions[i].x, fleetPositions[i].x-250, fleetPositions[i].y);
+					triangleFleetStatus[i] = true;
+					shipsToAdd -= 1;
+				}
+			}
+		}
+	}
+	
+	private void addShipsToSquareFleet(int shipsToAdd)
+	{
+		if (shipsToAdd > 0)
+		{
+			for(int i=0; i<fleetPositions.length; i++)
+			{
+				if (shipsToAdd <= 0)
+					break;
+				if(!squareFleetStatus[i])
+				{
 					engine.actors.addSquare(engine.windowWidth-fleetPositions[i].x, engine.windowWidth-fleetPositions[i].x+250, fleetPositions[i].y);
-					fleetStatus[i] = true;
+					squareFleetStatus[i] = true;
 					shipsToAdd -= 1;
 				}
 			}

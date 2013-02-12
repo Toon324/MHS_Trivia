@@ -30,13 +30,15 @@ public class EndGame extends GameMode {
 	public void paint(Graphics g) {
 		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight,
 				null);
-		g.setColor(Color.gray);
+		g.setColor(engine.transGray);
 		g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 				engine.windowHeight);
 		g.setColor(Color.cyan);
 		buttons.get(0).draw(g);
-		g.drawString("Your score is " + engine.score + ".", 40,
-				engine.windowHeight - 225);
+		g.setFont(engine.large);
+		buttons.get(0).set(200, engine.windowHeight-100);
+		g.drawString("Your score is " + engine.score + ".", engine.windowWidth/2-100,
+				engine.windowHeight - 150);
 	}
 	
 	public String toString()

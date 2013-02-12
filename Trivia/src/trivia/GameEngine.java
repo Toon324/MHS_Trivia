@@ -35,7 +35,8 @@ public class GameEngine {
 	private int timer = 0;
 	int windowWidth, windowHeight;
 	protected int score;
-	Font large = new Font("Serif", Font.BOLD, 30);
+	final Font large = new Font("Serif", Font.BOLD, 30);
+	final Color transGray = new Color(Color.gray.getRed(),Color.gray.getGreen(),Color.gray.getBlue(), 200);
 	
 	public static Point envSize = new Point(0, 0);
 	public static PrintWriter debugWriter;
