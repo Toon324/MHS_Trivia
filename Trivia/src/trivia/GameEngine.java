@@ -65,9 +65,8 @@ public class GameEngine {
 	 * @param debug
 	 *            If true, prints out debug messages.
 	 */
-	public GameEngine(Actors actors, boolean debug) {
-		this.actors = actors;
-		actors.setEngine(this);
+	public GameEngine(boolean debug) {
+		actors = new Actors(this, debug);
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		endGame = new EndGame(this);
@@ -81,15 +80,6 @@ public class GameEngine {
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
-	}
-
-	public ParticleEngine getParticleEngine() {
-		if (particleEngine == null)
-		{
-			log("PE is null");
-			particleEngine = new ParticleEngine(this);
-		}
-		return particleEngine;
 	}
 
 	/**
@@ -138,6 +128,10 @@ public class GameEngine {
 	 */
 	public void setMode(GameMode newMode) {
 		mode = newMode;
+		if (mode instanceof MainGame) {
+			actors.clear();
+			score = 0;
+		}
 	}
 
 	/**

@@ -30,8 +30,12 @@ public class Actors {
 
 	/**
 	 * Creates a new container of Actor.
+	 * @param debug 
+	 * @param gameEngine 
 	 */
-	public Actors() {
+	public Actors(GameEngine gameEngine, boolean debug) {
+		engine = gameEngine;
+		debugMode = debug;
 	}
 
 	/**
@@ -116,8 +120,7 @@ public class Actors {
 	 */
 	public void drawActors(Graphics g) {
 		for (Object a : actors.toArray()) {
-			PainterThread p = new PainterThread((Actor)(a),g);
-			threadPool.execute(p);
+			((Actor)a).draw(g);
 		}
 	}
 
@@ -167,4 +170,9 @@ public class Actors {
 	public void fire() {
 		canFire = true;	
 	}
+
+	public void clear() {
+		actors.clear();
+	}
+	
 }
