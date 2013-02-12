@@ -247,6 +247,15 @@ public class MainGame extends GameMode {
 
 	}
 	
+	public void setPositionToFalse(int x, int y) {
+		int num = 0;
+		for (Point p : fleetPositions) {
+			if (p.x == x && p.y == y)
+				fleetStatus[num] = false;
+			num++;
+		}
+	}
+	
 	private void addShipsToFleet(int shipsToAdd)
 	{
 		if (shipsToAdd > 0)
