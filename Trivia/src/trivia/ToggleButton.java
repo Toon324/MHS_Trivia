@@ -45,7 +45,7 @@ public class ToggleButton extends Button {
 			g.fillRect(x_pos - 2, y_pos - 2, width + 2, 2);
 			g.fillRect(x_pos - 2, y_pos - 2, 2, height + 2);
 		} else {
-			g.fillRect(x_pos + width, y_pos - 2, 2, height + 2);
+			g.fillRect(x_pos + width, y_pos, 2, height + 2);
 			g.fillRect(x_pos - 2, y_pos + height, width + 2, 2);
 		}
 
@@ -55,7 +55,7 @@ public class ToggleButton extends Button {
 			g.fillRect(x_pos - 2, y_pos + height, width + 2, 2);
 		} else {
 			g.fillRect(x_pos - 2, y_pos, width + 2, 2);
-			g.fillRect(x_pos - 2, y_pos - 2, 2, height + 2);
+			g.fillRect(x_pos - 2, y_pos, 2, height + 2);
 		}
 
 		g.drawString(text, x_pos + 10, y_pos + 23);

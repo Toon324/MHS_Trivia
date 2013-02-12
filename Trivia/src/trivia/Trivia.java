@@ -35,6 +35,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	public void init() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addKeyListener(this);
 		engine = new GameEngine(true);
 		engine.setWindowSize(getWidth(), getHeight());
 		engine.setMode(engine.mainMenu);
@@ -144,7 +145,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		engine.keyTyped(e);
 	}
 
 	@Override

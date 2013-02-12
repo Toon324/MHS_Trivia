@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
@@ -41,6 +42,8 @@ public class GameEngine {
 	public static Point envSize = new Point(0, 0);
 	public static PrintWriter debugWriter;
 	public static boolean debugMode;
+	
+	boolean ENTER;
 	
 	ArrayList<Long> stepTimes;
 	double FPS;
@@ -196,5 +199,13 @@ public class GameEngine {
 			System.out.println(s);
 		}
 		debugWriter.println(s);
+	}
+
+	public void keyTyped(KeyEvent e) {
+		log("Event: " + e.getKeyChar());
+		if (e.getKeyChar() == KeyEvent.VK_ESCAPE)
+			System.exit(0);
+		else if (e.getKeyChar() == KeyEvent.VK_ENTER)
+			ENTER = true;
 	}
 }

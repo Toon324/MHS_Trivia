@@ -22,7 +22,7 @@ public class MainGame extends GameMode {
 	private boolean[] triangleFleetStatus, squareFleetStatus;
 
 	private enum states {
-		QUESTIONS, DISPLAY_RESPONSE
+		QUESTIONS, DISPLAY_RESPONSE, WAIT_FOR_END
 	};
 
 	private states state;	
@@ -30,7 +30,6 @@ public class MainGame extends GameMode {
 	private Questions qstSet;
 
 	private int maxFleetSize;
-	private int fleetSize;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
@@ -69,13 +68,13 @@ public class MainGame extends GameMode {
 		case 1:
 			maxFleetSize = 8;
 			Point b1 = new Point(200,50),
-			b2 = new Point(230,100), 
-			b3 = new Point(230,150), 
-			b4 = new Point(200,200),
-			b5 = new Point(150,50),
-			b6 = new Point(150,100),
-			b7 = new Point(150,150),
-			b8 = new Point(150,200);
+			b2 = new Point(230,120), 
+			b3 = new Point(230,190), 
+			b4 = new Point(200,260),
+			b5 = new Point(130,50),
+			b6 = new Point(130,120),
+			b7 = new Point(130,190),
+			b8 = new Point(130,260);
 			Point[] btemp = {b1,b2,b3,b4,b5,b6,b7,b8};
 			boolean[] bstatusTemp = {false,false,false,false,false,false,false,false};
 			fleetPositions = btemp;
@@ -102,11 +101,6 @@ public class MainGame extends GameMode {
 		//intentionally modifies the object, rather than re-instantianizing
 		GameEngine.envSize.x = engine.windowWidth;
 		GameEngine.envSize.y = engine.windowHeight - 250;
-
-		if(fleetSize < maxFleetSize){
-			//addShips(1);
-			fleetSize++;
-		}
 		
 		engine.actors.handleActors(ms);
 		//Particle.runParticles(ms);
@@ -116,7 +110,7 @@ public class MainGame extends GameMode {
 			runQuestion();
 			break;
 		case DISPLAY_RESPONSE:
-			if (System.currentTimeMillis() > lastTime + 1000) {
+			if (System.currentTimeMillis() > lastTime + 1000 && engine.ENTER) {
 				state = states.QUESTIONS;
 
 				if (qstSet.nextQuestion()) {
@@ -127,9 +121,13 @@ public class MainGame extends GameMode {
 								(engine.windowHeight - 150) + (i * 35)));
 					}
 				} else {
-					engine.setMode(engine.endGame);
+					state = states.WAIT_FOR_END;
 				}
 			}
+			break;
+		case WAIT_FOR_END:
+			if (System.currentTimeMillis() > lastTime + 3000)
+				engine.setMode(engine.endGame);
 			break;
 		}
 	}
@@ -161,6 +159,7 @@ public class MainGame extends GameMode {
 				engine.actors.setEvade(toAdd);
 				addShipsToTriangleFleet(1);
 				addShipsToSquareFleet(1);
+				engine.ENTER = true;
 			} else {
 				engine.score -= 90;
 				if (engine.score < 0) 
@@ -171,6 +170,7 @@ public class MainGame extends GameMode {
 				}
 				addShipsToSquareFleet(1);
 				engine.actors.setEvade(50);
+				engine.ENTER = false;
 			}
 		}
 	}
@@ -238,7 +238,7 @@ public class MainGame extends GameMode {
 			}
 			break;
 
-		case DISPLAY_RESPONSE:
+		default:
 			g.setColor(engine.transGray);
 			g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 					engine.windowHeight);
@@ -247,8 +247,16 @@ public class MainGame extends GameMode {
 				g.drawString("You got that right!", 10,
 						engine.windowHeight - 230);
 			} else {
-				g.drawString("You got that wrong!", 10,
+				g.drawString("Nice try, but you got that wrong!", 10,
 						engine.windowHeight - 230);
+				g.drawString("The correct answer was:", 10, engine.windowHeight-200);
+				g.setColor(Color.red);
+				try {
+					g.drawString(qstSet.getCorrectString(), 10, engine.windowHeight-170); 
+				}
+				catch (Exception e) { engine.ENTER = true;}
+				g.setColor(Color.cyan);
+				g.drawString("Press ENTER to continue.", 10, engine.windowHeight-140);
 			}
 		}
 

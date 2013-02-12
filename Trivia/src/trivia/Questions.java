@@ -70,6 +70,11 @@ public class Questions {
 		}
 		return false;
 	}
+	
+	public String getCorrectString() {
+		String[] currentAnswers = answers[currentQuestion];
+		return currentAnswers[answerKey[currentQuestion]];
+	}
 
 	/**
 	 * Moves to the next question
