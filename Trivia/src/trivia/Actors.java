@@ -2,7 +2,6 @@ package trivia;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -98,10 +97,9 @@ public class Actors {
 		
 		// Spawns particle explosions
 		for (Point2D.Float p : particles) {
-			//engine.particleEngine.spawnRandomExplosion(p);
+			engine.particleEngine.spawnRandomExplosion(p);
 		}
 		canFire = false;
-		//engine.log("-----------------------------------------");
 	}
 
 	/**
@@ -150,17 +148,6 @@ public class Actors {
 	public void setEngine(GameEngine e)
 	{
 		engine = e;
-	}
-
-	/**
-	 * Debug tool. Used to print a String.
-	 * 
-	 * @param s
-	 *            String to print.
-	 */
-	private void log(String s) {
-		if (debugMode) 
-			System.out.println(s);
 	}
 	
 	public void setEvade(int e) {
