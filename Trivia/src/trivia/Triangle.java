@@ -30,7 +30,6 @@ public class Triangle extends FightingActor {
 	public void move(int ms) {
 		if (center.x + vectVel.x*(ms/1000f) <= destination)
 			super.move(ms);
-		fire();
 	}
 
 	public void checkCollision(Actor other) {

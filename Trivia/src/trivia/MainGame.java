@@ -144,12 +144,15 @@ public class MainGame extends GameMode {
 		}
 
 		if (Button.isOneClicked(buttons)) {
+			engine.actors.fire();
 			lastTime = System.currentTimeMillis();
 			state = states.DISPLAY_RESPONSE;
 			lastAnswer = qstSet.checkCorrect(buttons.toArray(new Button[0]));
 			if (lastAnswer) {
-				engine.score += 100 / Math.pow(2,
-						Math.pow(qstSet.getTimePassed() / (double) 5000, 4));
+				int toAdd = (int) (100 / Math.pow(2,
+						Math.pow(qstSet.getTimePassed() / (double) 5000, 4)));
+				engine.score += toAdd;
+				engine.actors.setEvade(toAdd);
 				addShipsToFleet(1);
 			} else {
 
@@ -176,6 +179,10 @@ public class MainGame extends GameMode {
 
 		g.setFont(f);
 		g.setColor(Color.cyan);
+		
+		g.drawString("Evade:", 250, 20);
+		g.fillRect(300, 20, (int) (100 / Math.pow(2,
+						Math.pow(qstSet.getTimePassed() / (double) 5000, 4))), 20);
 
 		switch (state) {
 		case QUESTIONS:

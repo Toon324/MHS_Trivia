@@ -49,6 +49,8 @@ public class Actors {
 		toAdd.add(a);
 	}
 
+	private int evade;
+	private boolean canFire;
 	/**
 	 * Moves and checks for death all actors which are alive. Removes all dead
 	 * actors.
@@ -78,6 +80,10 @@ public class Actors {
 			}
 			else {
 				a.move(ms);
+				if (a instanceof Triangle)
+					((Triangle) a).setEvade(evade);
+				if (a instanceof FightingActor && canFire)
+					((FightingActor) a).fire();
 				// check for collisions
 				threadPool.execute(new CollisionThread(a,actors.toArray()));
 			}
@@ -94,7 +100,7 @@ public class Actors {
 		for (Point2D.Float p : particles) {
 			//engine.particleEngine.spawnRandomExplosion(p);
 		}
-
+		canFire = false;
 		//engine.log("-----------------------------------------");
 	}
 
@@ -156,10 +162,18 @@ public class Actors {
 		if (debugMode) 
 			System.out.println(s);
 	}
+	
+	public void setEvade(int e) {
+		evade = e;
+	}
 
 	public void fireBullet(Point2D.Float center, Color drawClr, Point2D.Float velocity) {
 		Bullet b = new Bullet(debugMode, engine, velocity, drawClr);
 		b.setCenter(center.x, center.y);
 		add(b);
+	}
+
+	public void fire() {
+		canFire = true;	
 	}
 }
