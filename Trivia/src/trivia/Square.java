@@ -19,7 +19,6 @@ import aiControls.RotateSearch;
 
 public class Square extends AI_Actor {
 
-	Point currentDest;
 	static float MAX_ACCEL = 100F;
 
 	private Square() {
@@ -64,6 +63,11 @@ public class Square extends AI_Actor {
 		return list;
 	}
 	
+	public boolean equals(Object other){
+		if (other == this) return true;
+		if (other instanceof Square) return true;
+		return false;
+	}
 
 	public static void addSquare(int x, int y) {
 		Square c = new Square();

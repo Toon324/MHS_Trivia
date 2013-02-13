@@ -64,9 +64,8 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void run(int ms) {
-		//intentionally modifies the object, rather than re-instantianizing
-		GameEngine.envSize.x = engine.windowWidth;
-		GameEngine.envSize.y = engine.windowHeight - 250;
+		super.run(ms);
+		GameEngine.envSize.y -= 250;
 
 		if(fleetSize < maxFleetSize){
 			//addShips(1);
@@ -77,7 +76,6 @@ public class MainGame extends GameMode {
 			tf.nextStep(ms);
 		}
 		
-		Actor.handleActors(ms);
 		//Particle.runParticles(ms);
 		switch (state) {
 		case QUESTIONS:

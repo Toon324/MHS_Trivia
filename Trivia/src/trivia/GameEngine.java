@@ -55,7 +55,7 @@ public class GameEngine {
 	}
 	
 	/**
-	 * Creates a new GameEngine. Must use setMode before execution
+	 * Creates a new GameEngine.
 	 * 
 	 * @param debug
 	 *            If true, prints out debug messages.
@@ -67,6 +67,7 @@ public class GameEngine {
 		endGame = new EndGame(this);
 		sandbox = new Sandbox(this);
 		instructions = new Instructions(this);
+		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;
 		millis = System.currentTimeMillis();
@@ -130,7 +131,7 @@ public class GameEngine {
 	 * @param y
 	 */
 	public void clickedAt(MouseEvent e) {
-		mode.clicked(e.getX(), e.getY());
+		mode.clicked(e);
 	}
 
 	public void MouseMoved(MouseEvent e) {

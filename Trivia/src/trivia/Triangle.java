@@ -9,7 +9,6 @@ import aiControls.*;
 
 public class Triangle extends AI_Actor {
 
-	Point currentDest;
 	static float MAX_ACCEL = 100F;// Pixels/s/s
 
 	private Triangle() {
@@ -47,6 +46,12 @@ public class Triangle extends AI_Actor {
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;
+	}
+	
+	public boolean equals(Object other){
+		if (other == this) return true;
+		if (other instanceof Triangle) return true;
+		return false;
 	}
 	
 	//used for debug

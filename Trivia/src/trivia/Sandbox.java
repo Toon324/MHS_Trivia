@@ -1,6 +1,8 @@
 package trivia;
 
 import java.awt.Graphics;
+import java.awt.MouseInfo;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 /**
@@ -19,14 +21,19 @@ public class Sandbox extends GameMode {
 	}
 
 	@Override
-	public void clicked(int x, int y) {
+	public void clicked(MouseEvent e) {
 		//engine.log("Clicked at " + x + ", " + y);
-		Particle.spawnRandomExplosion(new Point2D.Float(x,y));
+		if(e.getButton() == MouseEvent.BUTTON1)
+			Particle.spawnRandomExplosion(new Point2D.Float(e.getX() ,e.getY()));
+		else
+			Triangle.addTriangle(e.getX(), e.getY());
 	}
-
+	
+	
+	
 	@Override
 	public void run(int ms) {
-		Actor.handleActors(ms);
+		super.run(ms);
 	}
 
 	@Override

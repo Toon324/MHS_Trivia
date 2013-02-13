@@ -11,6 +11,7 @@ import aiControls.RandomWander;
 
 public abstract class AI_Actor extends Actor {
 
+	protected Point currentDest;
 	protected double viewAngle;
 	protected int viewDist;
 	ArrayList<Polygon> viewArea;
@@ -49,7 +50,7 @@ public abstract class AI_Actor extends Actor {
 	public void checkCollision(Actor other) {
 		// this will still check actors against particles, but not particles
 		// against actors
-		if (this == other)
+		if (this.equals(other))
 			return;
 
 		Polygon otherPoly = other.basePoly;
@@ -139,4 +140,6 @@ public abstract class AI_Actor extends Actor {
 	public boolean isDead() {
 		return death;
 	}
+
+	public abstract float getMaxAccel();
 }

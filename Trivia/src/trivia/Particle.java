@@ -65,11 +65,6 @@ public class Particle extends Actor {
 		p.setCenter(center);
 		add(p);
 	}
-	
-	@Override
-	public float getMaxAccel() {
-		return 0;
-	}
 
 	public String toString() {
 		return "Particle";
@@ -92,7 +87,7 @@ public class Particle extends Actor {
 		int num = gen.nextInt(11) + 3;
 		// engine.log("Num: " + num);
 		double angleInc = (2 * Math.PI) / num;
-		float speed = gen.nextFloat() + .2f;
+		float speed = gen.nextFloat() + 50f;
 		Color c = new Color(gen.nextFloat(), gen.nextFloat(), gen.nextFloat(),
 				1.0f);
 		c.brighter();

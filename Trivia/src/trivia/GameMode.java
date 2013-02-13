@@ -2,6 +2,7 @@ package trivia;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -40,6 +41,10 @@ public abstract class GameMode {
 	 * Runs the logic of the GameMode.
 	 */
 	public void run(int ms) {
+		//intentionally modifies the object, rather than re-instantianizing
+		GameEngine.envSize.x = engine.windowWidth;
+		GameEngine.envSize.y = engine.windowHeight;
+		Actor.handleActors(ms);
 	}
 
 	public void mouseMoved(int x, int y) {
@@ -53,12 +58,12 @@ public abstract class GameMode {
 	 * @param y
 	 *            MouseClick Y value
 	 */
-	public void clicked(int x, int y) {
+	public void clicked(MouseEvent e) {
 		try {
 			for (int i = 0; i < buttons.size(); i++) {
-				buttons.get(i).checkClick(x, y);
+				buttons.get(i).checkClick(e.getX(), e.getY());
 			}
-		} catch (java.lang.NullPointerException e) {
+		} catch (java.lang.NullPointerException except) {
 			GameEngine.log("No defined buttons in " + this.toString());
 		}
 	}
@@ -70,7 +75,6 @@ public abstract class GameMode {
 	 *            Graphics to paint with
 	 */
 	public void paint(Graphics g) {
-
 		try {
 			for (int i = 0; i < buttons.size(); i++) {
 				buttons.get(i).draw(g);

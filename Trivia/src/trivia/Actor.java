@@ -73,8 +73,6 @@ public abstract class Actor {
 		return rotateVel;
 	}
 
-	public abstract float getMaxAccel();
-
 	/**
 	 * Draws the Actor.
 	 * 
@@ -241,7 +239,8 @@ public abstract class Actor {
 	private static ArrayList<Actor> toAdd = new ArrayList<Actor>();
 	protected static GameEngine engine;
 	private static ExecutorService threadPool = Executors.newCachedThreadPool();
-
+	
+	
 	public static void add(Actor a) {
 		if (actors.size() >= MAX_ACTORS) {
 			return;
@@ -257,10 +256,8 @@ public abstract class Actor {
 	public static void handleActors(int ms) {
 		ArrayList<Actor> toRemove = new ArrayList<Actor>();
 
-		// adds Actors toAdd
-		Actor[] addArray = toAdd.toArray(new Actor[0]);
-		for (int x = 0; x < addArray.length; x++) {
-			Actor a = addArray[x];
+		// adds toAdd Actors to actors
+		for (Actor a : toAdd) {
 			actors.add(a);
 		}
 		toAdd.clear();
