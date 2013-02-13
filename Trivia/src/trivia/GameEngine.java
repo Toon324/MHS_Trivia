@@ -70,7 +70,7 @@ public class GameEngine {
 	 *            If true, prints out debug messages.
 	 */
 	public GameEngine(boolean debug) {
-		actors = new Actors(this, debug);
+		actors = new Actors(this);
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		endGame = new EndGame(this);
@@ -202,7 +202,6 @@ public class GameEngine {
 	}
 
 	public void keyTyped(KeyEvent e) {
-		log("Event: " + e.getKeyChar());
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE)
 			System.exit(0);
 		else if (e.getKeyChar() == KeyEvent.VK_ENTER)

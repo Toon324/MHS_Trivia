@@ -16,7 +16,6 @@ import java.util.ArrayList;
  */
 public abstract class Actor {
 
-	protected boolean debug;
 	protected Actors actors;
 
 	protected boolean death;
@@ -36,8 +35,7 @@ public abstract class Actor {
 	 *            Position in ArrayList
 	 */
 
-	public Actor(boolean debugMode, GameEngine e) {
-		debug = debugMode;
+	public Actor(GameEngine e) {
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
 		center = new Point2D.Float(0, 0);

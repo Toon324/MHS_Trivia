@@ -22,8 +22,8 @@ public class FightingActor extends Actor {
 	 * @param debugMode
 	 * @param e
 	 */
-	public FightingActor(boolean debugMode, GameEngine e) {
-		super(debugMode, e);
+	public FightingActor(GameEngine e) {
+		super(e);
 		evade = 75; // % chance to evade a shot
 	}
 

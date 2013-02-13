@@ -9,8 +9,8 @@ public class Triangle extends FightingActor {
 
 	Point currentDest;
 
-	public Triangle(boolean debugMode,GameEngine e, int dest) {
-		super(debugMode,e);
+	public Triangle(GameEngine e, int dest) {
+		super(e);
 		Polygon poly = new Polygon();
 		destination = dest;
 		vectVel = new Point2D.Float(50,0);

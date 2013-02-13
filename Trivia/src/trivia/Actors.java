@@ -17,7 +17,6 @@ public class Actors {
 	private final int MAX_ACTORS = 1000;
 	private ArrayList<Actor> actors = new ArrayList<Actor>();
 	private ArrayList<Actor> toAdd = new ArrayList<Actor>();
-	private Boolean debugMode = false;
 	private GameEngine engine;
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -33,9 +32,8 @@ public class Actors {
 	 * @param debug 
 	 * @param gameEngine 
 	 */
-	public Actors(GameEngine gameEngine, boolean debug) {
+	public Actors(GameEngine gameEngine) {
 		engine = gameEngine;
-		debugMode = debug;
 	}
 
 	/**
@@ -72,8 +70,7 @@ public class Actors {
 		toAdd.clear();
 		
 		// collects dead actors in an array and moves live ones, checking for collisions
-		for (Object b : actors.toArray()) {
-			Actor a = (Actor) (b);
+		for (Actor a : actors.toArray(new Actor[0])) {
 			//engine.log("Handling " + a.toString());
 			if (a.isDead())
 			{
@@ -93,8 +90,7 @@ public class Actors {
 				
 		}
 		// removes dead actors from the main array
-		for (Object b : toRemove.toArray()) {
-			Actor a = (Actor) (b);
+		for (Actor a : toRemove.toArray(new Actor[0])) {
 			if (a instanceof Triangle) {
 				Triangle f = (Triangle) (a);
 				engine.mainGame.setTrianglePositionToFalse(f.destination, (int) f.center.y);
@@ -138,20 +134,20 @@ public class Actors {
 	}
 
 	public void addTriangle(int destination, int x, int y) {
-		Triangle c = new Triangle(debugMode, engine, destination);
+		Triangle c = new Triangle(engine, destination);
 		c.setCenter(x, y);
 		add(c);
 	}
 
 	public void addSquare(int destination, int x, int y) {
-		Square c = new Square(debugMode, engine, destination);
+		Square c = new Square(engine, destination);
 		c.setCenter(x, y);
 		add(c);
 	}
 	
 	public void addParticle(Point2D.Float center, Point2D.Float vectorSpeed, Color c)
 	{
-		Particle p = new Particle(debugMode, engine, vectorSpeed, c);
+		Particle p = new Particle(engine, vectorSpeed, c);
 		p.setCenter(center);
 		add(p);
 	}
@@ -166,7 +162,7 @@ public class Actors {
 	}
 
 	public void fireBullet(Point2D.Float center, Color drawClr, Point2D.Float velocity) {
-		Bullet b = new Bullet(debugMode, engine, velocity, drawClr);
+		Bullet b = new Bullet( engine, velocity, drawClr);
 		b.setCenter(center.x, center.y);
 		add(b);
 	}

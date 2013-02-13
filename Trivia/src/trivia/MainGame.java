@@ -33,7 +33,7 @@ public class MainGame extends GameMode {
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 
-	private Font f = new Font("Serif", Font.BOLD, 23);
+	private Font f = new Font("Serif", Font.BOLD, 26);
 
 	/**
 	 * Creates a new MainGame controller.
@@ -118,7 +118,7 @@ public class MainGame extends GameMode {
 					String[] ans = qstSet.getAnsArray();
 					for (int i = 0; i < ans.length; i++) {
 						buttons.add(new Button(ans[i], 20,
-								(engine.windowHeight - 150) + (i * 35)));
+								(engine.windowHeight - 165) + (i * 40)));
 					}
 				} else {
 					state = states.WAIT_FOR_END;
@@ -248,15 +248,15 @@ public class MainGame extends GameMode {
 						engine.windowHeight - 230);
 			} else {
 				g.drawString("Nice try, but you got that wrong!", 10,
-						engine.windowHeight - 230);
-				g.drawString("The correct answer was:", 10, engine.windowHeight-200);
+						engine.windowHeight - 220);
+				g.drawString("The correct answer was:", 10, engine.windowHeight-160);
 				g.setColor(Color.red);
 				try {
-					g.drawString(qstSet.getCorrectString(), 10, engine.windowHeight-170); 
+					g.drawString(qstSet.getCorrectString(), 10, engine.windowHeight-130); 
 				}
 				catch (Exception e) { engine.ENTER = true;}
 				g.setColor(Color.cyan);
-				g.drawString("Press ENTER to continue.", 10, engine.windowHeight-140);
+				g.drawString("Press ENTER to continue.", 10, engine.windowHeight-70);
 			}
 		}
 

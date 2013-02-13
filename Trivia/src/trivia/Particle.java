@@ -15,8 +15,8 @@ public class Particle extends Actor {
 
 	private int alpha;
 
-	public Particle(boolean debugMode, GameEngine e, Point2D.Float vectorSpeed, Color c) {
-		super(debugMode, e);
+	public Particle(GameEngine e, Point2D.Float vectorSpeed, Color c) {
+		super(e);
 		alpha = 255;
 		vectVel = vectorSpeed;
 		drawClr = c;

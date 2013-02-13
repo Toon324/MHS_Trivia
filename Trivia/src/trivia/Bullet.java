@@ -20,8 +20,8 @@ public class Bullet extends Particle {
 	 * @param vectorSpeed
 	 * @param c
 	 */
-	public Bullet(boolean debugMode, GameEngine e, Float vectorSpeed, Color c) {
-		super(debugMode, e, vectorSpeed, c);
+	public Bullet(GameEngine e, Float vectorSpeed, Color c) {
+		super(e, vectorSpeed, c);
 	}
 
 }

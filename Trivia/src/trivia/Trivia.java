@@ -11,7 +11,7 @@ import java.awt.event.MouseMotionListener;
 
 public class Trivia extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 42l;
 	private Thread th; // Game thread
 	private Thread close;
 	private GameEngine engine;
@@ -26,6 +26,8 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		close = new Thread(new CloseHook(this));
 		th = new Thread(this);
 		Runtime.getRuntime().addShutdownHook(close);
+		GameEngine.log("Trivia has been initialized.");
+		GameEngine.log("Found " +Runtime.getRuntime().availableProcessors() + " processors to use");
 	}
 
 	/**

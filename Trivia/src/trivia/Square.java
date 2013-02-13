@@ -20,8 +20,8 @@ public class Square extends FightingActor {
 	Point currentDest;
 	static float MAX_ACCEL = 1000F;
 
-	public Square(boolean debugMode,GameEngine e, int dest) {
-		super(debugMode,e);
+	public Square(GameEngine e, int dest) {
+		super(e);
 		Polygon poly = new Polygon();
 		destination = dest;
 		int width = 30, height = 30;
