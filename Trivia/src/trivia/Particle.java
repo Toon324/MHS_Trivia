@@ -2,6 +2,7 @@ package trivia;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 import java.util.Random;
@@ -16,7 +17,6 @@ public class Particle extends Actor {
 
 	private int alpha;
 	private Color color;
-	private Point2D.Float vector;
 
 	/**
 	 * @param debugMode
@@ -30,25 +30,25 @@ public class Particle extends Actor {
 	public Particle(Point2D.Float vectorSpeed, Color c) {
 		super();
 		alpha = 255;
-		vector = vectorSpeed;
+		vectVel = vectorSpeed;
 		color = c;
+		basePoly = new Polygon(new int[] {-1, -1, 1, 1},
+								new int[] {-1, 1, -1, 1},
+								4);
 	}
 
 	public void draw(Graphics g) {
 		// Draws a fading tail behind the Particle
-		for (int a = 0; a <= 130; a += 15) {
+		for (int a = 0; a <= 2000/*represents how long, in ms, the tail should be*/; a += 100) {
 			color = new Color(color.getRed(), color.getGreen(),
 					color.getBlue(), alpha / (a + 1));
 			g.setColor(color);
-			g.fillRect((int) (center.x - vector.x * a),
-					(int) (center.y - vector.y * a), 4, 4);
+			g.fillRect((int) (center.x - vectVel.x * a),
+					(int) (center.y - vectVel.y * a), 4, 4);
 		}
 	}
-
-	public void move(int ms) {
-		setCenter(center.x + (vector.x * (ms / 100f)), center.y
-				+ (vector.y * (ms / 100f)));
-	}
+	
+	//move in Actor is sufficient
 
 	@Override
 	public void setCenter(float x, float y) {
@@ -59,19 +59,16 @@ public class Particle extends Actor {
 		super.setCenter(x, y);
 	}
 
-	public static void addParticle(Point2D.Float center, Point2D.Float vectorSpeed,
-			Color c) {
-		Particle p = new Particle(vectorSpeed, c);
-		p.setCenter(center);
-		add(p);
-	}
-
-	public void setCenter(Point2D.Float center) {
-		this.center = center;
-	}
 	
 	public String toString(){
 		return "Particle " + super.toString();
+	}
+
+	public static void addParticle(Point2D.Float center, Point2D.Float vectorSpeed,
+			Color c) {
+		Particle p = new Particle(vectorSpeed, c);
+		p.setCenter(center.x, center.y);
+		add(p);
 	}
 	
 	/**
@@ -85,9 +82,10 @@ public class Particle extends Actor {
 	public static void spawnRandomExplosion(Point2D.Float center) {
 		Random gen = new Random();
 		int num = gen.nextInt(11) + 3;
+		num = 100;
 		// engine.log("Num: " + num);
 		double angleInc = (2 * Math.PI) / num;
-		float speed = gen.nextFloat() + 50f;
+		float speed = gen.nextFloat() + 500f;
 		Color c = new Color(gen.nextFloat(), gen.nextFloat(), gen.nextFloat(),
 				1.0f);
 		c.brighter();

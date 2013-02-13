@@ -48,11 +48,12 @@ public class Square extends AI_Actor {
 	 */
 	
 	public void fireShot(int spoke){
-		double speed = 50;
+		double speed = 500;
 		double shotAngle = (spoke*Math.PI/2 + angle) % (Math.PI*2);
+		Point2D.Float shotPos = new Point2D.Float(center.x + (float) (radius * Math.cos(shotAngle)), center.y + (float) (radius * Math.sin(shotAngle)));
 		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
 		//Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
-		Particle.addParticle((Point2D.Float) (center.clone()), shotVel, Color.magenta);
+		Particle.addParticle(shotPos, shotVel, Color.magenta);
 	}
 
 	public ArrayList<Actor> getActorsInView(){

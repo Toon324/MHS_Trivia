@@ -16,6 +16,7 @@ public abstract class AI_Actor extends Actor {
 	protected int viewDist;
 	ArrayList<Polygon> viewArea;
 	protected ArrayList<AI_Control> aiCtrl;
+	protected double health;
 
 	protected boolean death;
 
@@ -25,6 +26,7 @@ public abstract class AI_Actor extends Actor {
 		viewArea = new ArrayList<Polygon>();
 		aiCtrl = new ArrayList<AI_Control>();
 		aiCtrl.add(new RandomWander(this, GameEngine.envSize));
+		health = 100;
 	}
 
 	public void draw(Graphics g) {
@@ -41,9 +43,13 @@ public abstract class AI_Actor extends Actor {
 
 	public void move(int ms) {
 		AI_Control[] tmp = aiCtrl.toArray(new AI_Control[0]);
+		if(health <= 0){
+			this.kill();
+			return;
+		}
 		for (AI_Control ai : tmp)
 			ai.run(ms);
-
+		
 		super.move(ms);
 	}
 
@@ -56,9 +62,25 @@ public abstract class AI_Actor extends Actor {
 		Polygon otherPoly = other.basePoly;
 		for (int i = 0; i < otherPoly.npoints; i++) {
 			if (basePoly.contains(otherPoly.xpoints[i], otherPoly.ypoints[i])) {
-				GameEngine.log(this + " collided with " + other);
 				onCollide(other);
 			}
+		}
+	}
+
+
+	/**
+	 * Called when this actor has collided with another
+	 * 
+	 * @param other
+	 *            The actor this actor has collided with
+	 */
+	public void onCollide(Actor other) {
+		if (other instanceof Particle){
+			other.remove = true;
+			this.damage(1);
+		}else if(other instanceof AI_Actor){
+			kill();
+			((AI_Actor) other).kill();
 		}
 	}
 	
@@ -121,28 +143,14 @@ public abstract class AI_Actor extends Actor {
 		}
 		return valids;
 	}
-
-	/**
-	 * Called when this actor has collided with another
-	 * 
-	 * @param other
-	 *            The actor this actor has collided with
-	 */
-	public void onCollide(Actor other) {
-		if (other instanceof Particle){
-			other.remove = true;
-			GameEngine.log("Removing " + other);
-		}else if(other instanceof AI_Actor){
-			setDeath(true);
-			((AI_Actor) other).setDeath(true);
-			//GameEngine.log("Killing " + other + " and " + this);
-		}
+	
+	public void damage(double amount){
+		health -= amount;
 	}
-
-	public void setDeath(boolean d) {
-		GameEngine.log("Killing " + this);
-		death = d;
-		remove = d;
+	
+	public void kill() {
+		death = true;
+		remove = true;
 	}
 
 	public boolean isDead() {

@@ -53,8 +53,6 @@ public class SquareAttack extends AI_Control {
 		}
 		if (!fired) {
 			actor.removeAI_Control(this);
-			if (shots != 0)
-				GameEngine.log("Removed AI control, fired " + shots + " shots");
 		}
 	}
 

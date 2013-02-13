@@ -22,6 +22,7 @@ public abstract class Actor {
 
 	protected Point2D.Float center;
 	protected Color drawClr;
+	protected float radius; //maximum distance from center to any point
 
 	protected double angle;
 	protected double rotateVel;// radians/s
@@ -52,10 +53,19 @@ public abstract class Actor {
 		drawClr = Color.cyan;
 		remove = false;
 	}
-
+	
 	public void setBasePoly(Polygon poly) {
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
+		double tmpRadius = 0, newRad = 0;
+		int[] xPoints = poly.xpoints, yPoints = poly.ypoints;
+		for(int i = 0; i < poly.npoints;i++){
+			tmpRadius = center.distance(xPoints[i], yPoints[i]);
+			if(tmpRadius > newRad){
+				newRad = tmpRadius;
+			}
+		}
+		radius = (float) newRad;
 	}
 
 	public Polygon getDrawnPoly() {
