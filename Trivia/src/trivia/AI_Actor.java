@@ -50,12 +50,11 @@ public abstract class AI_Actor extends Actor {
 	public void checkCollision(Actor other) {
 		// this will still check actors against particles, but not particles
 		// against actors
-		if (this.equals(other))
-			return;
 
 		Polygon otherPoly = other.basePoly;
 		for (int i = 0; i < otherPoly.npoints; i++) {
 			if (basePoly.contains(otherPoly.xpoints[i], otherPoly.ypoints[i])) {
+				GameEngine.log(this + " collided with " + other);
 				onCollide(other);
 			}
 		}
@@ -128,11 +127,18 @@ public abstract class AI_Actor extends Actor {
 	 *            The actor this actor has collided with
 	 */
 	public void onCollide(Actor other) {
-		//if other instanceof Particle other.remove etc...
-		setDeath(true);
+		if (other instanceof Particle){
+			other.remove = true;
+			GameEngine.log("Removing " + other);
+		}else if(other instanceof AI_Actor){
+			setDeath(true);
+			((AI_Actor) other).setDeath(true);
+			//GameEngine.log("Killing " + other + " and " + this);
+		}
 	}
 
 	public void setDeath(boolean d) {
+		GameEngine.log("Killing " + this);
 		death = d;
 		remove = d;
 	}

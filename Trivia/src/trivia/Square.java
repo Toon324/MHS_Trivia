@@ -79,4 +79,8 @@ public class Square extends AI_Actor {
 	public float getMaxAccel() {
 		return MAX_ACCEL;
 	}
+	
+	public String toString(){
+		return "Square " + super.toString();
+	}
 }

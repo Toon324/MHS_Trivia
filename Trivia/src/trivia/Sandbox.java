@@ -25,8 +25,10 @@ public class Sandbox extends GameMode {
 		//engine.log("Clicked at " + x + ", " + y);
 		if(e.getButton() == MouseEvent.BUTTON1)
 			Particle.spawnRandomExplosion(new Point2D.Float(e.getX() ,e.getY()));
-		else
+		else if(e.getButton() == MouseEvent.BUTTON2)
 			Triangle.addTriangle(e.getX(), e.getY());
+		else
+			Square.addSquare(e.getX(), e.getY());
 	}
 	
 	

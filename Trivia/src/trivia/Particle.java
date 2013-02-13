@@ -66,12 +66,12 @@ public class Particle extends Actor {
 		add(p);
 	}
 
-	public String toString() {
-		return "Particle";
-	}
-
 	public void setCenter(Point2D.Float center) {
 		this.center = center;
+	}
+	
+	public String toString(){
+		return "Particle " + super.toString();
 	}
 	
 	/**

@@ -30,7 +30,10 @@ public abstract class Actor {
 	protected Polygon basePoly, drawPoly;
 
 	protected boolean remove;
-
+	
+	protected static int ID_Count = 0;
+	protected int ID;
+	
 	/**
 	 * Creates a new Actor.
 	 * 
@@ -39,6 +42,8 @@ public abstract class Actor {
 	 */
 
 	public Actor() {
+		ID = ID_Count;
+		ID_Count++;
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
 		rotateVel = 0;
@@ -164,7 +169,7 @@ public abstract class Actor {
 	 * @return "Actor"
 	 */
 	public String toString() {
-		return "Actor";
+		return "" + ID;
 	}
 
 	private static Polygon applyAffineTransform(Polygon poly,
@@ -266,6 +271,7 @@ public abstract class Actor {
 		// checking for collisions
 		for (Actor a : actors) {
 			if (a.remove) {
+				if(!(a instanceof Particle)) GameEngine.log("Removing " + a);
 				toRemove.add(a);
 			} else {
 				a.move(ms);

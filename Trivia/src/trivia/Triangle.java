@@ -48,6 +48,10 @@ public class Triangle extends AI_Actor {
 		return MAX_ACCEL;
 	}
 	
+	public String toString(){
+		return "Triangle " + super.toString();
+	}
+	
 	public boolean equals(Object other){
 		if (other == this) return true;
 		if (other instanceof Triangle) return true;
