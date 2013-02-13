@@ -52,12 +52,6 @@ public class Triangle extends AI_Actor {
 		return "Triangle " + super.toString();
 	}
 	
-	public boolean equals(Object other){
-		if (other == this) return true;
-		if (other instanceof Triangle) return true;
-		return false;
-	}
-	
 	//used for debug
 	public static Triangle getEmptyInstance(){
 		Triangle t = new Triangle();

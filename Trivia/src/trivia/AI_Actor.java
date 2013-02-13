@@ -50,7 +50,9 @@ public abstract class AI_Actor extends Actor {
 	public void checkCollision(Actor other) {
 		// this will still check actors against particles, but not particles
 		// against actors
-
+		
+		if(this.getClass().equals(other.getClass())) return;
+		
 		Polygon otherPoly = other.basePoly;
 		for (int i = 0; i < otherPoly.npoints; i++) {
 			if (basePoly.contains(otherPoly.xpoints[i], otherPoly.ypoints[i])) {
@@ -99,7 +101,7 @@ public abstract class AI_Actor extends Actor {
 						(int) (Math.sin(viewAngle - viewRads) * viewDist + center.y) },
 				3);
 
-		viewArea.add(tmpArea);
+		//viewArea.add(tmpArea);
 
 		int[] xPnts, yPnts;
 		for (Actor a : all) {

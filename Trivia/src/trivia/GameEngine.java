@@ -44,7 +44,7 @@ public class GameEngine {
 
 	static{
 		debugMode = true;
-		File file = new File("src\\trivia\\Resources\\log.txt");
+		File file = new File("Trivia\\src\\trivia\\Resources\\log.txt");
 		try {
 			if(!file.exists()) file.createNewFile();
 			debugWriter = new PrintWriter(new FileWriter(file.getAbsoluteFile()));

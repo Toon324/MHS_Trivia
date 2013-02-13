@@ -48,7 +48,7 @@ public class Square extends AI_Actor {
 	 */
 	
 	public void fireShot(int spoke){
-		double speed = 300;
+		double speed = 50;
 		double shotAngle = (spoke*Math.PI/2 + angle) % (Math.PI*2);
 		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
 		//Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
@@ -63,12 +63,6 @@ public class Square extends AI_Actor {
 		return list;
 	}
 	
-	public boolean equals(Object other){
-		if (other == this) return true;
-		if (other instanceof Square) return true;
-		return false;
-	}
-
 	public static void addSquare(int x, int y) {
 		Square c = new Square();
 		c.setCenter(x, y);
