@@ -7,16 +7,13 @@ import java.awt.Polygon;
 
 import aiControls.*;
 
-public class Triangle extends Actor {
+public class Triangle extends AI_Actor {
 
 	Point currentDest;
 	static float MAX_ACCEL = 100F;// Pixels/s/s
 
-	private double viewAngle;// angle that the view will deviate on both sides
-	private int viewDist;
-
-	public Triangle(boolean debugMode,GameEngine e) {
-		super(debugMode,e);
+	private Triangle() {
+		super();
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;
@@ -34,22 +31,6 @@ public class Triangle extends Actor {
 	}
 
 	public void move(int ms) {
-		/*
-		viewArea = new ArrayList<Polygon>();
-		ArrayList<Actor> list = getActorsInView(angle, viewAngle, viewDist);
-		if (!list.isEmpty()) {
-			for (Actor a : list) {
-				if (!a.equals(this) && a instanceof Square) {
-					// process actors
-				}
-			}
-		}
-		vectVel.x += (ms / 1000F)
-				* getAccelToReach(currentDest.x - center.x, vectVel.x,
-						MAX_ACCEL);
-		vectVel.y += (ms / 1000F)
-				* getAccelToReach(currentDest.y - center.y, vectVel.y,
-						MAX_ACCEL);*/
 		super.move(ms);
 	}
 
@@ -57,16 +38,22 @@ public class Triangle extends Actor {
 		super.draw(g);
 	}
 
-	public void checkCollision(Actor other) {
-		if (other instanceof Triangle) {
-			return;
-		}
-		super.checkCollision(other);
+	public static void addTriangle(int x, int y) {
+		Triangle c = new Triangle();
+		c.setCenter(x, y);
+		add(c);
 	}
-
+	
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;
+	}
+	
+	//used for debug
+	public static Triangle getEmptyInstance(){
+		Triangle t = new Triangle();
+		t.setCenter(engine.windowWidth / 2, engine.windowHeight / 2);
+		return t;
 	}
 
 }

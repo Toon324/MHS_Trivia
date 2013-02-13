@@ -77,7 +77,7 @@ public class MainGame extends GameMode {
 			tf.nextStep(ms);
 		}
 		
-		engine.actors.handleActors(ms);
+		Actor.handleActors(ms);
 		//Particle.runParticles(ms);
 		switch (state) {
 		case QUESTIONS:
@@ -142,7 +142,7 @@ public class MainGame extends GameMode {
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
 
-		engine.actors.drawActors(g);
+		Actor.drawActors(g);
 		//Particle.drawParticles(g);
 
 		g.setFont(f);
@@ -213,10 +213,9 @@ public class MainGame extends GameMode {
 	}
 
 	private void addShips(int shipsToAdd) {
-		Actor t, s;
 		for (; shipsToAdd > 0; shipsToAdd--) {
-			engine.actors.addTriangle((int) (Math.random() * GameEngine.envSize.x), (int) (Math.random() * GameEngine.envSize.y));
-			engine.actors.addSquare((int)(Math.random() * GameEngine.envSize.x),(int) (Math.random() * GameEngine.envSize.y));
+			Triangle.addTriangle((int) (Math.random() * GameEngine.envSize.x), (int) (Math.random() * GameEngine.envSize.y));
+			Square.addSquare((int)(Math.random() * GameEngine.envSize.x),(int) (Math.random() * GameEngine.envSize.y));
 		}
 	}
 

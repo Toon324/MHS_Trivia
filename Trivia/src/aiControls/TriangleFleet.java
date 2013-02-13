@@ -17,7 +17,7 @@ public class TriangleFleet {
 	public TriangleFleet() {
 		members = new ArrayList<Triangle>();
 		knownEnemies = new ArrayList<Actor>();
-		target = new Triangle(true, null);
+		target = Triangle.getEmptyInstance();
 		target.setCenter(GameEngine.envSize.x/2, GameEngine.envSize.y/2);
 	}
 	

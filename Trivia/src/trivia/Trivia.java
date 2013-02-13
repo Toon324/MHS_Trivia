@@ -15,7 +15,6 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	private Thread th; // Game thread
 	private Thread close;
 	private GameEngine engine;
-	private Actors actors;
 
 	/**
 	 * Creates a new Trivia game.
@@ -36,10 +35,9 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	public void init() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		actors = new Actors();
-		engine = new GameEngine(actors, true);
+		engine = new GameEngine(true);
 		engine.setWindowSize(getWidth(), getHeight());
-		engine.setMode(engine.sandbox);
+		engine.setMode(engine.mainMenu);
 	}
 	
 	public class CloseHook implements Runnable{
@@ -52,7 +50,6 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 			try {
 				this.finalize();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

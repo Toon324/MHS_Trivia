@@ -17,13 +17,13 @@ import aiControls.RotateSearch;
  * 
  */
 
-public class Square extends Actor {
+public class Square extends AI_Actor {
 
 	Point currentDest;
-	static float MAX_ACCEL = 1000F;
+	static float MAX_ACCEL = 100F;
 
-	public Square(boolean debugMode,GameEngine e) {
-		super(debugMode,e);
+	private Square() {
+		super();
 		Polygon poly = new Polygon();
 
 		int width = 30, height = 30;
@@ -40,47 +40,6 @@ public class Square extends Actor {
 	}
 
 	public void move(int ms) {
-		
-		/*
-		if(currentDest == null)
-			currentDest = new Point((int) ((Math.random() * 200 - 100) + center.x), (int) ((Math.random() * 200 - 100) + center.y));
-
-		viewArea = new ArrayList<Polygon>();
-		ArrayList<Actor> list = new ArrayList<Actor>();
-		for(int i = 0; i < 360; i += 90){
-			list = getActorsInView(Math.toRadians((Math.toDegrees(angle) + i) % 360), viewAngle, viewDist);
-			
-			if (!list.isEmpty()) {
-				for (Actor a : list) {
-					if (!a.equals(this) && a instanceof Triangle) {
-						boolean right = false, left = false; //used to determine if the triangle is in the sights
-						double cornerAngle = (angle + Math.toRadians(i)) % (Math.PI * 2);
-						Polygon target = a.drawPoly;
-						double pntAngle;
-						for(int j = 0; j < target.npoints; j++){
-							pntAngle = (-Math.atan2(target.xpoints[j] - center.x, target.ypoints[j] - center.y) + Math.PI * 5/2) % (Math.PI * 2);
-							System.out.println("Angle: " + Math.toDegrees(pntAngle) + "Corner Angle: " + Math.toDegrees(cornerAngle));
-							if(pntAngle > cornerAngle){
-								left = true;
-							}else{
-								right = true;
-							}
-							if(right && left){
-								fireShot(i / 90);
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		vectVel.x += (ms / 1000F)
-				* getAccelToReach(currentDest.x - center.x, vectVel.x,
-						MAX_ACCEL);
-		vectVel.y += (ms / 1000F)
-				* getAccelToReach(currentDest.y - center.y, vectVel.y,
-						MAX_ACCEL);*/
 		super.move(ms);
 	}
 	
@@ -93,9 +52,8 @@ public class Square extends Actor {
 		double speed = 300;
 		double shotAngle = (spoke*Math.PI/2 + angle) % (Math.PI*2);
 		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
-		Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
-		//System.out.printf("Shot vel: (%.4f, %.4f)\n", shotVel.x, shotVel.y);
-		actors.addParticle((Point2D.Float) (center.clone()), shotVel, Color.magenta);
+		//Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
+		Particle.addParticle((Point2D.Float) (center.clone()), shotVel, Color.magenta);
 	}
 
 	public ArrayList<Actor> getActorsInView(){
@@ -105,6 +63,14 @@ public class Square extends Actor {
 		}
 		return list;
 	}
+	
+
+	public static void addSquare(int x, int y) {
+		Square c = new Square();
+		c.setCenter(x, y);
+		add(c);
+	}
+	
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;

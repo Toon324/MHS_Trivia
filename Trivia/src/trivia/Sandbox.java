@@ -21,18 +21,18 @@ public class Sandbox extends GameMode {
 	@Override
 	public void clicked(int x, int y) {
 		//engine.log("Clicked at " + x + ", " + y);
-		engine.particleEngine.spawnRandomExplosion(new Point2D.Float(x,y));
+		Particle.spawnRandomExplosion(new Point2D.Float(x,y));
 	}
 
 	@Override
 	public void run(int ms) {
-		engine.actors.handleActors(ms);
+		Actor.handleActors(ms);
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		engine.actors.drawActors(g);
+		Actor.drawActors(g);
 	}
 
 	@Override

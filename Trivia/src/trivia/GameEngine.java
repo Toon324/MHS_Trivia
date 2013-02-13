@@ -29,8 +29,6 @@ public class GameEngine {
 	public Instructions instructions;
 	public EndGame endGame;
 	public Sandbox sandbox;
-	public ParticleEngine particleEngine;
-	Actors actors;
 	private long millis;
 	int windowWidth, windowHeight;
 	protected int score;
@@ -57,38 +55,24 @@ public class GameEngine {
 	}
 	
 	/**
-	 * Creates a new GameEngine
+	 * Creates a new GameEngine. Must use setMode before execution
 	 * 
-	 * @param actors
-	 *            Array of actors to pass logic to.
 	 * @param debug
 	 *            If true, prints out debug messages.
 	 */
-	public GameEngine(Actors actors, boolean debug) {
-		this.actors = actors;
-		actors.setEngine(this);
+	public GameEngine(boolean debug) {
+		Actor.setEngine(this);
 		debugMode = debug;
 		mainMenu = new MainMenu(this);
 		endGame = new EndGame(this);
 		sandbox = new Sandbox(this);
-		particleEngine = new ParticleEngine(this);
 		instructions = new Instructions(this);
-		mode = mainMenu;
 		windowWidth = 800;
 		windowHeight = 600;
 		millis = System.currentTimeMillis();
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
-	}
-
-	public ParticleEngine getParticleEngine() {
-		if (particleEngine == null)
-		{
-			log("PE is null");
-			particleEngine = new ParticleEngine(this);
-		}
-		return particleEngine;
 	}
 
 	/**
@@ -102,7 +86,7 @@ public class GameEngine {
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
-		FPS = average(stepTimes);	
+		FPS = 1000F/average(stepTimes);	
 	}
 
 	private double average(ArrayList<Long> list) {
@@ -170,7 +154,7 @@ public class GameEngine {
 		try {
 			Clip clip = AudioSystem.getClip();
 			AudioInputStream inputStream = AudioSystem
-					.getAudioInputStream(Actors.class
+					.getAudioInputStream(this.getClass()
 							.getResourceAsStream("Resources\\" + s));
 			clip.open(inputStream);
 			if (loop) {

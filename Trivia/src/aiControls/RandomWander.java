@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import trivia.Actor;
+import trivia.AI_Actor;
 
 public class RandomWander extends AI_Control {
 
@@ -12,7 +13,7 @@ public class RandomWander extends AI_Control {
 	Point envSize;
 	
 	
-	public RandomWander(Actor a, Point env) {
+	public RandomWander(AI_Actor a, Point env) {
 		super(a);
 		envSize = env;
 		currentDest = new Point((int) (Math.random() * envSize.x),

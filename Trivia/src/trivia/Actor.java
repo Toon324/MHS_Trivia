@@ -8,6 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import aiControls.*;
 
@@ -17,24 +19,17 @@ import aiControls.*;
  * @author Cody Swendrowski, Dan Miller
  */
 public abstract class Actor {
-	protected double angle;
-	protected double viewAngle;
-	protected int viewDist;
-	
-	protected boolean debug;
-	protected Actors actors;
-	
-	protected boolean death;
+
 	protected Point2D.Float center;
 	protected Color drawClr;
-	protected ArrayList<AI_Control> aiCtrl;
-	protected GameEngine engine;
-	
-	// derivative motion values
+
+	protected double angle;
 	protected double rotateVel;// radians/s
 	protected Point2D.Float vectVel;// pixels/s
 
 	protected Polygon basePoly, drawPoly;
+
+	protected boolean remove;
 
 	/**
 	 * Creates a new Actor.
@@ -43,61 +38,43 @@ public abstract class Actor {
 	 *            Position in ArrayList
 	 */
 
-	public Actor(boolean debugMode, GameEngine e) {
-		debug = debugMode;
+	public Actor() {
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
 		rotateVel = 0;
 		angle = 0;
 		center = new Point2D.Float(0, 0);
-		death = false;
-		engine = e;
 		drawClr = Color.cyan;
-		aiCtrl = new ArrayList<AI_Control>();
-		aiCtrl.add(new RandomWander(this, GameEngine.envSize));
-		
-		viewArea = new ArrayList<Polygon>();
-	}
-
-	public void setActors(Actors act) {
-		actors = act;
+		remove = false;
 	}
 
 	public void setBasePoly(Polygon poly) {
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
-	
-	public Polygon getDrawnPoly(){
+
+	public Polygon getDrawnPoly() {
 		return drawPoly;
 	}
-	public boolean hasAIClass(Class<?> cls){
-		for(AI_Control a : aiCtrl)
-			if (a.getClass() == cls) return true;
-		return false;
-	}
-	public void addAI_Control(AI_Control ctrl){
-		aiCtrl.add(ctrl);
-	}
-	public void removeAI_Control(AI_Control ctrl){
-		aiCtrl.remove(ctrl);
-	}
-	public void clearAI_Control(){
-		aiCtrl = new ArrayList<AI_Control>();
-	}
-	public Point2D.Float getCenter(){
+
+	public Point2D.Float getCenter() {
 		return center;
 	}
-	public Point2D.Float getVelocity(){
+
+	public Point2D.Float getVelocity() {
 		return vectVel;
 	}
-	public void accelerateRotation(double accel){
+
+	public void accelerateRotation(double accel) {
 		rotateVel += accel;
 	}
-	public double getRotateVel(){
+
+	public double getRotateVel() {
 		return rotateVel;
 	}
+
 	public abstract float getMaxAccel();
+
 	/**
 	 * Draws the Actor.
 	 * 
@@ -111,46 +88,7 @@ public abstract class Actor {
 		if (drawPoly == null)
 			drawPoly = basePoly;
 
-		drawPoly(g, drawPoly, new Point((int) center.x, (int) center.y), true);
-		g.setColor(Color.red);
-		if (viewArea != null && !viewArea.isEmpty())
-			for (Object p : viewArea.toArray())
-				drawPoly(g, (Polygon) p, null, false);
-	}
-
-	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
-			boolean centerLines) {
-		if (p == null)
-			return;
-
-		int x = 0, y = 0, firstX = 0, firstY = 0;
-		int res;
-		float array[] = new float[6];
-		PathIterator iter = p.getPathIterator(new AffineTransform());
-		while (!iter.isDone()) {
-			res = iter.currentSegment(array);
-			switch (res) {
-			case PathIterator.SEG_CLOSE:
-				array[0] = firstX;
-				array[1] = firstY;
-			case PathIterator.SEG_LINETO:
-				g.drawLine(x, y, (int) array[0], (int) array[1]);
-
-				if (centerLines)
-					g.drawLine(x, y, (int) thisCenter.x, (int) thisCenter.y);
-
-				x = (int) array[0];
-				y = (int) array[1];
-				break;
-			case PathIterator.SEG_MOVETO:
-				x = (int) array[0];
-				y = (int) array[1];
-				firstX = x;
-				firstY = y;
-				break;
-			}
-			iter.next();
-		}
+		g.drawPolygon(drawPoly);
 	}
 
 	/**
@@ -162,23 +100,10 @@ public abstract class Actor {
 	 *            Height of window to draw in
 	 */
 	public void move(int ms) {
-		AI_Control[] tmp = aiCtrl.toArray(new AI_Control[0]);
-		for(AI_Control ai : tmp)
-			ai.run(ms);
-		
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
 				* vectVel.y);
-		if (rotateVel != 0)
+		if (rotateVel != 0)// used to prevent unnecessary use of polygonal rotation
 			rotate((ms / 1000F) * rotateVel);
-	}
-
-	/**
-	 * Returns true if Actor is dead; else, returns false.
-	 * 
-	 * @return death
-	 */
-	public boolean isDead() {
-		return death;
 	}
 
 	/**
@@ -188,66 +113,14 @@ public abstract class Actor {
 	 *            Actor to check collision against
 	 */
 	public void checkCollision(Actor other) {
-		if (other.equals(this) || other instanceof Particle)
-			return;
-
-		Polygon otherPoly = other.basePoly;
-		for (int i = 0; i < otherPoly.npoints; i++) {
-			if (basePoly.contains(new Point(otherPoly.xpoints[i],
-					otherPoly.ypoints[i]))) {
-				setDeath(true);
-				other.setDeath(true);
-			}
-		}
-	}
-	
-	public ArrayList<Actor> getActorsInView(){
-		return getActorsInView(angle, viewAngle, viewDist);
-	}
-	
-	ArrayList<Polygon> viewArea;
-
-	protected ArrayList<Actor> getActorsInView(double viewAngle,
-			double viewRads, double viewDist) {
-		ArrayList<Actor> valids = new ArrayList<Actor>();
-		ArrayList<Actor> all = actors.getArray();
-
-		Polygon tmpArea = new Polygon(
-				new int[] {
-						(int) center.x,
-						(int) (Math.cos(viewAngle + viewRads) * viewDist + center.x),
-						(int) (Math.cos(viewAngle - viewRads) * viewDist + center.x) },
-				new int[] {
-						(int) center.y,
-						(int) (Math.sin(viewAngle + viewRads) * viewDist + center.y),
-						(int) (Math.sin(viewAngle - viewRads) * viewDist + center.y) },
-				3);
-
-		viewArea.add(tmpArea);
-
-		int[] xPnts, yPnts;
-		for (Actor a : all) {
-			if (a instanceof Particle)
-				break;
-			if(a == this) continue;
-			xPnts = a.drawPoly.xpoints;
-			yPnts = a.drawPoly.ypoints;
-
-			for (int i = 0; i < a.drawPoly.npoints; i++) {
-				if (tmpArea.contains(xPnts[i], yPnts[i])) {
-					valids.add(a);
-					break;
-				}
-			}
-		}
-		return valids;
+		return;
 	}
 
 	public void setCenter(float x, float y) {
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
-		center = new Point2D.Float(x,y);
+		center = new Point2D.Float(x, y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);
@@ -287,7 +160,17 @@ public abstract class Actor {
 				AffineTransform.getRotateInstance(d, center.x, center.y));
 	}
 
-	private Polygon applyAffineTransform(Polygon poly, AffineTransform trans) {
+	/**
+	 * Allows System to print name of object. Returns the name of the Actor
+	 * 
+	 * @return "Actor"
+	 */
+	public String toString() {
+		return "Actor";
+	}
+
+	private static Polygon applyAffineTransform(Polygon poly,
+			AffineTransform trans) {
 		Point[] points = new Point[poly.npoints];
 		for (int i = 0; i < poly.npoints; i++) {
 			points[i] = new Point(poly.xpoints[i], poly.ypoints[i]);
@@ -300,21 +183,7 @@ public abstract class Actor {
 		return newPoly;
 	}
 
-	public void setDeath(boolean d) {
-		death = d;
-	}
-
-	/**
-	 * Allows System to print name of object. Returns the name of the Actor
-	 * 
-	 * @return "Actor"
-	 */
-	public String toString() {
-		return "Actor";
-	}
-
-	public static float getAccelToReach(float xDist, float currentVel,
-			float MAX) {
+	public static float getAccelToReach(float xDist, float currentVel, float MAX) {
 		/*
 		 * Time for velocity to reach 0 if it started to slow down:
 		 * (currentVel/MAX_ACCEL)
@@ -333,5 +202,103 @@ public abstract class Actor {
 		if (Math.abs(xDist) <= 2 && currentVel <= MAX)
 			return -currentVel;
 		return MAX * velSign;
+	}
+
+	protected static void drawPolyCenterLines(Graphics g, Polygon p,
+			Point thisCenter) {
+		if (p == null)
+			return;
+
+		int x = 0, y = 0, firstX = 0, firstY = 0;
+		int res;
+		float array[] = new float[6];
+		PathIterator iter = p.getPathIterator(new AffineTransform());
+		while (!iter.isDone()) {
+			res = iter.currentSegment(array);
+			switch (res) {
+			case PathIterator.SEG_CLOSE:
+				array[0] = firstX;
+				array[1] = firstY;
+			case PathIterator.SEG_LINETO:
+				g.drawLine(x, y, (int) thisCenter.x, (int) thisCenter.y);
+
+				x = (int) array[0];
+				y = (int) array[1];
+				break;
+			case PathIterator.SEG_MOVETO:
+				x = (int) array[0];
+				y = (int) array[1];
+				firstX = x;
+				firstY = y;
+				break;
+			}
+			iter.next();
+		}
+	}
+
+	protected static final int MAX_ACTORS = 1000;
+	protected static ArrayList<Actor> actors = new ArrayList<Actor>();
+	private static ArrayList<Actor> toAdd = new ArrayList<Actor>();
+	protected static GameEngine engine;
+	private static ExecutorService threadPool = Executors.newCachedThreadPool();
+
+	public static void add(Actor a) {
+		if (actors.size() >= MAX_ACTORS) {
+			return;
+		}
+		// engine.log("Added " + a.toString() + " to toAdd");
+		toAdd.add(a);
+	}
+
+	/**
+	 * Moves and checks for death all actors which are alive. Removes all dead
+	 * actors.
+	 */
+	public static void handleActors(int ms) {
+		ArrayList<Actor> toRemove = new ArrayList<Actor>();
+
+		// adds Actors toAdd
+		Actor[] addArray = toAdd.toArray(new Actor[0]);
+		for (int x = 0; x < addArray.length; x++) {
+			Actor a = addArray[x];
+			actors.add(a);
+		}
+		toAdd.clear();
+
+		// collects to be removed actors in an array and moves active ones,
+		// checking for collisions
+		for (Actor a : actors) {
+			if (a.remove) {
+				toRemove.add(a);
+			} else {
+				a.move(ms);
+				// check for collisions
+				threadPool.execute(new CollisionThread(a, actors
+						.toArray(new Actor[0])));
+			}
+		}
+		// removes dead actors from the main array
+		for (Actor a : toRemove) {
+			if (!actors.remove(a))
+				GameEngine.log("Error in removing actor " + a);
+		}
+	}
+
+	/**
+	 * Calls the draw method of all objects.
+	 * 
+	 * @param g
+	 *            Graphics to be drawn with
+	 * @param i
+	 *            ImageObserver to be reported to
+	 */
+	public static void drawActors(Graphics g) {
+		for (Actor a : actors.toArray(new Actor[0])) {
+			a.draw(g);
+		}
+	}
+
+	public static void setEngine(GameEngine e) {
+		engine = e;
 	}
 }
