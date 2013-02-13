@@ -40,7 +40,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		addKeyListener(this);
 		engine = new GameEngine(true);
 		engine.setWindowSize(getWidth(), getHeight());
-		engine.setMode(engine.mainMenu);
+		engine.setMode(engine.instructions);
 	}
 	
 	public class CloseHook implements Runnable{

@@ -33,10 +33,10 @@ public class ParticleEngine {
 	 */
 	public void spawnRandomExplosion(Point2D.Float center) {
 		Random gen = new Random();
-		int num = gen.nextInt(11) + 3;
+		int num = gen.nextInt(11) + 4;
 		// engine.log("Num: " + num);
 		double angleInc = (2 * Math.PI) / num;
-		int speed = gen.nextInt(25)+5;
+		int speed = gen.nextInt(25)+15;
 		Color c = new Color(gen.nextFloat(), gen.nextFloat(), gen.nextFloat(),
 				1.0f);
 		c.brighter();
