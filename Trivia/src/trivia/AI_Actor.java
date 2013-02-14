@@ -6,7 +6,6 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.util.ArrayList;
 
-
 import aiControls.AI_Control;
 import aiControls.RandomWander;
 
@@ -44,22 +43,23 @@ public abstract class AI_Actor extends Actor {
 
 	public void move(int ms) {
 		AI_Control[] tmp = aiCtrl.toArray(new AI_Control[0]);
-		if(health <= 0){
+		if (health <= 0) {
 			this.kill();
 			return;
 		}
 		for (AI_Control ai : tmp)
 			ai.run(ms);
-		
+
 		super.move(ms);
 	}
 
 	public void checkCollision(Actor other) {
 		// this will still check actors against particles, but not particles
 		// against actors
-		
-		if(this.getClass().equals(other.getClass())) return;
-		
+
+		if (this.getClass().equals(other.getClass()))
+			return;
+
 		Polygon otherPoly = other.basePoly;
 		for (int i = 0; i < otherPoly.npoints; i++) {
 			if (basePoly.contains(otherPoly.xpoints[i], otherPoly.ypoints[i])) {
@@ -68,7 +68,6 @@ public abstract class AI_Actor extends Actor {
 		}
 	}
 
-
 	/**
 	 * Called when this actor has collided with another
 	 * 
@@ -76,15 +75,17 @@ public abstract class AI_Actor extends Actor {
 	 *            The actor this actor has collided with
 	 */
 	public void onCollide(Actor other) {
-		if (other instanceof Particle){
-			other.remove = true;
-			this.damage(1);
-		}else if(other instanceof AI_Actor){
+		if (other instanceof Particle) {
+			if (!other.remove) {
+				other.remove = true;
+				this.damage(1);
+			}
+		} else if (other instanceof AI_Actor) {
 			kill();
 			((AI_Actor) other).kill();
 		}
 	}
-	
+
 	public boolean hasAIClass(Class<?> cls) {
 		for (AI_Control a : aiCtrl)
 			if (a.getClass() == cls)
@@ -124,7 +125,7 @@ public abstract class AI_Actor extends Actor {
 						(int) (Math.sin(viewAngle - viewRads) * viewDist + center.y) },
 				3);
 
-		//viewArea.add(tmpArea);
+		// viewArea.add(tmpArea);
 
 		int[] xPnts, yPnts;
 		for (Actor a : all) {
@@ -144,11 +145,11 @@ public abstract class AI_Actor extends Actor {
 		}
 		return valids;
 	}
-	
-	public void damage(double amount){
+
+	public void damage(double amount) {
 		health -= amount;
 	}
-	
+
 	public void kill() {
 		death = true;
 		remove = true;

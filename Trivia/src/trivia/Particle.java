@@ -72,7 +72,7 @@ public class Particle extends Actor {
 	}
 	
 	/**
-	 * Spawns an explosion of up to 13 particles, all sharing a random color,
+	 * Spawns an explosion of between 25-100 particles, all sharing a random color,
 	 * vector, and decay rate. Particles are spawned in an equal division around
 	 * the center point.
 	 * 
@@ -81,19 +81,20 @@ public class Particle extends Actor {
 	 */
 	public static void spawnRandomExplosion(Point2D.Float center) {
 		Random gen = new Random();
-		int num = gen.nextInt(11) + 3;
-		num = 100;
-		// engine.log("Num: " + num);
+		int num = gen.nextInt(25) + 50;
+		//GameEngine.log("Num: " + num);
 		double angleInc = (2 * Math.PI) / num;
+		double rndAngleAdd;
 		float speed = gen.nextFloat() + 500f;
 		Color c = new Color(gen.nextFloat(), gen.nextFloat(), gen.nextFloat(),
 				1.0f);
 		c.brighter();
 		for (int x = 0; x < num; x++) {
+			rndAngleAdd = gen.nextDouble() * angleInc * 2 - (angleInc);
 			Point2D.Float vector = new Point2D.Float();
 			// engine.log("Angle " + Math.toDegrees(angleInc*x));
-			vector.x = (float) (speed * Math.cos(angleInc * x));
-			vector.y = (float) (speed * Math.sin(angleInc * x));
+			vector.x = (float) (speed * Math.cos(angleInc * x + rndAngleAdd));
+			vector.y = (float) (speed * Math.sin(angleInc * x + rndAngleAdd));
 			// engine.log("Vector " + vector.x + ", " + vector.y);
 			Particle.addParticle(center, vector, c);
 		}

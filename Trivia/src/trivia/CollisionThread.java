@@ -35,7 +35,7 @@ public class CollisionThread implements Runnable {
 	@Override
 	public void run() {
 		for (Actor a : actors) {
-			if (!actor.equals(a))
+			if (!actor.equals(a) && actor.center.distance(a.center) <= actor.radius + a.radius)
 				actor.checkCollision(a);
 		}
 	}

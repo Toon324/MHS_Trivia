@@ -286,9 +286,13 @@ public abstract class Actor {
 				toRemove.add(a);
 			} else {
 				a.move(ms);
-				// check for collisions
+				for (Actor act : actors) {//use of radius will massively increase speed of collisions, thus no need for thread
+					if (!a.equals(act) && a.center.distance(act.center) <= a.radius + act.radius)
+						a.checkCollision(act);
+				}
+				/*// check for collisions
 				threadPool.execute(new CollisionThread(a, actors
-						.toArray(new Actor[0])));
+						.toArray(new Actor[0])));*/
 			}
 		}
 		// removes dead actors from the main array
