@@ -9,7 +9,7 @@ import aiControls.*;
 
 public class Triangle extends AI_Actor {
 
-	static float MAX_ACCEL = 300F;// Pixels/s/s
+	public static float MAX_ACCEL = 300F;// Pixels/s/s
 
 	private Triangle() {
 		super();

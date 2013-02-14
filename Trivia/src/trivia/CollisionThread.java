@@ -3,6 +3,7 @@
  */
 package trivia;
 
+
 /**
  * Calculates the collisions of one actor in relation to the group of actors.
  * 

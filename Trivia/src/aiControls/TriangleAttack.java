@@ -5,6 +5,8 @@ import java.awt.geom.Point2D;
 import trivia.Actor;
 import trivia.Triangle;
 
+
+
 public class TriangleAttack extends AI_Control {
 	
 	private TriangleFleet myFleet;

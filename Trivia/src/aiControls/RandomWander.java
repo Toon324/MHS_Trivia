@@ -3,8 +3,10 @@ package aiControls;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-import trivia.Actor;
 import trivia.AI_Actor;
+import trivia.Actor;
+
+
 
 public class RandomWander extends AI_Control {
 

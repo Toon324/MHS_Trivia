@@ -15,6 +15,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+
 /**
  * Handles all the game logic and painting
  *         based on the current game mode.
@@ -30,7 +31,7 @@ public class GameEngine {
 	public EndGame endGame;
 	public Sandbox sandbox;
 	private long millis;
-	int windowWidth, windowHeight;
+	public int windowWidth, windowHeight;
 	protected int score;
 	Font large = new Font("Serif", Font.BOLD, 30);
 	
@@ -44,7 +45,7 @@ public class GameEngine {
 
 	static{
 		debugMode = true;
-		File file = new File("Trivia\\src\\trivia\\Resources\\log.txt");
+		File file = new File("src\\trivia\\Resources\\log.txt");
 		try {
 			if(!file.exists()) file.createNewFile();
 			debugWriter = new PrintWriter(new FileWriter(file.getAbsoluteFile()));
@@ -74,6 +75,7 @@ public class GameEngine {
 		stepTimes = new ArrayList<Long>();
 		stepTimes.add(millis);
 		score = 0;
+		GameEngine.log("Found " +Runtime.getRuntime().availableProcessors() + " processors to use");
 	}
 
 	/**

@@ -1,10 +1,8 @@
 package trivia;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 import java.util.ArrayList;
 
 import aiControls.RotateSearch;
@@ -20,6 +18,8 @@ import aiControls.RotateSearch;
 public class Square extends AI_Actor {
 
 	static float MAX_ACCEL = 100F;
+	static float fireRate = 50;// ms/shot
+	long lastShotTime;
 
 	private Square() {
 		super();
@@ -41,41 +41,55 @@ public class Square extends AI_Actor {
 	public void move(int ms) {
 		super.move(ms);
 	}
-	
+
 	/**
 	 * Fires a shot from the given spoke, 0-3
+	 * 
 	 * @param spoke
 	 */
-	
-	public void fireShot(int spoke){
-		double speed = 500;
-		double shotAngle = (spoke*Math.PI/2 + angle) % (Math.PI*2);
-		Point2D.Float shotPos = new Point2D.Float(center.x + (float) (radius * Math.cos(shotAngle)), center.y + (float) (radius * Math.sin(shotAngle)));
-		Point2D.Float shotVel = new Point2D.Float((float) (speed * Math.cos(shotAngle)), (float) (speed * Math.sin(shotAngle)));
-		//Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[] {0, 3, -3}, 3);
-		Particle.addParticle(shotPos, shotVel, Color.magenta);
+
+	public boolean fireShot(int spoke) {
+		long ms = System.currentTimeMillis();
+		if (lastShotTime + 50 <= ms) {
+			lastShotTime = ms;
+			double speed = 500;
+			double shotAngle = (spoke * Math.PI / 2 + angle) % (Math.PI * 2);
+			Point2D.Float shotPos = new Point2D.Float(
+					center.x + (float) (radius * Math.cos(shotAngle)),
+					center.y + (float) (radius * Math.sin(shotAngle)));
+			Point2D.Float shotVel = new Point2D.Float(
+					(float) (speed * Math.cos(shotAngle)),
+					(float) (speed * Math.sin(shotAngle)));
+			// Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[]
+			// {0, 3, -3}, 3);
+			Particle.addParticle(shotPos, shotVel, Color.magenta);
+			return true;
+		}
+		return false;
 	}
 
-	public ArrayList<Actor> getActorsInView(){
+	public ArrayList<Actor> getActorsInView() {
 		ArrayList<Actor> list = new ArrayList<Actor>();
-		for(int i = 0; i < 360; i += 90){
-			list.addAll(getActorsInView(Math.toRadians((Math.toDegrees(angle) + i) % 360), viewAngle, viewDist));
+		for (int i = 0; i < 360; i += 90) {
+			list.addAll(getActorsInView(
+					Math.toRadians((Math.toDegrees(angle) + i) % 360),
+					viewAngle, viewDist));
 		}
 		return list;
 	}
-	
+
 	public static void addSquare(int x, int y) {
 		Square c = new Square();
 		c.setCenter(x, y);
 		add(c);
 	}
-	
+
 	@Override
 	public float getMaxAccel() {
 		return MAX_ACCEL;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return "Square " + super.toString();
 	}
 }

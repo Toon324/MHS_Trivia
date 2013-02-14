@@ -3,6 +3,7 @@ package aiControls;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
 
+
 import trivia.Actor;
 import trivia.GameEngine;
 import trivia.Square;
@@ -11,6 +12,7 @@ public class SquareAttack extends AI_Control {
 
 	Actor target;
 	Point2D.Float cen;
+	Point2D.Float vel;
 	int shots = 0;
 
 	public SquareAttack(Square a, Actor b) {
@@ -24,6 +26,7 @@ public class SquareAttack extends AI_Control {
 	public void run(int ms) {
 		boolean fired = false;
 		cen = actor.getCenter();
+		vel = actor.getVelocity();
 		double angle = actor.getAngle();
 		for (int i = 0; i < 360; i += 90) {
 			boolean right = false, left = false; // used to determine if the
@@ -55,5 +58,4 @@ public class SquareAttack extends AI_Control {
 			actor.removeAI_Control(this);
 		}
 	}
-
 }
