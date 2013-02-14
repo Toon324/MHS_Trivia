@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Instructions extends GameMode {
 
 	private String[] instructions = {
-			"Click the category buttons to choose which quesitons to be tested on.",
+			"Click the category buttons to choose which questions to be tested on.",
 			"Click on the button containing your answer of choice.",
 			"The longer you take to answer, the less points you get for being right." };
 

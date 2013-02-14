@@ -187,10 +187,6 @@ public class MainGame extends GameMode {
 
 		g.setFont(f);
 		g.setColor(Color.cyan);
-		
-		g.drawString("Evade:", 250, 20);
-		g.fillRect(300, 20, (int) (100 / Math.pow(2,
-						Math.pow(qstSet.getTimePassed() / (double) 5000, 4))), 20);
 
 		switch (state) {
 		case QUESTIONS:
@@ -209,7 +205,7 @@ public class MainGame extends GameMode {
 
 			if (questionWidth < engine.windowWidth) {
 				g.drawString(qstSet.getQuestion(), 60,
-						engine.windowHeight - 190);
+						engine.windowHeight - 210);
 			} else // If question goes outside the screen, split it
 			{
 				String question = qstSet.getQuestion();
@@ -225,8 +221,8 @@ public class MainGame extends GameMode {
 					}
 				}
 				splitter.close();
-				g.drawString(part1.toString(), 60, engine.windowHeight - 190);
-				g.drawString(part2.toString(), 60, engine.windowHeight - 165);
+				g.drawString(part1.toString(), 60, engine.windowHeight - 210);
+				g.drawString(part2.toString(), 60, engine.windowHeight - 185);
 			}
 
 			try {
@@ -259,7 +255,27 @@ public class MainGame extends GameMode {
 				g.drawString("Press ENTER to continue.", 10, engine.windowHeight-70);
 			}
 		}
+		
+		int scoreCalc = (int) (100 / Math.pow(2, Math.pow(qstSet.getTimePassed() / (double) 5000, 4))) + 5;
+		//int scoreCalc = 100;
+		//Draws score
+		g.drawString("Score:", engine.windowWidth-220, engine.windowHeight-140);
+		g.fillRect(engine.windowWidth-220, engine.windowHeight-scoreCalc -10, 65, scoreCalc);
+				
+		//Draws evade chance
+		g.drawString("Evade %:", engine.windowWidth-120, engine.windowHeight-140);
+		g.setColor(Color.green);
+		g.fillRect(engine.windowWidth-100, engine.windowHeight-10-scoreCalc, 65, scoreCalc);
 
+		if (scoreCalc > 75)
+			scoreCalc = 75;
+		
+		g.setColor(Color.orange);
+		g.fillRect(engine.windowWidth-100, engine.windowHeight- 10-scoreCalc, 65, scoreCalc-40);
+		
+		g.setColor(Color.red);
+		g.fillRect(engine.windowWidth-100, engine.windowHeight-60, 65, 50);
+		
 		g.setColor(temp);
 		g.setFont(tempF);
 
