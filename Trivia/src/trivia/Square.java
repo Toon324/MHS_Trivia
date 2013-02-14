@@ -18,7 +18,7 @@ import aiControls.RotateSearch;
 public class Square extends AI_Actor {
 
 	static float MAX_ACCEL = 100F;
-	static float fireRate = 50;// ms/shot
+	static float fireRate = 10;// ms/shot
 	long lastShotTime;
 
 	private Square() {

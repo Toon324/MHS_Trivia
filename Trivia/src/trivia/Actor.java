@@ -125,9 +125,12 @@ public abstract class Actor {
 	 * 
 	 * @param other
 	 *            Actor to check collision against
+	 * 
+	 * @return boolean
+	 *            If the actor died when colliding
 	 */
-	public void checkCollision(Actor other) {
-		return;
+	public boolean checkCollision(Actor other) {
+		return false;
 	}
 
 	public void setCenter(float x, float y) {
@@ -288,7 +291,7 @@ public abstract class Actor {
 				a.move(ms);
 				for (Actor act : actors) {//use of radius will massively increase speed of collisions, thus no need for thread
 					if (!a.equals(act) && a.center.distance(act.center) <= a.radius + act.radius)
-						a.checkCollision(act);
+						if (a.checkCollision(act)) break;
 				}
 				/*// check for collisions
 				threadPool.execute(new CollisionThread(a, actors

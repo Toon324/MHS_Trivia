@@ -52,38 +52,47 @@ public abstract class AI_Actor extends Actor {
 
 		super.move(ms);
 	}
-
-	public void checkCollision(Actor other) {
+	
+	
+	
+	public boolean checkCollision(Actor other) {
 		// this will still check actors against particles, but not particles
 		// against actors
 
 		if (this.getClass().equals(other.getClass()))
-			return;
+			return false;
 
 		Polygon otherPoly = other.basePoly;
 		for (int i = 0; i < otherPoly.npoints; i++) {
-			if (basePoly.contains(otherPoly.xpoints[i], otherPoly.ypoints[i])) {
-				onCollide(other);
+			if (!other.remove && basePoly.contains(otherPoly.xpoints[i], otherPoly.ypoints[i])) {
+				if(onCollide(other)) return true;;
 			}
 		}
+		return false;
 	}
 
 	/**
-	 * Called when this actor has collided with another
+	 * Called when this actor has collided with another.
+	 * PRECONDITION: The actor passed must not be flagged for removal, or equal to this object
 	 * 
-	 * @param other
-	 *            The actor this actor has collided with
+	 * @param other The actor this actor has collided with
+	 * 
+	 * @return boolean if the actor has died
 	 */
-	public void onCollide(Actor other) {
+	public boolean onCollide(Actor other) {
 		if (other instanceof Particle) {
-			if (!other.remove) {
-				other.remove = true;
-				this.damage(1);
+			other.remove = true;
+			this.damage(1);
+			if (health <= 0) {
+				this.kill();
+				return true;
 			}
 		} else if (other instanceof AI_Actor) {
 			kill();
 			((AI_Actor) other).kill();
+			return true;
 		}
+		return false;
 	}
 
 	public boolean hasAIClass(Class<?> cls) {
