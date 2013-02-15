@@ -20,6 +20,7 @@ public class Square extends AI_Actor {
 	static float MAX_ACCEL = 100F;
 	static float fireRate = 10;// ms/shot
 	long lastShotTime;
+	double shotSpeed = 500;
 
 	private Square() {
 		super();
@@ -47,19 +48,18 @@ public class Square extends AI_Actor {
 	 * 
 	 * @param spoke
 	 */
-
+	
 	public boolean fireShot(int spoke) {
 		long ms = System.currentTimeMillis();
 		if (lastShotTime + 50 <= ms) {
 			lastShotTime = ms;
-			double speed = 500;
 			double shotAngle = (spoke * Math.PI / 2 + angle) % (Math.PI * 2);
 			Point2D.Float shotPos = new Point2D.Float(
 					center.x + (float) (radius * Math.cos(shotAngle)),
 					center.y + (float) (radius * Math.sin(shotAngle)));
 			Point2D.Float shotVel = new Point2D.Float(
-					(float) (speed * Math.cos(shotAngle)),
-					(float) (speed * Math.sin(shotAngle)));
+					(float) (shotSpeed * Math.cos(shotAngle)),
+					(float) (shotSpeed * Math.sin(shotAngle)));
 			// Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[]
 			// {0, 3, -3}, 3);
 			Particle.addParticle(shotPos, shotVel, Color.magenta);
@@ -67,7 +67,11 @@ public class Square extends AI_Actor {
 		}
 		return false;
 	}
-
+	
+	public double getShotSpeed(){
+		return shotSpeed;
+	}
+	
 	public ArrayList<Actor> getActorsInView() {
 		ArrayList<Actor> list = new ArrayList<Actor>();
 		for (int i = 0; i < 360; i += 90) {

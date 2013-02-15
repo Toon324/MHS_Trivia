@@ -27,7 +27,7 @@ public abstract class Actor {
 
 	protected double angle;
 	protected double rotateVel;// radians/s
-	protected Point2D.Float vectVel;// pixels/s
+	protected Point2D.Float vectVel, vectAccel;// pixels/s(/s)
 
 	protected Polygon basePoly, drawPoly;
 
@@ -48,6 +48,7 @@ public abstract class Actor {
 		ID_Count++;
 		basePoly = new Polygon();
 		vectVel = new Point2D.Float(0, 0);
+		vectAccel = new Point2D.Float(0, 0);
 		rotateVel = 0;
 		angle = 0;
 		center = new Point2D.Float(0, 0);
@@ -88,7 +89,15 @@ public abstract class Actor {
 	public double getRotateVel() {
 		return rotateVel;
 	}
-
+	
+	public void setAccel(Point2D.Float newAccel){
+		vectAccel.setLocation(newAccel);
+	}
+	
+	public Point2D.Float getAccel(){
+		return vectAccel;
+	}
+	
 	/**
 	 * Draws the Actor.
 	 * 
@@ -114,8 +123,11 @@ public abstract class Actor {
 	 *            Height of window to draw in
 	 */
 	public void move(int ms) {
-		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
+		float sec = ms/1000F;
+		setCenter(center.x + sec * vectVel.x, center.y + sec
 				* vectVel.y);
+		vectVel.y += vectAccel.y * sec;
+		vectVel.x += vectAccel.x * sec;
 		if (rotateVel != 0)// used to prevent unnecessary use of polygonal rotation
 			rotate((ms / 1000F) * rotateVel);
 	}
