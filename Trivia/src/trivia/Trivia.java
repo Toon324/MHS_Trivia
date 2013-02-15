@@ -9,11 +9,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+/**
+ * The class that controls and owns all necessary objects.
+ * @author Cody Swendrowski, Dan Miller
+ */
 public class Trivia extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
 	private static final long serialVersionUID = 42l;
 	private Thread th; // Game thread
-	private Thread close;
+	private Thread close; //Used for closing the game
 	private GameEngine engine;
 
 	/**
@@ -31,43 +35,46 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	}
 
 	/**
-	 * Called when game is first initialized. Resets all values to default
-	 * state.
+	 * Called when game is first initialized. Sets all values and objects to default
+	 * state, and allows this class to listen to Mouse and Keyboard input.
 	 */
 	public void init() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addKeyListener(this);
-		engine = new GameEngine(true);
+		engine = new GameEngine(false);
 		engine.setWindowSize(getWidth(), getHeight());
 		engine.setMode(engine.instructions);
 	}
 	
+	/**
+	 * A thread used to close the game correctly.
+	 * @author Cody Swendrowski, Dan Miller
+	 */
 	public class CloseHook implements Runnable{
 		Trivia t;
 		public CloseHook(Trivia tri){t = tri;}
 
 		@Override
 		public void run() {
-			t.onClose();
+			t.onClose(); //Closes the game from a new thread to avoid errors
 			try {
 				this.finalize();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	
 	/**
-	 * Starts the game thread. Must be called from out of this class.
+	 * Starts the game thread.
 	 */
 	public void start() {
 		th.start();
 	}
 
 	/**
-	 * Called to run the game. Will continue running until game is exitted. All
+	 * Called to run the game. Will continue running until game is closed. All
 	 * game logic is called from here.
 	 */
 	public synchronized void run() {
@@ -88,22 +95,22 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	}
 
 	/**
-	 * Updates the graphics of the game using a double buffer system.
+	 * Updates the graphics of the game using a double buffer system to avoid screen flicker.
 	 */
 	public void update(Graphics g) {
-		// start buffer
+		//Start buffer
 		Image dbImage = createImage(getWidth(), getHeight());
 		Graphics dbg = dbImage.getGraphics();
 
-		// clear screen in background
+		//Clear screen in background
 		dbg.setColor(getBackground());
 		dbg.fillRect(0, 0, getWidth(), getHeight());
 
-		// draw elements in background
+		//Draw game in background
 		dbg.setColor(getForeground());
 		paint(dbg);
 
-		// draw image on screen
+		//Draw Image on screen
 		g.drawImage(dbImage, 0, 0, this);
 	}
 
@@ -117,33 +124,15 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		super.paint(g);
 
 		synchronized (this) {
-			notifyAll();
+			notifyAll(); //Lets the run() method know that painting is completed
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.applet.Applet#resize(int, int)
-	 */
 	@Override
-	public void resize(int width, int height) {
-		if (width < 300)
-			width = 300;
-		if (height < 300)
-			height = 300;
-		super.resize(width, height);
-	}
+	public void keyPressed(KeyEvent e) {}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void keyReleased(KeyEvent e) {}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -156,36 +145,27 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	public void mouseDragged(MouseEvent arg0) {}
 	
+	/**
+	 * Called when game exits. Properly closes resources.
+	 */
 	public void onClose(){
 		engine.onClose();
 	}
 	
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		engine.MouseMoved(arg0);
-	}
+	public void mouseMoved(MouseEvent arg0) {}
 }

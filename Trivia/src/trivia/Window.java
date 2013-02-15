@@ -1,14 +1,12 @@
 package trivia;
 
 import java.awt.BorderLayout;
-//import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 
 /**
- * Displays the Applet.
+ * Starts the game and displays the Applet.
  * 
- * @author Cody
+ * @author Cody Swendrowski, Dan Miller
  */
 public class Window {
 	public static void main(String[] args) {
@@ -25,6 +23,7 @@ public class Window {
 		frame.setSize(800, 600);
 		frame.setResizable(true);
 		frame.setVisible(true);
+
 		// Runs game
 		game.run();
 	}

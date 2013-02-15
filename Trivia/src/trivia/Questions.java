@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+/**
+ * Reads in all questions based on categories selected, then offers a way to
+ * retrieve those questions and their right answer.
+ * 
+ * @author Cody Swendrowski, Dan Miller
+ */
 public class Questions {
 
 	private String[] filePaths;
@@ -14,6 +20,14 @@ public class Questions {
 	private int currentQuestion;
 	private long lastQuestionTime = 0;
 
+	/**
+	 * Creates a new Questions controller.
+	 * 
+	 * @param path
+	 *            Location of questions to load
+	 * @param names
+	 *            Names of categories to load
+	 */
 	public Questions(String path, String[] names) {
 		filePaths = new String[names.length];
 		for (int i = 0; i < names.length; i++) {
@@ -25,15 +39,28 @@ public class Questions {
 		currentQuestion = -1;
 	}
 
+	/**
+	 * Returns the current question.
+	 * 
+	 * @return
+	 */
 	public String getQuestion() {
 		try {
 			return questions[currentQuestion];
 		} catch (Exception e) {
-			e.printStackTrace();
-			return e.getMessage();
+			GameEngine.log("No current question!");
+			if (GameEngine.debugMode)
+				return e.getMessage();
+			else
+				return "";
 		}
 	}
 
+	/**
+	 * Returns the possible answers in an array.
+	 * 
+	 * @return String array of possible answers
+	 */
 	public String[] getAnsArray() {
 		try {
 			return answers[currentQuestion];
@@ -43,13 +70,19 @@ public class Questions {
 		}
 	}
 
+	/**
+	 * Calculates time since last question was answered. Used for score
+	 * calculations.
+	 * 
+	 * @return Time since last question was answered
+	 */
 	public long getTimePassed() {
 		return System.currentTimeMillis() - lastQuestionTime;
 	}
 
 	/**
 	 * Checks to find the first clicked button and returns if it is the correct
-	 * answer or not
+	 * answer or not.
 	 * 
 	 * @param buts
 	 *            The buttons to check
@@ -70,14 +103,19 @@ public class Questions {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Returns the correct answer.
+	 * 
+	 * @return String of correct answer
+	 */
 	public String getCorrectString() {
 		String[] currentAnswers = answers[currentQuestion];
 		return currentAnswers[answerKey[currentQuestion]];
 	}
 
 	/**
-	 * Moves to the next question
+	 * Moves to the next question.
 	 * 
 	 * @return true if there is another question, false otherwise
 	 */
@@ -91,10 +129,10 @@ public class Questions {
 	}
 
 	/**
-	 * Reads in a file to an array
+	 * Helper method. Reads in questions from given filepaths.
 	 * 
-	 * @return ArrayList<String> arrayList containing the contents of the file,
-	 *         separated by line
+	 * @return ArrayList<String> containing the contents of the file, separated
+	 *         by line
 	 */
 	private ArrayList<String> readFile(String[] filePaths) {
 
@@ -103,7 +141,8 @@ public class Questions {
 		for (int i = 0; i < filePaths.length; i++) {
 			Scanner scanner = new Scanner(
 					Trivia.class.getResourceAsStream(filePaths[i]));
-			scanner.useDelimiter("\n");
+			scanner.useDelimiter("\n"); // Uses newline as a signal that it is a
+										// new question
 			try {
 				while (scanner.hasNext()) {
 					String s = scanner.next();
@@ -119,14 +158,14 @@ public class Questions {
 	}
 
 	/**
-	 * Takes the read in file, randomizes the questions and answers, and puts
-	 * the results into global variables questions, answers, and the answer key
-	 * into ansKey Preconditions: The text file input has questions seperated by
-	 * lines, and on each line the items are seperated by "|", with the first
-	 * item being the question, the second the correct answer, and all the rest
-	 * incorrect answers
+	 * Helper method. Takes the read in file, randomizes the questions and
+	 * answers, and puts the results into global variables questions, answers,
+	 * and the answer key into ansKey Preconditions: The text file input has
+	 * questions separated by lines, and on each line the items are separated by
+	 * tabs.
 	 * 
 	 * @param input
+	 *            ArrayList of strings to process.
 	 */
 	private void proccessQuestions(ArrayList<String> input) {
 
@@ -171,7 +210,7 @@ public class Questions {
 
 		answers = new String[questList.size()][];
 
-		// sort arrays are used to determine where each value should be pulled
+		// Sort arrays are used to determine which value should be pulled
 		// from either questList or ansList and put into the result array
 		int[] sort1 = genUniqueRandArray(questList.size());
 		int[] sort2;
@@ -195,11 +234,12 @@ public class Questions {
 	}
 
 	/**
-	 * Utility used to generate an array of a certain length which contains
-	 * numbers from 0 to length - 1, with each number occuring only once
+	 * Helper method. Used to generate an array of a certain length which
+	 * contains numbers from 0 to length - 1, with each number occurring only
+	 * once.
 	 * 
 	 * @param len
-	 *            : length of the result array
+	 *            length of the result array
 	 * @return Array of random numbers ranging from 0 to len - 1, with no number
 	 *         occuring twice
 	 */

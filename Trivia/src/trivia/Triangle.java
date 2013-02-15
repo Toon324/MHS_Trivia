@@ -5,40 +5,41 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
 
+/**
+ * Fights for the Player, and is affected by Player performance via a change in
+ * evade chance.
+ * 
+ * @author Cody Swendrowski, Dan Miller
+ */
 public class Triangle extends FightingActor {
 
-	Point currentDest;
-
+	/**
+	 * Creates a new Triangle.
+	 * 
+	 * @param e
+	 *            GameEngine to utilize
+	 * @param dest
+	 *            Destination to move to
+	 */
 	public Triangle(GameEngine e, int dest) {
 		super(e);
-		Polygon poly = new Polygon();
 		destination = dest;
-		vectVel = new Point2D.Float(50,0);
+		vectVel = new Point2D.Float(50, 0); // Move right
 		int width = 30, height = 30;
-		poly.addPoint(-width / 2, -height / 2);
-		poly.addPoint(width / 2, 0);
-		poly.addPoint(-width / 2, height / 2);
-		setBasePoly(poly);
-		shotVel.x = 40;
+		basePoly.addPoint(-width / 2, -height / 2);
+		basePoly.addPoint(width / 2, 0);
+		basePoly.addPoint(-width / 2, height / 2);
+		shotVel.x = 40; // Shoot right
 		drawClr = Color.cyan;
 	}
 
-	public void setDestination(Point pnt) {
-		currentDest = pnt;
-	}
-	
+	@Override
 	public void move(int ms) {
-		if (center.x + vectVel.x*(ms/1000f) <= destination)
+		if (center.x + vectVel.x * (ms / 1000f) <= destination)
 			super.move(ms);
 	}
 
-	public void checkCollision(Actor other) {
-		if (other instanceof Triangle) {
-			return;
-		}
-		super.checkCollision(other);
-	}
-	
+	@Override
 	public String toString() {
 		return "Triangle";
 	}

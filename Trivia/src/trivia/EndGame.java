@@ -21,12 +21,14 @@ public class EndGame extends GameMode {
 		buttons.add(new Button("Return to Main Menu", 200, 500));
 	}
 
+	@Override
 	public void run(int ms) {
 		if (buttons.get(0).isClicked()) {
 			engine.setMode(engine.mainMenu);
 		}
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight,
 				null);
@@ -36,13 +38,13 @@ public class EndGame extends GameMode {
 		g.setColor(Color.cyan);
 		buttons.get(0).draw(g);
 		g.setFont(engine.large);
-		buttons.get(0).set(200, engine.windowHeight-100);
-		g.drawString("Your score is " + engine.score + ".", engine.windowWidth/2-100,
-				engine.windowHeight - 150);
+		buttons.get(0).set(200, engine.windowHeight - 100);
+		g.drawString("Your score is " + engine.score + ".",
+				engine.windowWidth / 2 - 100, engine.windowHeight - 150);
 	}
-	
-	public String toString()
-	{
+
+	@Override
+	public String toString() {
 		return "EndGame";
 	}
 }

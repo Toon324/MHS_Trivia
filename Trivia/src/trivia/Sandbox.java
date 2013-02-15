@@ -12,7 +12,9 @@ public class Sandbox extends GameMode {
 
 	/**
 	 * Creates a new Sandbox controller.
-	 * @param eng GameEngine to utilize
+	 * 
+	 * @param eng
+	 *            GameEngine to utilize
 	 */
 	public Sandbox(GameEngine eng) {
 		super(eng);
@@ -20,8 +22,7 @@ public class Sandbox extends GameMode {
 
 	@Override
 	public void clicked(int x, int y) {
-		//engine.log("Clicked at " + x + ", " + y);
-		engine.particleEngine.spawnRandomExplosion(new Point2D.Float(x,y));
+		engine.particleEngine.spawnRandomExplosion(new Point2D.Float(x, y));
 	}
 
 	@Override
@@ -39,7 +40,4 @@ public class Sandbox extends GameMode {
 	public String toString() {
 		return "Sandbox";
 	}
-	
-	
-
 }

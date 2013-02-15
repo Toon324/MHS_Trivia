@@ -17,7 +17,7 @@ import java.util.Scanner;
  * @author Cody Swendrowski, Dan Miller
  */
 public class MainGame extends GameMode {
-	
+
 	private Point[] fleetPositions;
 	private boolean[] triangleFleetStatus, squareFleetStatus;
 
@@ -25,40 +25,43 @@ public class MainGame extends GameMode {
 		QUESTIONS, DISPLAY_RESPONSE, WAIT_FOR_END
 	};
 
-	private states state;	
-	
+	private states state;
 	private Questions qstSet;
-
 	private int maxFleetSize;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
-
 	private Font f = new Font("Serif", Font.BOLD, 26);
 
 	/**
 	 * Creates a new MainGame controller.
 	 * 
 	 * @param eng
-	 *            Engine to utilize and report to.
+	 *            Engine to utilize and report to
 	 */
 	public MainGame(GameEngine eng) {
 		super(eng);
 		state = states.DISPLAY_RESPONSE;// will automatically time out to next
-		maxFleetSize = 10;
+										// phase
 		initializeFleetPositions(1);
 	}
 
+	/**
+	 * Helper method. Sets up Fleet positions. Offers differing options for ease
+	 * of use and future expandability.
+	 * 
+	 * @param setup
+	 *            Represents which setup to load.
+	 */
 	private void initializeFleetPositions(int setup) {
-		switch (setup)
-		{
+		switch (setup) {
 		case 0:
 			maxFleetSize = 4;
-			Point a1 = new Point(200,50),
-			a2 = new Point(230,120), 
-			a3 = new Point(230,190), 
-			a4 = new Point(200,260);
-			Point[] atemp = {a1,a2,a3,a4};
-			boolean[] astatusTemp = {false,false,false,false};
+			Point a1 = new Point(200, 50),
+			a2 = new Point(230, 120),
+			a3 = new Point(230, 190),
+			a4 = new Point(200, 260);
+			Point[] atemp = { a1, a2, a3, a4 };
+			boolean[] astatusTemp = { false, false, false, false };
 			fleetPositions = atemp;
 			triangleFleetStatus = astatusTemp.clone();
 			squareFleetStatus = astatusTemp.clone();
@@ -67,16 +70,17 @@ public class MainGame extends GameMode {
 			break;
 		case 1:
 			maxFleetSize = 8;
-			Point b1 = new Point(200,50),
-			b2 = new Point(230,120), 
-			b3 = new Point(230,190), 
-			b4 = new Point(200,260),
-			b5 = new Point(130,50),
-			b6 = new Point(130,120),
-			b7 = new Point(130,190),
-			b8 = new Point(130,260);
-			Point[] btemp = {b1,b2,b3,b4,b5,b6,b7,b8};
-			boolean[] bstatusTemp = {false,false,false,false,false,false,false,false};
+			Point b1 = new Point(200, 50),
+			b2 = new Point(230, 120),
+			b3 = new Point(230, 190),
+			b4 = new Point(200, 260),
+			b5 = new Point(130, 50),
+			b6 = new Point(130, 120),
+			b7 = new Point(130, 190),
+			b8 = new Point(130, 260);
+			Point[] btemp = { b1, b2, b3, b4, b5, b6, b7, b8 };
+			boolean[] bstatusTemp = { false, false, false, false, false, false,
+					false, false };
 			fleetPositions = btemp;
 			triangleFleetStatus = bstatusTemp.clone();
 			squareFleetStatus = bstatusTemp.clone();
@@ -98,13 +102,13 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void run(int ms) {
-		//intentionally modifies the object, rather than re-instantianizing
+		// intentionally modifies the object, rather than re-instantianizing
 		GameEngine.envSize.x = engine.windowWidth;
 		GameEngine.envSize.y = engine.windowHeight - 250;
-		
+
 		engine.actors.handleActors(ms);
-		//Particle.runParticles(ms);
-		
+		// Particle.runParticles(ms);
+
 		switch (state) {
 		case QUESTIONS:
 			runQuestion();
@@ -132,10 +136,6 @@ public class MainGame extends GameMode {
 		}
 	}
 
-	@Override
-	public void mouseMoved(int x, int y) {
-	}
-
 	/**
 	 * Determines if answer is clicked, and what score to give.
 	 */
@@ -145,11 +145,14 @@ public class MainGame extends GameMode {
 				engine.setMode(engine.endGame);
 		}
 
+		// If a button is clicked, check to see if it is the right answer
 		if (Button.isOneClicked(buttons)) {
 			engine.actors.fire();
 			lastTime = System.currentTimeMillis();
 			state = states.DISPLAY_RESPONSE;
 			lastAnswer = qstSet.checkCorrect(buttons.toArray(new Button[0]));
+			// If the answer is right, add points and ships, as well as set
+			// evade
 			if (lastAnswer) {
 				int toAdd = (int) (100 / Math.pow(2,
 						Math.pow(qstSet.getTimePassed() / (double) 5000, 4)));
@@ -160,14 +163,11 @@ public class MainGame extends GameMode {
 				addShipsToTriangleFleet(1);
 				addShipsToSquareFleet(1);
 				engine.ENTER = true;
-			} else {
-				engine.score -= 90;
-				if (engine.score < 0) 
-					engine.score = 0;
-				if (engine.score < 0)
-				{
-					engine.score = 0;
-				}
+			}
+			// If the answer is wrong, only add ships to enemy fleet, set evade
+			// to minimum (50), and display correct answer until Enter is
+			// pressed
+			else {
 				addShipsToSquareFleet(1);
 				engine.actors.setEvade(50);
 				engine.ENTER = false;
@@ -177,6 +177,7 @@ public class MainGame extends GameMode {
 
 	@Override
 	public void paint(Graphics g) {
+		// Draws background image
 		g.drawImage(background, 0, 0, engine.windowWidth, engine.windowHeight,
 				null);
 
@@ -190,12 +191,11 @@ public class MainGame extends GameMode {
 
 		switch (state) {
 		case QUESTIONS:
-
 			// Draws question background
 			g.setColor(engine.transGray);
 			g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 					engine.windowHeight);
-			
+
 			g.setColor(Color.cyan);
 
 			// Draws question
@@ -234,53 +234,80 @@ public class MainGame extends GameMode {
 			}
 			break;
 
-		default:
+		default: // while waiting for the end, display last question's info
 			g.setColor(engine.transGray);
 			g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 					engine.windowHeight);
 			g.setColor(Color.cyan);
+			// If answer was correct, tell player it was
 			if (lastAnswer) {
 				g.drawString("You got that right!", 10,
 						engine.windowHeight - 230);
-			} else {
+			}
+			// If answer was wrong, tell player the correct answer and wait for
+			// them to hit Enter
+			else {
 				g.drawString("Nice try, but you got that wrong!", 10,
 						engine.windowHeight - 220);
-				g.drawString("The correct answer was:", 10, engine.windowHeight-160);
+				g.drawString("The correct answer was:", 10,
+						engine.windowHeight - 160);
 				g.setColor(Color.red);
 				try {
-					g.drawString(qstSet.getCorrectString(), 10, engine.windowHeight-130); 
+					g.drawString(qstSet.getCorrectString(), 10,
+							engine.windowHeight - 130);
+				} catch (Exception e) {
+					engine.ENTER = true;
 				}
-				catch (Exception e) { engine.ENTER = true;}
 				g.setColor(Color.cyan);
-				g.drawString("Press ENTER to continue.", 10, engine.windowHeight-70);
+				g.drawString("Press ENTER to continue.", 10,
+						engine.windowHeight - 70);
 			}
 		}
-		
-		int scoreCalc = (int) (100 / Math.pow(2, Math.pow(qstSet.getTimePassed() / (double) 5000, 4))) + 5;
-		//int scoreCalc = 100;
-		//Draws score
-		g.drawString("Score:", engine.windowWidth-220, engine.windowHeight-140);
-		g.fillRect(engine.windowWidth-220, engine.windowHeight-scoreCalc -10, 65, scoreCalc);
-				
-		//Draws evade chance
-		g.drawString("Evade %:", engine.windowWidth-120, engine.windowHeight-140);
+
+		int scoreCalc = (int) (100 / Math.pow(2,
+				Math.pow(qstSet.getTimePassed() / (double) 5000, 4))) + 5;
+
+		// Draws score
+		g.drawString("Score:", engine.windowWidth - 220,
+				engine.windowHeight - 140);
+		g.fillRect(engine.windowWidth - 220, engine.windowHeight - scoreCalc
+				- 10, 65, scoreCalc);
+
+		// Draws evade chance
+		g.drawString("Evade %:", engine.windowWidth - 120,
+				engine.windowHeight - 140);
+
+		// Draws green
 		g.setColor(Color.green);
-		g.fillRect(engine.windowWidth-100, engine.windowHeight-10-scoreCalc, 65, scoreCalc);
+		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 10
+				- scoreCalc, 65, scoreCalc);
 
 		if (scoreCalc > 75)
 			scoreCalc = 75;
-		
+
+		// Draws orange
 		g.setColor(Color.orange);
-		g.fillRect(engine.windowWidth-100, engine.windowHeight- 10-scoreCalc, 65, scoreCalc-40);
-		
+		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 10
+				- scoreCalc, 65, scoreCalc - 40);
+
+		// Draws red (constant)
 		g.setColor(Color.red);
-		g.fillRect(engine.windowWidth-100, engine.windowHeight-60, 65, 50);
-		
+		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 60, 65, 50);
+
 		g.setColor(temp);
 		g.setFont(tempF);
 
 	}
-	
+
+	/**
+	 * Called when a Triangle dies to tell the corresponding fleet position that
+	 * the position can be filled in with a new Triangle.
+	 * 
+	 * @param x
+	 *            X position of Triangle
+	 * @param y
+	 *            Y position of Triangle
+	 */
 	public void setTrianglePositionToFalse(int x, int y) {
 		int num = 0;
 		for (Point p : fleetPositions) {
@@ -289,45 +316,61 @@ public class MainGame extends GameMode {
 			num++;
 		}
 	}
-	
+
+	/**
+	 * Called when a Square dies to tell the corresponding fleet position that
+	 * the position can be filled in with a new Square.
+	 * 
+	 * @param x
+	 *            X position of Square
+	 * @param y
+	 *            Y position of Square
+	 */
 	public void setSquarePositionToFalse(int x, int y) {
 		int num = 0;
 		for (Point p : fleetPositions) {
-			if (engine.windowWidth-p.x == x && p.y == y)
+			if (engine.windowWidth - p.x == x && p.y == y)
 				squareFleetStatus[num] = false;
 			num++;
 		}
 	}
-	
-	private void addShipsToTriangleFleet(int shipsToAdd)
-	{
-		if (shipsToAdd > 0)
-		{
-			for(int i=0; i<fleetPositions.length; i++)
-			{
-				if (shipsToAdd <= 0)
-					break;
-				if(!triangleFleetStatus[i])
-				{
-					engine.actors.addTriangle(fleetPositions[i].x, fleetPositions[i].x-250, fleetPositions[i].y);
-					triangleFleetStatus[i] = true;
-					shipsToAdd -= 1;
-				}
+
+	/**
+	 * Helper method. Adds ships to the Triangle fleet, and updates
+	 * TriangleFleetStatus.
+	 * 
+	 * @param shipsToAdd
+	 *            Number of Triangles to add
+	 */
+	private void addShipsToTriangleFleet(int shipsToAdd) {
+		for (int i = 0; i < fleetPositions.length; i++) {
+			if (shipsToAdd <= 0)
+				break;
+			if (!triangleFleetStatus[i]) {
+				engine.actors.addTriangle(fleetPositions[i].x,
+						fleetPositions[i].x - 250, fleetPositions[i].y);
+				triangleFleetStatus[i] = true;
+				shipsToAdd -= 1;
 			}
 		}
 	}
-	
-	private void addShipsToSquareFleet(int shipsToAdd)
-	{
-		if (shipsToAdd > 0)
-		{
-			for(int i=0; i<fleetPositions.length; i++)
-			{
+
+	/**
+	 * Helper method. Adds ships to the Square fleet, and updates
+	 * SquareFleetStatus
+	 * 
+	 * @param shipsToAdd
+	 *            Number of Squares to add
+	 */
+	private void addShipsToSquareFleet(int shipsToAdd) {
+		if (shipsToAdd > 0) {
+			for (int i = 0; i < fleetPositions.length; i++) {
 				if (shipsToAdd <= 0)
 					break;
-				if(!squareFleetStatus[i])
-				{
-					engine.actors.addSquare(engine.windowWidth-fleetPositions[i].x, engine.windowWidth-fleetPositions[i].x+250, fleetPositions[i].y);
+				if (!squareFleetStatus[i]) {
+					engine.actors.addSquare(engine.windowWidth
+							- fleetPositions[i].x, engine.windowWidth
+							- fleetPositions[i].x + 250, fleetPositions[i].y);
 					squareFleetStatus[i] = true;
 					shipsToAdd -= 1;
 				}
@@ -335,6 +378,7 @@ public class MainGame extends GameMode {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return "Main Game";
 	}

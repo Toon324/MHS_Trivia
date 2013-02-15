@@ -4,13 +4,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 
 /**
- * 
- * @author Cody Swendrowski, Dan Miller Abstract class that contains all of the
- *         necessary methods for GameModes.
+ * Abstract class that contains all of the necessary methods for GameModes.
+ * @author Cody Swendrowski, Dan Miller 
  */
 
 public abstract class GameMode {
@@ -40,9 +38,6 @@ public abstract class GameMode {
 	 * Runs the logic of the GameMode.
 	 */
 	public void run(int ms) {
-	}
-
-	public void mouseMoved(int x, int y) {
 	}
 
 	/**

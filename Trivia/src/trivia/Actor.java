@@ -7,32 +7,28 @@ import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 /**
- * Generic class for all objects in the game.
+ * Generic class for all objects in the game that both move and paint.
  * 
  * @author Cody Swendrowski, Dan Miller
  */
 public abstract class Actor {
-
-	protected Actors actors;
 
 	protected boolean death;
 	protected Point2D.Float center;
 	protected Color drawClr;
 	protected GameEngine engine;
 
-	// derivative motion values
-	protected Point2D.Float vectVel;// pixels/s
+	protected Point2D.Float vectVel; // speed in pixels/s
 
 	protected Polygon basePoly, drawPoly;
 
 	/**
 	 * Creates a new Actor.
 	 * 
-	 * @param p
-	 *            Position in ArrayList
+	 * @param e
+	 *            GameEngine to utilize
 	 */
 
 	public Actor(GameEngine e) {
@@ -44,28 +40,44 @@ public abstract class Actor {
 		drawClr = Color.cyan;
 	}
 
-	public void setActors(Actors act) {
-		actors = act;
-	}
-
+	/**
+	 * Sets the basePoly, which is the default shape of the Actor, to a new
+	 * Polygon.
+	 * 
+	 * @param poly
+	 *            Polygon to set to
+	 */
 	public void setBasePoly(Polygon poly) {
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
 	}
 
+	/**
+	 * Returns Polygon used for drawing
+	 * 
+	 * @return drawnPoly
+	 */
 	public Polygon getDrawnPoly() {
 		return drawPoly;
 	}
 
+	/**
+	 * Returns center of Actor in a Point2D.Float format.
+	 * 
+	 * @return center
+	 */
 	public Point2D.Float getCenter() {
 		return center;
 	}
 
+	/**
+	 * Returns velocity of Actor in a Point2D.Float format.
+	 * 
+	 * @return vectVel
+	 */
 	public Point2D.Float getVelocity() {
 		return vectVel;
 	}
-
-	public abstract float getMaxAccel();
 
 	/**
 	 * Draws the Actor.
@@ -83,8 +95,22 @@ public abstract class Actor {
 		drawPoly(g, drawPoly, new Point((int) center.x, (int) center.y), true);
 	}
 
+	/**
+	 * Draws the Polygon with given graphics and center.
+	 * 
+	 * @param g
+	 *            Graphics to draw with
+	 * @param p
+	 *            Polygon to draw
+	 * @param thisCenter
+	 *            The center of the Polygon
+	 * @param centerLines
+	 *            If true, draws lines from all points to center
+	 */
 	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
 			boolean centerLines) {
+		
+		//If there is no Polygon, return
 		if (p == null)
 			return;
 
@@ -92,6 +118,8 @@ public abstract class Actor {
 		int res;
 		float array[] = new float[6];
 		PathIterator iter = p.getPathIterator(new AffineTransform());
+		
+		//Iterate through the Path of the Polygon, drawing lines according to data provided
 		while (!iter.isDone()) {
 			res = iter.currentSegment(array);
 			switch (res) {
@@ -101,6 +129,7 @@ public abstract class Actor {
 			case PathIterator.SEG_LINETO:
 				g.drawLine(x, y, (int) array[0], (int) array[1]);
 
+				//Draws lines to center if boolean is true
 				if (centerLines)
 					g.drawLine(x, y, (int) thisCenter.x, (int) thisCenter.y);
 
@@ -147,7 +176,16 @@ public abstract class Actor {
 	 *            Actor to check collision against
 	 */
 	public void checkCollision(Actor other) {
-		if (other.equals(this) || other.center.x - center.x > 20 || other.center.y - center.y > 20 || drawClr.toString().equalsIgnoreCase(other.drawClr.toString()))
+		if (other.equals(this))
+			return;
+		int distance = 1;
+		if (other.basePoly != null && basePoly != null)
+			distance = Math.abs((other.basePoly.getBounds().x - basePoly.getBounds().x)
+				/ (other.basePoly.getBounds().y - basePoly.getBounds().y));
+		if (distance > 5
+				|| drawClr.toString()
+						.equalsIgnoreCase(other.drawClr.toString())
+				||  other instanceof Particle)
 			return;
 
 		Polygon otherPoly = other.basePoly;
@@ -160,16 +198,34 @@ public abstract class Actor {
 		}
 	}
 
+	/**
+	 * Sets the center of the Actor by first transforming the basePoly (and
+	 * drawPoly if not null) to (0,0), then transforms to new center.
+	 * 
+	 * @param x
+	 *            X co-ordinate of center
+	 * @param y
+	 *            Y co-ordinate of center
+	 */
 	public void setCenter(float x, float y) {
+		//Translates to (0,0)
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
+		
+		//Translates to new center
 		center = new Point2D.Float(x, y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
 		basePoly.translate((int) center.x, (int) center.y);
 	}
 
+	/**
+	 * Sets the death boolean of Actor.
+	 * 
+	 * @param d
+	 *            boolean to set to
+	 */
 	public void setDeath(boolean d) {
 		death = d;
 	}
@@ -183,24 +239,4 @@ public abstract class Actor {
 		return "Actor";
 	}
 
-	public static float getAccelToReach(float xDist, float currentVel, float MAX) {
-		/*
-		 * Time for velocity to reach 0 if it started to slow down:
-		 * (currentVel/MAX_ACCEL)
-		 * 
-		 * Distance to the next solution for y = 0 that will be traveled in t
-		 * time if acceleration is reversed: currentVel * t - (MAX_ACCEL/2) *
-		 * t^2
-		 */
-		byte velSign = (byte) ((((Float.floatToIntBits(currentVel) >> 31) & (1)) * 2 - 1) * -1);
-		double t = currentVel / MAX;
-		float possibleDist = (float) (currentVel * t - (MAX / 2)
-				* Math.pow(t, 2));
-
-		if (possibleDist >= xDist * velSign)
-			velSign *= -1;
-		if (Math.abs(xDist) <= 2 && currentVel <= MAX)
-			return -currentVel;
-		return MAX * velSign;
-	}
 }

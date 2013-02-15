@@ -17,52 +17,56 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * Handles all the game logic and painting
- *         based on the current game mode.
- *         
- * @author Cody Swendrowski, Dan Miller 
+ * Handles all the game logic and painting based on the current game mode.
+ * 
+ * @author Cody Swendrowski, Dan Miller
  */
 public class GameEngine {
 
-	private GameMode mode;
-	public MainMenu mainMenu;
-	public MainGame mainGame;
-	public Instructions instructions;
-	public EndGame endGame;
-	public Sandbox sandbox;
-	public ParticleEngine particleEngine;
-	Actors actors;
-	private long millis;
-	private int timer = 0;
-	int windowWidth, windowHeight;
-	protected int score;
+	// Resources to use
 	final Font large = new Font("Serif", Font.BOLD, 30);
-	final Color transGray = new Color(Color.gray.getRed(),Color.gray.getGreen(),Color.gray.getBlue(), 200);
-	
+	final Color transGray = new Color(Color.gray.getRed(),
+			Color.gray.getGreen(), Color.gray.getBlue(), 200);
+
+	private GameMode mode;
+	private long millis; // Used to calculate time between each frame
+
+	// GameModes
+	MainMenu mainMenu;
+	MainGame mainGame;
+	Instructions instructions;
+	EndGame endGame;
+	Sandbox sandbox;
+	ParticleEngine particleEngine;
+
+	protected int score;
+
 	public static Point envSize = new Point(0, 0);
 	public static PrintWriter debugWriter;
 	public static boolean debugMode;
-	
-	boolean ENTER;
-	
-	ArrayList<Long> stepTimes;
-	double FPS;
-	int frames;
 
-	static{
-		debugMode = true;
+	int windowWidth, windowHeight, frames;
+	boolean ENTER;
+	ArrayList<Long> stepTimes;
+	Actors actors;
+	double FPS;
+
+	static {
 		File file = new File("src\\trivia\\Resources\\log.txt");
 		try {
-			if(!file.exists()) file.createNewFile();
-			debugWriter = new PrintWriter(new FileWriter(file.getAbsoluteFile()));
+			if (!file.exists())
+				file.createNewFile();
+			debugWriter = new PrintWriter(
+					new FileWriter(file.getAbsoluteFile()));
 		} catch (IOException e) {
-			System.out.println("Error creating debug output stream\n" + System.getProperty("user.dir"));
+			System.out.println("Error creating debug output stream\n"
+					+ System.getProperty("user.dir"));
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Creates a new GameEngine
+	 * Creates a new GameEngine.
 	 * 
 	 * @param actors
 	 *            Array of actors to pass logic to.
@@ -97,9 +101,17 @@ public class GameEngine {
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
-		FPS = 1000/ average(stepTimes);	
+		FPS = 1000 / average(stepTimes); // Calculates average FPS
 	}
 
+	/**
+	 * Helper method. Finds the average in a given list of doubles. Used for FPS
+	 * calculations.
+	 * 
+	 * @param list
+	 *            List of numbers to use
+	 * @return Average of list
+	 */
 	private double average(ArrayList<Long> list) {
 		double avg = 0;
 		int num = 0;
@@ -120,7 +132,7 @@ public class GameEngine {
 		mode.paint(g);
 		g.setFont(large);
 		g.setColor(Color.blue);
-		if(debugMode){
+		if (debugMode) {
 			g.drawString(String.format("%6.2f", FPS), 10, 30);
 		}
 	}
@@ -148,10 +160,14 @@ public class GameEngine {
 		mode.clicked(e.getX(), e.getY());
 	}
 
-	public void MouseMoved(MouseEvent e) {
-		mode.mouseMoved(e.getX(), e.getY());
-	}
-
+	/**
+	 * Sets the current size of the window to draw in.
+	 * 
+	 * @param width
+	 *            Width of window
+	 * @param height
+	 *            Height of window
+	 */
 	public void setWindowSize(int width, int height) {
 		windowWidth = width;
 		windowHeight = height;
@@ -182,8 +198,11 @@ public class GameEngine {
 			log("Could not load sound clip " + s + " Error: " + e.toString());
 		}
 	}
-	
-	public void onClose(){
+
+	/**
+	 * Called when the engine is closed. Properly closes resources.
+	 */
+	public void onClose() {
 		log("Closing writer");
 		debugWriter.close();
 	}
@@ -201,6 +220,12 @@ public class GameEngine {
 		debugWriter.println(s);
 	}
 
+	/**
+	 * Accepts keyEvents when a key is typed. Exits on ESC.
+	 * 
+	 * @param e
+	 *            KeyEvent to handle
+	 */
 	public void keyTyped(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE)
 			System.exit(0);

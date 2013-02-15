@@ -55,8 +55,11 @@ public class Button {
 		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
 		width = (int) rect.getWidth() + 20;
 		height = (int) rect.getHeight();
+
+		// Calculates the left and right wings of the Button
 		Polygon leftTri = new Polygon();
 		Polygon rightTri = new Polygon();
+
 		leftTri.addPoint(x_pos - 1, y_pos - 1);
 		leftTri.addPoint(x_pos - 20, y_pos + ((height) / 2));
 		leftTri.addPoint(x_pos - 1, y_pos + height + 1);
@@ -64,17 +67,22 @@ public class Button {
 		rightTri.addPoint(x_pos + width + 1, y_pos - 1);
 		rightTri.addPoint(x_pos + width + 20, y_pos + ((height) / 2));
 		rightTri.addPoint(x_pos + width + 1, y_pos + height + 1);
+
+		// Draws the outside section of the Button
 		g.setColor(Color.cyan);
 		g.fillPolygon(leftTri);
 		g.fillPolygon(rightTri);
 		g.fillRect(x_pos - 1, y_pos - 1, width + 2, height + 2);
 
 		g.setColor(Color.BLACK);
-		if (!enabled)
+		if (!enabled) // If a Button can not be clicked, it is colored
+						// differently
 			g.setColor(Color.DARK_GRAY);
 
+		// Calculates inner wings
 		leftTri = new Polygon();
 		rightTri = new Polygon();
+
 		leftTri.addPoint(x_pos, y_pos);
 		leftTri.addPoint(x_pos - 19, y_pos + ((height) / 2));
 		leftTri.addPoint(x_pos, y_pos + height);
@@ -83,12 +91,14 @@ public class Button {
 		rightTri.addPoint(x_pos + width + 19, y_pos + ((height) / 2));
 		rightTri.addPoint(x_pos + width, y_pos + height);
 
+		// Draws inner section of the Button
 		g.fillPolygon(leftTri);
 		g.fillPolygon(rightTri);
 		g.fillRect(x_pos, y_pos, width, height);
 		g.setColor(Color.cyan);
 		g.drawString(text, x_pos + 10, y_pos + 23);
 
+		// Resets graphics to whatever Color it was origionally
 		g.setColor(temp);
 		g.setFont(tempF);
 	}
@@ -122,11 +132,19 @@ public class Button {
 		}
 	}
 
+	/**
+	 * A helper method that checks to see if a Button is clicked, given a list
+	 * of Buttons
+	 * 
+	 * @param buts
+	 *            List to check
+	 * @return True if at least one Button is clicked
+	 */
 	public static boolean isOneClicked(List<Button> buts) {
 		try {
 			for (Button but : buts) {
-				// intentionally does not use the .isClicked method to avoid
-				// unclicking buttons
+				// Intentionally does not use the .isClicked method to avoid
+				// changing Button clicked state
 				if (but.clicked)
 					return true;
 			}
@@ -136,6 +154,12 @@ public class Button {
 		}
 	}
 
+	/**
+	 * Sets the enabled status of the Button
+	 * 
+	 * @param enable
+	 *            boolean to set to
+	 */
 	public void setEnabled(boolean enable) {
 		if (!enable)
 			clicked = false;

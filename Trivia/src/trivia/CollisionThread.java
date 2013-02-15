@@ -1,6 +1,3 @@
-/**
- * 
- */
 package trivia;
 
 /**
@@ -11,7 +8,7 @@ package trivia;
 public class CollisionThread implements Runnable {
 
 	private Actor actor;
-	private Object[] actors;
+	private Actor[] actors;
 
 	/**
 	 * Creates a new CollisionThread.
@@ -21,22 +18,16 @@ public class CollisionThread implements Runnable {
 	 * @param objects
 	 *            Collection of Actors to check collisions against
 	 */
-	public CollisionThread(Actor a, Object[] objects) {
+	public CollisionThread(Actor a, Actor[] objects) {
 		actor = a;
 		actors = objects;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Runnable#run()
-	 */
 	@Override
 	public void run() {
-		for (Object a : actors) {
-			Actor b = (Actor) (a);
-			if (!actor.equals(b))
-				actor.checkCollision(b);
+		for (Actor a : actors) {
+			if (!actor.equals(a))
+				actor.checkCollision(a);
 		}
 	}
 

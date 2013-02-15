@@ -6,8 +6,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 /**
- * @author Cody Swendrowski, Dan Miller
+ * A button that has two states, on and off. Clicking the button flips the
+ * state.
  * 
+ * @author Cody Swendrowski, Dan Miller
  */
 public class ToggleButton extends Button {
 
@@ -23,6 +25,7 @@ public class ToggleButton extends Button {
 		super(s, x, y);
 	}
 
+	@Override
 	public void draw(Graphics g) {
 		Color temp = g.getColor();
 		Font tempF = g.getFont();
@@ -41,6 +44,7 @@ public class ToggleButton extends Button {
 
 		g.fillRect(x_pos, y_pos, width, height);
 		g.setColor(Color.gray);
+		// Draws inverse sections in gray depending on state
 		if (!clicked) {
 			g.fillRect(x_pos - 2, y_pos - 2, width + 2, 2);
 			g.fillRect(x_pos - 2, y_pos - 2, 2, height + 2);
@@ -64,10 +68,12 @@ public class ToggleButton extends Button {
 		g.setFont(tempF);
 	}
 
+	@Override
 	public boolean isClicked() {
 		return clicked;
 	}
 
+	@Override
 	public void checkClick(int mx, int my) {
 		if (enabled && (mx >= x_pos) && (mx <= x_pos + width)
 				&& (my <= y_pos + height) && (my >= y_pos)) {
