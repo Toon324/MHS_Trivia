@@ -38,6 +38,11 @@ public class FightingActor extends Actor {
 	public void setEvade(int e) {
 		evade = e;
 	}
+	
+	@Override
+	public void move(int ms) {
+		super.move(ms); //Necessary so FightingActors move properly
+	}
 
 	/**
 	 * Fires a bullet. Is called from this class instead of Actors to add in

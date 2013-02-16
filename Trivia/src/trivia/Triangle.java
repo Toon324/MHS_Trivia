@@ -1,7 +1,6 @@
 package trivia;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
 
@@ -26,9 +25,11 @@ public class Triangle extends FightingActor {
 		destination = dest;
 		vectVel = new Point2D.Float(50, 0); // Move right
 		int width = 30, height = 30;
-		basePoly.addPoint(-width / 2, -height / 2);
-		basePoly.addPoint(width / 2, 0);
-		basePoly.addPoint(-width / 2, height / 2);
+		Polygon base = new Polygon();
+		base.addPoint(-width / 2, -height / 2);
+		base.addPoint(width / 2, 0);
+		base.addPoint(-width / 2, height / 2);
+		setBasePoly(base);
 		shotVel.x = 40; // Shoot right
 		drawClr = Color.cyan;
 	}

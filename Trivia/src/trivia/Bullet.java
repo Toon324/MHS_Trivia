@@ -3,7 +3,6 @@ package trivia;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
 
 /**
  * A single point Actor that does not interact with others. Used for particle

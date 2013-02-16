@@ -17,10 +17,12 @@ public class Square extends FightingActor {
 		destination = dest;
 		int width = 30, height = 30;
 		vectVel = new Point2D.Float(-50, 0);
-		basePoly.addPoint(width, 0);
-		basePoly.addPoint(0, -height);
-		basePoly.addPoint(-width, 0);
-		basePoly.addPoint(0, height);
+		Polygon base = new Polygon();
+		base.addPoint(width, 0);
+		base.addPoint(0, -height);
+		base.addPoint(-width, 0);
+		base.addPoint(0, height);
+		setBasePoly(base);
 		drawClr = Color.orange;
 		shotVel.x = -40; // Make shots move left
 	}
