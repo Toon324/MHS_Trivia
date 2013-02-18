@@ -27,7 +27,7 @@ public class MainGame extends GameMode {
 
 	private states state;
 	private Questions qstSet;
-	private int maxFleetSize;
+	private int maxFleetSize, scoreCalc;
 	private boolean lastAnswer = false;
 	private long lastTime = 0;
 	private Font f = new Font("Serif", Font.BOLD, 26);
@@ -264,7 +264,8 @@ public class MainGame extends GameMode {
 			}
 		}
 
-		int scoreCalc = (int) (100 / Math.pow(2,
+		if (state == states.QUESTIONS)
+			scoreCalc = (int) (100 / Math.pow(2,
 				Math.pow(qstSet.getTimePassed() / (double) 5000, 4))) + 5;
 
 		// Draws score
@@ -276,23 +277,29 @@ public class MainGame extends GameMode {
 		// Draws evade chance
 		g.drawString("Evade %:", engine.windowWidth - 120,
 				engine.windowHeight - 140);
-
-		// Draws green
+		g.setFont(engine.small);
 		g.setColor(Color.green);
-		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 10
-				- scoreCalc, 65, scoreCalc);
-
-		if (scoreCalc > 75)
-			scoreCalc = 75;
-
-		// Draws orange
+		g.drawString("100%", engine.windowWidth-30, engine.windowHeight-110);
 		g.setColor(Color.orange);
-		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 10
-				- scoreCalc, 65, scoreCalc - 40);
-
-		// Draws red (constant)
+		g.drawString("75%", engine.windowWidth-30, engine.windowHeight-80);
 		g.setColor(Color.red);
-		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 60, 65, 50);
+		g.drawString("50%", engine.windowWidth-30, engine.windowHeight-55);
+		
+		int evadeCalc = scoreCalc;
+		
+		if (scoreCalc < 50)
+			evadeCalc = 50;
+
+		// Draws bar with color based on chance
+		if (evadeCalc > 75)
+			g.setColor(Color.green);
+		else if (evadeCalc > 50)
+			g.setColor(Color.orange);
+		else
+			g.setColor(Color.red);
+		
+		g.fillRect(engine.windowWidth - 100, engine.windowHeight - 10
+				- evadeCalc, 65, evadeCalc);
 
 		g.setColor(temp);
 		g.setFont(tempF);

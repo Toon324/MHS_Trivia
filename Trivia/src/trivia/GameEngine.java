@@ -25,6 +25,7 @@ public class GameEngine {
 
 	// Resources to use
 	final Font large = new Font("Serif", Font.BOLD, 30);
+	final Font small = new Font("Serif", Font.PLAIN, 12);
 	final Color transGray = new Color(Color.gray.getRed(),
 			Color.gray.getGreen(), Color.gray.getBlue(), 200);
 

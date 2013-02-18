@@ -63,11 +63,13 @@ public class FightingActor extends Actor {
 		if (other.equals(this))
 			return;
 		int distance = 1;
+		try {
 		if ((other.basePoly.getBounds().y - basePoly.getBounds().y) != 0)
 			distance = Math.abs((other.basePoly.getBounds().x - basePoly.getBounds().x)
-				/ (other.basePoly.getBounds().y - basePoly.getBounds().y));
-		
-		GameEngine.log("Distance between " + toString() + " and " + other.toString() + " is: " + distance);
+				/ (other.basePoly.getBounds().y - basePoly.getBounds().y)); }
+		catch (Exception e) {
+			GameEngine.log("Error in FightingActor collision check.");
+		}
 
 		if (distance > 5
 				|| drawClr.toString()
@@ -75,7 +77,7 @@ public class FightingActor extends Actor {
 				|| other instanceof Particle)
 			return;
 
-		// Checks to see if FightingActor evades the collision
+		//Checks to see if FightingActor evades the collision
 		Random gen = new Random();
 		int temp = gen.nextInt(100) + 1;
 		if (temp < evade)

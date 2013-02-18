@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Button {
 	protected String text;
 	protected boolean clicked;
 	protected boolean enabled;
+	protected Polygon bounds;
 	protected int x_pos, y_pos;
 	protected Font f = new Font("Serif", Font.BOLD, 25);
 
@@ -56,23 +58,23 @@ public class Button {
 		width = (int) rect.getWidth() + 20;
 		height = (int) rect.getHeight();
 
-		// Calculates the left and right wings of the Button
-		Polygon leftTri = new Polygon();
-		Polygon rightTri = new Polygon();
+		// Calculates the outside of the Button
+		Polygon outside = new Polygon();
 
-		leftTri.addPoint(x_pos - 1, y_pos - 1);
-		leftTri.addPoint(x_pos - 20, y_pos + ((height) / 2));
-		leftTri.addPoint(x_pos - 1, y_pos + height + 1);
+		outside.addPoint(x_pos - 1, y_pos - 1);
+		outside.addPoint(x_pos - 21, y_pos + ((height) / 2));
+		outside.addPoint(x_pos - 1, y_pos + height + 1);
 
-		rightTri.addPoint(x_pos + width + 1, y_pos - 1);
-		rightTri.addPoint(x_pos + width + 20, y_pos + ((height) / 2));
-		rightTri.addPoint(x_pos + width + 1, y_pos + height + 1);
+		outside.addPoint(x_pos + width + 1, y_pos + height + 1);
+		outside.addPoint(x_pos + width + 21, y_pos + ((height) / 2));
+		outside.addPoint(x_pos + width + 1, y_pos - 1);
+		
+		
+		bounds = outside;
 
 		// Draws the outside section of the Button
 		g.setColor(Color.cyan);
-		g.fillPolygon(leftTri);
-		g.fillPolygon(rightTri);
-		g.fillRect(x_pos - 1, y_pos - 1, width + 2, height + 2);
+		g.fillPolygon(outside);
 
 		g.setColor(Color.BLACK);
 		if (!enabled) // If a Button can not be clicked, it is colored
@@ -80,20 +82,18 @@ public class Button {
 			g.setColor(Color.DARK_GRAY);
 
 		// Calculates inner wings
-		leftTri = new Polygon();
-		rightTri = new Polygon();
+		Polygon inside = new Polygon();
 
-		leftTri.addPoint(x_pos, y_pos);
-		leftTri.addPoint(x_pos - 19, y_pos + ((height) / 2));
-		leftTri.addPoint(x_pos, y_pos + height);
+		inside.addPoint(x_pos, y_pos);
+		inside.addPoint(x_pos - 19, y_pos + ((height) / 2));
+		inside.addPoint(x_pos, y_pos + height);
 
-		rightTri.addPoint(x_pos + width, y_pos);
-		rightTri.addPoint(x_pos + width + 19, y_pos + ((height) / 2));
-		rightTri.addPoint(x_pos + width, y_pos + height);
+		inside.addPoint(x_pos + width, y_pos);
+		inside.addPoint(x_pos + width + 19, y_pos + ((height) / 2));
+		inside.addPoint(x_pos + width, y_pos + height);
 
 		// Draws inner section of the Button
-		g.fillPolygon(leftTri);
-		g.fillPolygon(rightTri);
+		g.fillPolygon(inside);
 		g.fillRect(x_pos, y_pos, width, height);
 		g.setColor(Color.cyan);
 		g.drawString(text, x_pos + 10, y_pos + 23);
@@ -126,10 +126,8 @@ public class Button {
 	 *            Mouseclick y_pos
 	 */
 	public void checkClick(int mx, int my) {
-		if (enabled && (mx >= x_pos) && (mx <= x_pos + width)
-				&& (my <= y_pos + height) && (my >= y_pos)) {
+		if (bounds.contains(new Point(mx, my)))
 			clicked = true;
-		}
 	}
 
 	/**

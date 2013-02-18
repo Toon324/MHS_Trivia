@@ -92,13 +92,10 @@ public class Questions {
 		for (int i = 0; i < buts.length; i++) {
 			if (buts[i].isClicked()) {
 				// if the current button is the answer
-				if (i == answerKey[currentQuestion]) {
-					System.out.println("Question is correct!");
+				if (i == answerKey[currentQuestion]) 
 					return true;
-				} else {
-					System.out.println("Question is incorrect!");
+				else 
 					return false;
-				}
 			}
 		}
 		return false;
