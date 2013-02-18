@@ -233,4 +233,15 @@ public class GameEngine {
 		else if (e.getKeyChar() == KeyEvent.VK_ENTER)
 			ENTER = true;
 	}
+
+	/**
+	 * Checks the current mode to see if mouse is hovering over a Button.
+	 * 
+	 * @param e
+	 *            MouseEvent to check
+	 * @return True if mouse is over a Button
+	 */
+	public boolean isOver(MouseEvent e) {
+		return mode.isOver(e.getX(), e.getY());
+	}
 }

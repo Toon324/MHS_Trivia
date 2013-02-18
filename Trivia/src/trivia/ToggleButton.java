@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Polygon;
 
 /**
  * A button that has two states, on and off. Clicking the button flips the
@@ -36,13 +37,19 @@ public class ToggleButton extends Button {
 		java.awt.geom.Rectangle2D rect = fm.getStringBounds(text, g);
 		width = (int) rect.getWidth() + 20;
 		height = (int) rect.getHeight();
+		bounds = new Polygon();
+		
+		bounds.addPoint(x_pos, y_pos);
+		bounds.addPoint(x_pos, y_pos+height);
+		bounds.addPoint(x_pos+width, y_pos+height);
+		bounds.addPoint(x_pos+width, y_pos);
 
 		g.setFont(f);
 		g.setColor(Color.WHITE);
 		if (clicked)
 			g.setColor(Color.LIGHT_GRAY);
 
-		g.fillRect(x_pos, y_pos, width, height);
+		g.fillPolygon(bounds);
 		g.setColor(Color.gray);
 		// Draws inverse sections in gray depending on state
 		if (!clicked) {
@@ -77,7 +84,7 @@ public class ToggleButton extends Button {
 	public void checkClick(int mx, int my) {
 		if (enabled && (mx >= x_pos) && (mx <= x_pos + width)
 				&& (my <= y_pos + height) && (my >= y_pos)) {
-			clicked = !clicked;
+			clicked = !clicked; //Toggles back and forth
 		}
 	}
 }

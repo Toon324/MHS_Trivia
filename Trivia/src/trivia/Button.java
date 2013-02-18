@@ -1,6 +1,7 @@
 package trivia;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -68,8 +69,7 @@ public class Button {
 		outside.addPoint(x_pos + width + 1, y_pos + height + 1);
 		outside.addPoint(x_pos + width + 21, y_pos + ((height) / 2));
 		outside.addPoint(x_pos + width + 1, y_pos - 1);
-		
-		
+
 		bounds = outside;
 
 		// Draws the outside section of the Button
@@ -115,6 +115,22 @@ public class Button {
 			return true;
 		}
 		return clicked;
+	}
+
+	/**
+	 * Checks to see if mouse is hovering over Button.
+	 * 
+	 * @param x
+	 *            X position of mouse
+	 * @param y
+	 *            Y position of mouse
+	 * @return True if mouse is over Button
+	 */
+	public boolean checkOver(int x, int y) {
+		if (bounds.contains(new Point(x, y)))
+			return true;
+		else
+			return false;
 	}
 
 	/**

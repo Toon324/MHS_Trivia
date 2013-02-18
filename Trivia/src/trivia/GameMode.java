@@ -2,13 +2,15 @@ package trivia;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
  * Abstract class that contains all of the necessary methods for GameModes.
- * @author Cody Swendrowski, Dan Miller 
+ * 
+ * @author Cody Swendrowski, Dan Miller
  */
 
 public abstract class GameMode {
@@ -65,7 +67,6 @@ public abstract class GameMode {
 	 *            Graphics to paint with
 	 */
 	public void paint(Graphics g) {
-
 		try {
 			for (int i = 0; i < buttons.size(); i++) {
 				buttons.get(i).draw(g);
@@ -73,6 +74,27 @@ public abstract class GameMode {
 		} catch (java.lang.NullPointerException e) {
 			GameEngine.log("No defined buttons in " + this.toString());
 		}
+	}
+
+	/**
+	 * Checks every button to see if mouse is hovering over a Button.
+	 * 
+	 * @param x
+	 *            X position of mouse
+	 * @param y
+	 *            Y position of mouse
+	 * @return True is mouse is hovering over a Button in the current mode
+	 */
+	public boolean isOver(int x, int y) {
+		try {
+			for (int i = 0; i < buttons.size(); i++) {
+				if (buttons.get(i).checkOver(x, y))
+					return true;
+			}
+		} catch (java.lang.NullPointerException e) {
+			GameEngine.log("No defined buttons in " + this.toString());
+		}
+		return false;
 	}
 
 }

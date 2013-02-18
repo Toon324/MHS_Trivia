@@ -1,6 +1,7 @@
 package trivia;
 
 import java.applet.Applet;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -11,13 +12,14 @@ import java.awt.event.MouseMotionListener;
 
 /**
  * The class that controls and owns all necessary objects.
+ * 
  * @author Cody Swendrowski, Dan Miller
  */
 public class Trivia extends Applet implements Runnable, MouseListener,
 		MouseMotionListener, KeyListener {
 	private static final long serialVersionUID = 42l;
 	private Thread th; // Game thread
-	private Thread close; //Used for closing the game
+	private Thread close; // Used for closing the game
 	private GameEngine engine;
 
 	/**
@@ -31,12 +33,14 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		th = new Thread(this);
 		Runtime.getRuntime().addShutdownHook(close);
 		GameEngine.log("Trivia has been initialized.");
-		GameEngine.log("Found " +Runtime.getRuntime().availableProcessors() + " processors to use");
+		GameEngine.log("Found " + Runtime.getRuntime().availableProcessors()
+				+ " processors to use");
 	}
 
 	/**
-	 * Called when game is first initialized. Sets all values and objects to default
-	 * state, and allows this class to listen to Mouse and Keyboard input.
+	 * Called when game is first initialized. Sets all values and objects to
+	 * default state, and allows this class to listen to Mouse and Keyboard
+	 * input.
 	 */
 	public void init() {
 		addMouseListener(this);
@@ -46,18 +50,22 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		engine.setWindowSize(getWidth(), getHeight());
 		engine.setMode(engine.instructions);
 	}
-	
+
 	/**
 	 * A thread used to close the game correctly.
+	 * 
 	 * @author Cody Swendrowski, Dan Miller
 	 */
-	public class CloseHook implements Runnable{
+	public class CloseHook implements Runnable {
 		Trivia t;
-		public CloseHook(Trivia tri){t = tri;}
+
+		public CloseHook(Trivia tri) {
+			t = tri;
+		}
 
 		@Override
 		public void run() {
-			t.onClose(); //Closes the game from a new thread to avoid errors
+			t.onClose(); // Closes the game from a new thread to avoid errors
 			try {
 				this.finalize();
 			} catch (Throwable e) {
@@ -65,7 +73,7 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 			}
 		}
 	}
-	
+
 	/**
 	 * Starts the game thread.
 	 */
@@ -95,22 +103,23 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	}
 
 	/**
-	 * Updates the graphics of the game using a double buffer system to avoid screen flicker.
+	 * Updates the graphics of the game using a double buffer system to avoid
+	 * screen flicker.
 	 */
 	public void update(Graphics g) {
-		//Start buffer
+		// Start buffer
 		Image dbImage = createImage(getWidth(), getHeight());
 		Graphics dbg = dbImage.getGraphics();
 
-		//Clear screen in background
+		// Clear screen in background
 		dbg.setColor(getBackground());
 		dbg.fillRect(0, 0, getWidth(), getHeight());
 
-		//Draw game in background
+		// Draw game in background
 		dbg.setColor(getForeground());
 		paint(dbg);
 
-		//Draw Image on screen
+		// Draw Image on screen
 		g.drawImage(dbImage, 0, 0, this);
 	}
 
@@ -124,15 +133,18 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 		super.paint(g);
 
 		synchronized (this) {
-			notifyAll(); //Lets the run() method know that painting is completed
+			notifyAll(); // Lets the run() method know that painting is
+							// completed
 		}
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {}
+	public void keyPressed(KeyEvent e) {
+	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -145,27 +157,40 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {
+	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {}
-	
+	public void mouseDragged(MouseEvent arg0) {
+	}
+
 	/**
 	 * Called when game exits. Properly closes resources.
 	 */
-	public void onClose(){
+	public void onClose() {
 		engine.onClose();
 	}
-	
+
 	@Override
-	public void mouseMoved(MouseEvent arg0) {}
+	public void mouseMoved(MouseEvent e) {
+		if (engine.isOver(e))
+			setCursor(new Cursor(Cursor.HAND_CURSOR)); // If mouse is over a
+														// Button, change to
+														// hand cursor
+		else
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); // If it isn't, change
+															// back to default
+	}
 }
