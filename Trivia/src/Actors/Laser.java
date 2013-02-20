@@ -17,7 +17,9 @@ public class Laser extends Particle {
 	boolean charging;
 	double damage;
 	Point endPoint;
-
+	
+	
+	
 	long stateStartTime;
 
 	static ArrayList<Line2D.Float> windowBounds;
@@ -52,7 +54,7 @@ public class Laser extends Particle {
 			findCollidePoint();
 		}
 	}
-
+	
 	public void draw(Graphics g) {
 		g.setColor(drawClr);
 		if (charging) {
@@ -87,15 +89,8 @@ public class Laser extends Particle {
 		}
 
 		ArrayList<Point2D.Float> possIntersect = new ArrayList<Point2D.Float>();
-		ArrayList<AI_Actor> actMapping = new ArrayList<AI_Actor>();// used to
-																	// keep
-																	// track of
-																	// which
-																	// actor is
-																	// being
-																	// actually
-																	// collided
-																	// with
+		// used to keep track of which actor is being actually collided with
+		ArrayList<AI_Actor> actMapping = new ArrayList<AI_Actor>();
 
 		// add the window edges to intersects
 		for (Line2D ln : windowBounds) {

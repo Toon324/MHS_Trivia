@@ -50,8 +50,12 @@ public abstract class Particle extends Actor {
 	}
 	
 	public static void addLaser(Point2D.Float center, double angle, Color c){
+		addLaser(center, angle, c, 1000);
+	}
+	
+	public static void addLaser(Point2D.Float center, double angle, Color c, int life){
 		Laser l = new Laser(center, angle, c);
-		l.setLife(1000);
+		l.setLife(life);
 		add(l);
 	}
 	

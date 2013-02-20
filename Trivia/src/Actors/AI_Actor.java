@@ -175,7 +175,7 @@ public abstract class AI_Actor extends Actor {
 	}
 
 	public abstract float getMaxAccel();
-	
+
 	/**
 	 * 
 	 * CURRENTLY NON-FUNCTIONAL
@@ -200,8 +200,7 @@ public abstract class AI_Actor extends Actor {
 		GameEngine.log("P2:  " + p2);
 		GameEngine.log("vel: " + vel);
 		GameEngine.log("acc: " + ac);
-		
-		
+
 		double dX = p1.x - p2.x, dY = p1.y - p2.y;
 		double a = (ac.y * ac.y + ac.x * ac.x) / 4;
 		double b = (vel.y * ac.y + vel.x * ac.x);
@@ -221,12 +220,12 @@ public abstract class AI_Actor extends Actor {
 		double C2 = z / (3 * 1.2599210498948731647672106072782 * a);
 
 		double M = Math.sqrt(Ba * Ba / 4 + C1 + C2 - 2 * Ca / 3);
-		
+
 		double N = Ba * Ba / 2 - C1 - C2 - 4 * Ca / 3;
 		double O = (-Ba * Ba * Ba + 4 * Ba * Ca - 8 * d / a) / (4 * M);
 		GameEngine.log("N:   " + N);
 		GameEngine.log("O:   " + O);
-		
+
 		double P, Q, time;
 		if (N - O >= 0) {
 			P = Math.sqrt(N - O);
@@ -245,7 +244,19 @@ public abstract class AI_Actor extends Actor {
 		}
 
 		double theta = (Math.atan2(dY - vel.y * time - ac.y * time * time / 2,
-				dX - vel.x * time - ac.y * time * time / 2) + Math.PI * 2) % (Math.PI * 2);
+				dX - vel.x * time - ac.y * time * time / 2) + Math.PI * 2)
+				% (Math.PI * 2);
+
+		return theta;
+	}
+
+	public static double getAngleAtTime(Point2D.Float p1, Point2D.Float p2,
+			Point2D.Float vel, Point2D.Float ac, double time) {
+
+		double theta = (Math.atan2(p1.y
+				- (p2.y + vel.y * time + ac.y * time * time / 2), p1.y
+				- (p2.y + vel.x * time + ac.y * time * time / 2)) + Math.PI * 2)
+				% (Math.PI * 2);
 
 		return theta;
 	}

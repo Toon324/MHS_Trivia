@@ -83,17 +83,27 @@ public class Square extends AI_Actor {
 		return false;
 	}
 	
+	
+	
 	public double getShotSpeed(){
 		return shotSpeed;
 	}
 	
 	public ArrayList<Actor> getActorsInView() {
 		ArrayList<Actor> list = new ArrayList<Actor>();
+		
+		for(Actor a : actors){
+			if(center.distance(a.getCenter()) < viewDist){
+				list.add(a);
+			}
+		}
+		
+		/*
 		for (int i = 0; i < 360; i += 90) {
 			list.addAll(getActorsInView(
 					Math.toRadians((Math.toDegrees(angle) + i) % 360),
 					viewAngle, viewDist));
-		}
+		}*/
 		return list;
 	}
 
