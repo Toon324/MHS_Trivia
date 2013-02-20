@@ -36,9 +36,9 @@ public class EndGame extends GameMode {
 		g.fillRect(0, engine.windowHeight - 250, engine.windowWidth,
 				engine.windowHeight);
 		g.setColor(Color.cyan);
+		buttons.get(0).set((engine.windowWidth/2)-(buttons.get(0).width/2), engine.windowHeight - 100);
 		buttons.get(0).draw(g);
 		g.setFont(engine.large);
-		buttons.get(0).set(200, engine.windowHeight - 100);
 		g.drawString("Your score is " + engine.score + ".",
 				engine.windowWidth / 2 - 100, engine.windowHeight - 150);
 	}

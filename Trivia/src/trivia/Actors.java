@@ -22,8 +22,8 @@ public class Actors {
 	/**
 	 * Creates a new container of Actor.
 	 * 
-	 * @param debug
 	 * @param gameEngine
+	 *            GameEngine to utilize
 	 */
 	public Actors(GameEngine gameEngine) {
 		engine = gameEngine;
@@ -55,7 +55,9 @@ public class Actors {
 	public void handleActors(int ms) {
 		ArrayList<Actor> toRemove = new ArrayList<Actor>(); // Dead objects to
 															// be removed
-		ArrayList<Point2D.Float> particles = new ArrayList<Point2D.Float>(); // Particles to add
+		ArrayList<Point2D.Float> particles = new ArrayList<Point2D.Float>(); // Particles
+																				// to
+																				// add
 
 		// Adds Actors toAdd
 		for (Actor a : toAdd.toArray(new Actor[0])) {
@@ -79,7 +81,8 @@ public class Actors {
 
 				// Check for collisions. Uses a threadPool to maximize
 				// utilization of system resources and speed up processing.
-				threadPool.execute(new CollisionThread(a, actors.toArray(new Actor[0])));
+				threadPool.execute(new CollisionThread(a, actors
+						.toArray(new Actor[0])));
 			}
 
 		}

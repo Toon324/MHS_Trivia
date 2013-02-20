@@ -69,8 +69,6 @@ public class GameEngine {
 	/**
 	 * Creates a new GameEngine.
 	 * 
-	 * @param actors
-	 *            Array of actors to pass logic to.
 	 * @param debug
 	 *            If true, prints out debug messages.
 	 */
@@ -154,8 +152,8 @@ public class GameEngine {
 	/**
 	 * Called when a click occurs, sends the click to the current gameMode.
 	 * 
-	 * @param x
-	 * @param y
+	 * @param e
+	 *            MouseEvent to send
 	 */
 	public void clickedAt(MouseEvent e) {
 		mode.clicked(e.getX(), e.getY());

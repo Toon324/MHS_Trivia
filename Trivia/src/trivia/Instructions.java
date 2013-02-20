@@ -15,7 +15,7 @@ public class Instructions extends GameMode {
 
 	private String[] instructions = {
 			"Click the category buttons to choose which questions to be tested on.",
-			"Click on the button containing your answer of choice.",
+			" Click on the button containing your answer of choice.",
 			"The longer you take to answer, the less points you get for being right,",
 			"And your ships will have a decreased chance of evading enemy shots!" };
 
@@ -48,6 +48,10 @@ public class Instructions extends GameMode {
 		g.setColor(engine.transGray);
 		g.fillRect(0, 50, engine.windowWidth, engine.windowHeight - 130);
 
+		// Places buttons in respect to window size
+		buttons.get(0).set(
+				(engine.windowWidth / 2) - (buttons.get(0).width / 2),
+				engine.windowHeight - 50);
 		// Paints buttons
 		super.paint(g);
 

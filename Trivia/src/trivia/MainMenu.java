@@ -66,7 +66,15 @@ public class MainMenu extends GameMode {
 				null);
 		g.setColor(Color.cyan);
 		g.setFont(engine.large);
-		g.drawString("CATEGORIES", 140, 150);
+		g.drawString("CATEGORIES", engine.windowWidth/4 -10, 150);
+		
+		// Places category buttons
+		for (int x=1; x<buttons.size()-1; x++)
+			buttons.get(x).set(engine.windowWidth/4, buttons.get(x).y_pos);
+		
+		//Places start and instructions buttons
+		buttons.get(0).set(40, engine.windowHeight-50);
+		buttons.get(buttons.size()-1).set(engine.windowWidth-250, engine.windowHeight-50);
 		super.paint(g);
 	}
 

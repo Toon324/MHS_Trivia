@@ -25,8 +25,6 @@ public class Trivia extends Applet implements Runnable, MouseListener,
 	/**
 	 * Creates a new Trivia game.
 	 * 
-	 * @param debug
-	 *            If True, game prints out debug information.
 	 */
 	public Trivia() {
 		close = new Thread(new CloseHook(this));

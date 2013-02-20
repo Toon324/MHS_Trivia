@@ -42,7 +42,8 @@ public class Questions {
 	/**
 	 * Returns the current question.
 	 * 
-	 * @return
+	 * @return String of current question, or a blank String if there is no
+	 *         current question
 	 */
 	public String getQuestion() {
 		try {
@@ -92,9 +93,9 @@ public class Questions {
 		for (int i = 0; i < buts.length; i++) {
 			if (buts[i].isClicked()) {
 				// if the current button is the answer
-				if (i == answerKey[currentQuestion]) 
+				if (i == answerKey[currentQuestion])
 					return true;
-				else 
+				else
 					return false;
 			}
 		}

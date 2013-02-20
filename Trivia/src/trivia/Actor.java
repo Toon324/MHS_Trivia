@@ -82,8 +82,6 @@ public abstract class Actor {
 	/**
 	 * Draws the Actor.
 	 * 
-	 * @param p
-	 *            Corner of the screen to draw in reference to
 	 * @param g
 	 *            Graphics to be drawn with
 	 */
@@ -109,8 +107,8 @@ public abstract class Actor {
 	 */
 	private void drawPoly(Graphics g, Polygon p, Point thisCenter,
 			boolean centerLines) {
-		
-		//If there is no Polygon, return
+
+		// If there is no Polygon, return
 		if (p == null)
 			return;
 
@@ -118,8 +116,9 @@ public abstract class Actor {
 		int res;
 		float array[] = new float[6];
 		PathIterator iter = p.getPathIterator(new AffineTransform());
-		
-		//Iterate through the Path of the Polygon, drawing lines according to data provided
+
+		// Iterate through the Path of the Polygon, drawing lines according to
+		// data provided
 		while (!iter.isDone()) {
 			res = iter.currentSegment(array);
 			switch (res) {
@@ -129,7 +128,7 @@ public abstract class Actor {
 			case PathIterator.SEG_LINETO:
 				g.drawLine(x, y, (int) array[0], (int) array[1]);
 
-				//Draws lines to center if boolean is true
+				// Draws lines to center if boolean is true
 				if (centerLines)
 					g.drawLine(x, y, (int) thisCenter.x, (int) thisCenter.y);
 
@@ -150,10 +149,8 @@ public abstract class Actor {
 	/**
 	 * Moves the Actor.
 	 * 
-	 * @param w
-	 *            Width of window to draw in
-	 * @param h
-	 *            Height of window to draw in
+	 * @param ms
+	 *            Time passed in milliseconds since last call
 	 */
 	public void move(int ms) {
 		setCenter(center.x + (ms / 1000F) * vectVel.x, center.y + (ms / 1000F)
@@ -180,12 +177,13 @@ public abstract class Actor {
 			return;
 		int distance = 1;
 		if (other.basePoly != null && basePoly != null)
-			distance = Math.abs((other.basePoly.getBounds().x - basePoly.getBounds().x)
-				/ (other.basePoly.getBounds().y - basePoly.getBounds().y));
+			distance = Math.abs((other.basePoly.getBounds().x - basePoly
+					.getBounds().x)
+					/ (other.basePoly.getBounds().y - basePoly.getBounds().y));
 		if (distance > 5
 				|| drawClr.toString()
 						.equalsIgnoreCase(other.drawClr.toString())
-				||  other instanceof Particle)
+				|| other instanceof Particle)
 			return;
 
 		Polygon otherPoly = other.basePoly;
@@ -208,12 +206,12 @@ public abstract class Actor {
 	 *            Y co-ordinate of center
 	 */
 	public void setCenter(float x, float y) {
-		//Translates to (0,0)
+		// Translates to (0,0)
 		if (drawPoly != null)
 			drawPoly.translate((int) -center.x, (int) -center.y);
 		basePoly.translate((int) -center.x, (int) -center.y);
-		
-		//Translates to new center
+
+		// Translates to new center
 		center = new Point2D.Float(x, y);
 		if (drawPoly != null)
 			drawPoly.translate((int) center.x, (int) center.y);
