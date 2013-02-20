@@ -11,7 +11,7 @@ import trivia.GameEngine;
 
 public class Bullet extends CollidingParticle {
 
-	public Bullet(Float center, Float velocity, Color c) {
+	protected Bullet(Float center, Float velocity, Color c) {
 		super(center, c);
 
 		Polygon poly = new Polygon(new int[] {-2, 2, -2}, new int[] {2, 0, -2}, 3);

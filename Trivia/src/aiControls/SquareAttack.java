@@ -16,10 +16,11 @@ public class SquareAttack extends AI_Control {
 	Point2D.Float cen;
 	Point2D.Float vel;
 	int shots = 0;
-	double laserTime = 1000;
+	double laserTime;
 
 	public SquareAttack(Square a, Actor b) {
 		super(a);
+		laserTime = Square.laserChargeTime;
 		target = b;
 		if (target == actor)
 			actor.removeAI_Control(this);
@@ -56,8 +57,8 @@ public class SquareAttack extends AI_Control {
 						right = true;
 					}
 				if (right && left) {
-					((Square) actor).fireShot(i / 90);
-					//((Square) actor).fireLaser();
+					//((Square) actor).fireShot(i / 90);
+					((Square) actor).chargeLaser(1 / 90);
 					fired = true;
 					shots++;
 					break;

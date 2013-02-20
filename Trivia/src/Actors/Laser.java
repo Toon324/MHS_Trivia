@@ -10,24 +10,29 @@ import java.awt.geom.Point2D.Float;
 import java.util.ArrayList;
 
 import trivia.GameEngine;
+import trivia.MathHelper;
 
 public class Laser extends Particle {
 
 	int chargeTime, fireTime;
 	boolean charging;
 	double damage;
+	MathHelper.myDub directionLink;
 	Point endPoint;
-	
-	
 	
 	long stateStartTime;
 
 	static ArrayList<Line2D.Float> windowBounds;
-
-	public Laser(Point2D.Float origin, double direction, Color c) {
+	
+	public Laser(){
+		super();
+		remove = true;
+	}
+	
+	protected Laser(Point2D.Float origin, MathHelper.myDub angle, Color c) {
 		super(origin, c);
 		center = origin;
-		angle = direction;
+		directionLink = angle;
 		radius = -50;// to prevent any collisions
 		stateStartTime = System.currentTimeMillis();
 		charging = true;
@@ -41,10 +46,13 @@ public class Laser extends Particle {
 	public void move(int ms) {
 		if (charging) {
 			if (stateStartTime + chargeTime < System.currentTimeMillis()) {
+				//when charging is done
 				stateStartTime = System.currentTimeMillis();
 				charging = false;
 				findCollidePoint();
 				center = new Point2D.Float(center.x, center.y);
+				angle = directionLink.val;
+				directionLink = null;
 			}
 		} else {
 			if (stateStartTime + fireTime < System.currentTimeMillis()) {
@@ -105,7 +113,6 @@ public class Laser extends Particle {
 		// add any actors intersections
 		for (AI_Actor act : toCheck) {
 			poly = act.getDrawnPoly();
-			GameEngine.log("Searching poly with " + poly.npoints + "points.");
 			for (int i = 0; i < poly.npoints - 1; i++) {
 				ln = new Line2D.Float(poly.xpoints[i], poly.ypoints[i],
 						poly.xpoints[i + 1], poly.ypoints[i + 1]);
