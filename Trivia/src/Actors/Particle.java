@@ -1,4 +1,4 @@
-package trivia;
+package Actors;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,49 +7,28 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 import java.util.Random;
 
+import trivia.GameEngine;
+
 /**
  * A single point Actor that does not interact with others. Used for particle
  * effects.
  * 
  * @author Cody Swendrowski, Dan Miller
  */
-public class Particle extends Actor {
+public abstract class Particle extends Actor {
 
-	private int alpha;
-	private Color color;
 
-	/**
-	 * @param debugMode
-	 * @param p
-	 */
-	public Particle() {
+	public Particle(Point2D.Float center, Color c) {
 		super();
-		alpha = 255;
+		setCenter(center.x, center.y);
+		drawClr = c;
 	}
-
-	public Particle(Point2D.Float vectorSpeed, Color c) {
-		super();
-		alpha = 255;
-		vectVel = vectorSpeed;
-		color = c;
-		basePoly = new Polygon(new int[] {-1, -1, 1, 1},
-								new int[] {-1, 1, -1, 1},
-								4);
-	}
-
-	public void draw(Graphics g) {
-		// Draws a fading tail behind the Particle
-		for (int a = 0; a <= 2000/*represents how long, in ms, the tail should be*/; a += 100) {
-			color = new Color(color.getRed(), color.getGreen(),
-					color.getBlue(), alpha / (a + 1));
-			g.setColor(color);
-			g.fillRect((int) (center.x - vectVel.x * a),
-					(int) (center.y - vectVel.y * a), 4, 4);
-		}
+	//move in Actor is sufficient
+	
+	public void setVel(float x, float y){
+		vectVel = new Point2D.Float(x, y);
 	}
 	
-	//move in Actor is sufficient
-
 	@Override
 	public void setCenter(float x, float y) {
 		if (x < 0 || y < 0 || x > engine.windowWidth || y > engine.windowHeight) {
@@ -64,11 +43,16 @@ public class Particle extends Actor {
 		return "Particle " + super.toString();
 	}
 
-	public static void addParticle(Point2D.Float center, Point2D.Float vectorSpeed,
+	public static void addBullet(Point2D.Float center, Point2D.Float vectorSpeed,
 			Color c) {
-		Particle p = new Particle(vectorSpeed, c);
-		p.setCenter(center.x, center.y);
+		Particle p = new Bullet(center, (Float) vectorSpeed.clone(), c);
 		add(p);
+	}
+	
+	public static void addLaser(Point2D.Float center, double angle, Color c){
+		Laser l = new Laser(center, angle, c);
+		l.setLife(1000);
+		add(l);
 	}
 	
 	/**
@@ -96,7 +80,8 @@ public class Particle extends Actor {
 			vector.x = (float) (speed * Math.cos(angleInc * x + rndAngleAdd));
 			vector.y = (float) (speed * Math.sin(angleInc * x + rndAngleAdd));
 			// engine.log("Vector " + vector.x + ", " + vector.y);
-			Particle.addParticle(center, vector, c);
+			addBullet(center, vector, c);
+			addLaser(center, gen.nextDouble() * 2 * Math.PI, c);
 		}
 	}
 }

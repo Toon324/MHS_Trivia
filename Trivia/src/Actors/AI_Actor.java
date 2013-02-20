@@ -1,4 +1,4 @@
-package trivia;
+package Actors;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import trivia.GameEngine;
 
 import aiControls.AI_Control;
 import aiControls.RandomWander;
@@ -26,7 +28,7 @@ public abstract class AI_Actor extends Actor {
 		death = false;
 		viewArea = new ArrayList<Polygon>();
 		aiCtrl = new ArrayList<AI_Control>();
-		aiCtrl.add(new RandomWander(this, GameEngine.envSize));
+		aiCtrl.add(new RandomWander(this, GameEngine.getEnv()));
 		health = 100;
 	}
 
@@ -58,7 +60,8 @@ public abstract class AI_Actor extends Actor {
 		// this will still check actors against particles, but not particles
 		// against actors
 
-		if (this.getClass().equals(other.getClass()))
+		if (this.getClass().equals(other.getClass())
+				|| !(other instanceof AI_Actor || other instanceof CollidingParticle))
 			return false;
 
 		Polygon otherPoly = other.basePoly;
@@ -68,7 +71,6 @@ public abstract class AI_Actor extends Actor {
 							otherPoly.ypoints[i])) {
 				if (onCollide(other))
 					return true;
-				;
 			}
 		}
 		return false;
@@ -173,8 +175,10 @@ public abstract class AI_Actor extends Actor {
 	}
 
 	public abstract float getMaxAccel();
-
+	
 	/**
+	 * 
+	 * CURRENTLY NON-FUNCTIONAL
 	 * 
 	 * @param p1
 	 *            origin of the shot
@@ -203,7 +207,7 @@ public abstract class AI_Actor extends Actor {
 		double b = (vel.y * ac.y + vel.x * ac.x);
 		double c = (vel.x * vel.x + vel.y * vel.y - (dX * ac.x + dY * ac.y + speed
 				* speed));
-		double d = (dX * vel.x + dY * vel.y);
+		double d = -2 * (dX * vel.x + dY * vel.y);
 		double e = dX * dX + dY * dY;
 
 		double x = 2 * c * c * c - 9 * b * c * d + 27 * a * d * d + 27 * b * b
@@ -217,15 +221,20 @@ public abstract class AI_Actor extends Actor {
 		double C2 = z / (3 * 1.2599210498948731647672106072782 * a);
 
 		double M = Math.sqrt(Ba * Ba / 4 + C1 + C2 - 2 * Ca / 3);
+		
 		double N = Ba * Ba / 2 - C1 - C2 - 4 * Ca / 3;
 		double O = (-Ba * Ba * Ba + 4 * Ba * Ca - 8 * d / a) / (4 * M);
+		GameEngine.log("N:   " + N);
+		GameEngine.log("O:   " + O);
 		
 		double P, Q, time;
 		if (N - O >= 0) {
 			P = Math.sqrt(N - O);
+			GameEngine.log("Psq: " + (N - O));
 			Q = -Ba / 4 - M / 2;
 		} else {
 			P = Math.sqrt(N + O);
+			GameEngine.log("Psq: " + (N + O));
 			Q = -Ba / 4 + M / 2;
 		}
 

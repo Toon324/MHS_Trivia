@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import Actors.Actor;
+
 
 /**
  * 
@@ -43,8 +45,7 @@ public abstract class GameMode {
 	 */
 	public void run(int ms) {
 		//intentionally modifies the object, rather than re-instantianizing
-		GameEngine.envSize.x = engine.windowWidth;
-		GameEngine.envSize.y = engine.windowHeight;
+		GameEngine.setEnvSize(engine.windowWidth, engine.windowHeight);
 		Actor.handleActors(ms);
 	}
 

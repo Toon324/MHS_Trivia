@@ -2,8 +2,9 @@ package aiControls;
 
 import java.awt.geom.Point2D;
 
-import trivia.Actor;
-import trivia.Triangle;
+import Actors.Actor;
+import Actors.Triangle;
+
 
 
 

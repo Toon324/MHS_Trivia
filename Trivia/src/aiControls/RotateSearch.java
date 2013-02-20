@@ -2,8 +2,11 @@ package aiControls;
 
 import java.util.ArrayList;
 
-import trivia.Actor;
-import trivia.Square;
+import trivia.GameEngine;
+
+import Actors.Actor;
+import Actors.Square;
+
 
 
 
@@ -23,7 +26,7 @@ public class RotateSearch extends AI_Control {
 		if(rotateVel < 4 * Math.PI)//<---- MAXVEL
 			actor.accelerateRotation(0.5 * (ms/1000F));
 		ArrayList<Actor> seenActors = actor.getActorsInView();
-		if( !(seenActors.isEmpty() || seenActors.contains(this) || actor.hasAIClass(SquareAttack.class)) ){
+		if( !(seenActors.isEmpty() || actor.hasAIClass(SquareAttack.class)) ){
 			int start = (int)(Math.random() * seenActors.size());
 			int count = 0;
 			Actor selectActor = seenActors.get(start);

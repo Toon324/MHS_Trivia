@@ -15,6 +15,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import Actors.Actor;
+
 
 /**
  * Handles all the game logic and painting
@@ -35,7 +37,7 @@ public class GameEngine {
 	protected int score;
 	Font large = new Font("Serif", Font.BOLD, 30);
 	
-	public static Point envSize = new Point(0, 0);
+	private static Point envSize = new Point(0, 0);
 	public static PrintWriter debugWriter;
 	public static boolean debugMode;
 	
@@ -85,7 +87,7 @@ public class GameEngine {
 		long lastMillis = millis;
 		millis = System.currentTimeMillis();
 		stepTimes.add(millis - lastMillis);
-		if (stepTimes.size() > 10)
+		if (stepTimes.size() > 100)
 			stepTimes.remove(0);
 
 		mode.run((int) (millis - lastMillis));
@@ -101,7 +103,7 @@ public class GameEngine {
 		}
 		return (avg / num);
 	}
-
+	
 	/**
 	 * Paints the game based on the current game mode.
 	 * 
@@ -125,7 +127,19 @@ public class GameEngine {
 	public void setMode(GameMode newMode) {
 		mode = newMode;
 	}
-
+	
+	public static void setEnvSize(int x, int y){
+		if(envSize.x != x || envSize.y != y){
+			envSize.x = x;
+			envSize.y = y;
+			Actor.onEnvSizeChange();
+		}
+	}
+	
+	public static Point getEnv(){
+		return (Point) envSize.clone();
+	}
+	
 	/**
 	 * Called when a click occurs, sends the click to the current gameMode.
 	 * 

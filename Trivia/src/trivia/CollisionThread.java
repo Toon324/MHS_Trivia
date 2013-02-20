@@ -3,6 +3,8 @@
  */
 package trivia;
 
+import Actors.Actor;
+
 
 /**
  * Calculates the collisions of one actor in relation to the group of actors.
@@ -35,7 +37,7 @@ public class CollisionThread implements Runnable {
 	@Override
 	public void run() {
 		for (Actor a : actors) {
-			if (!actor.equals(a) && actor.center.distance(a.center) <= actor.radius + a.radius)
+			if (!actor.equals(a) && actor.getCenter().distance(a.getCenter()) <= actor.getRad() + a.getRad())
 				actor.checkCollision(a);
 		}
 	}

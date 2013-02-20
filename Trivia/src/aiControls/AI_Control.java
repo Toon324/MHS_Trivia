@@ -1,7 +1,7 @@
 package aiControls;
 
-import trivia.AI_Actor;
-import trivia.Actor;
+import Actors.AI_Actor;
+import Actors.Actor;
 
 public abstract class AI_Control {
 	AI_Actor actor;

@@ -8,6 +8,9 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Actors.Actor;
+import Actors.Square;
+import Actors.Triangle;
 import aiControls.TriangleFleet;
 
 /**
@@ -65,7 +68,7 @@ public class MainGame extends GameMode {
 	@Override
 	public void run(int ms) {
 		super.run(ms);
-		GameEngine.envSize.y -= 250;
+		GameEngine.setEnvSize(engine.windowWidth, engine.windowHeight - 250);
 
 		if(fleetSize < maxFleetSize){
 			//addShips(1);
@@ -212,8 +215,8 @@ public class MainGame extends GameMode {
 
 	private void addShips(int shipsToAdd) {
 		for (; shipsToAdd > 0; shipsToAdd--) {
-			Triangle.addTriangle((int) (Math.random() * GameEngine.envSize.x), (int) (Math.random() * GameEngine.envSize.y));
-			Square.addSquare((int)(Math.random() * GameEngine.envSize.x),(int) (Math.random() * GameEngine.envSize.y));
+			Triangle.addTriangle((int) (Math.random() * GameEngine.getEnv().x), (int) (Math.random() * GameEngine.getEnv().y));
+			Square.addSquare((int)(Math.random() * GameEngine.getEnv().x),(int) (Math.random() * GameEngine.getEnv().y));
 		}
 	}
 

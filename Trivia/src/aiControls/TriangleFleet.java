@@ -3,23 +3,24 @@ package aiControls;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import Actors.Actor;
+import Actors.Triangle;
 
-import trivia.Actor;
+
 import trivia.GameEngine;
-import trivia.Triangle;
 
 public class TriangleFleet {
 	
 	private ArrayList<Triangle> members;
 	private ArrayList<Actor> knownEnemies;
 	private Actor target;
-	public Point envSize = GameEngine.envSize;
+	public Point envSize = GameEngine.getEnv();
 	
 	public TriangleFleet() {
 		members = new ArrayList<Triangle>();
 		knownEnemies = new ArrayList<Actor>();
 		target = Triangle.getEmptyInstance();
-		target.setCenter(GameEngine.envSize.x/2, GameEngine.envSize.y/2);
+		target.setCenter(envSize.x/2, envSize.y/2);
 	}
 	
 	public void addTriangle(Triangle t){
@@ -35,7 +36,7 @@ public class TriangleFleet {
 	}
 	
 	public Actor getCurrentTarget(){
-		target.setCenter(GameEngine.envSize.x/2, GameEngine.envSize.y/2);
+		target.setCenter(envSize.x/2, envSize.y/2);
 		return target;
 	}
 	

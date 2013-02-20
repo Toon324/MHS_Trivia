@@ -1,4 +1,4 @@
-package trivia;
+package Actors;
 
 import java.awt.Color;
 import java.awt.Graphics;

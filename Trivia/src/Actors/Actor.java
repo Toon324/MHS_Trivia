@@ -1,4 +1,4 @@
-package trivia;
+package Actors;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,6 +10,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import trivia.GameEngine;
 
 
 import aiControls.*;
@@ -57,8 +59,10 @@ public abstract class Actor {
 	}
 	
 	public void setBasePoly(Polygon poly) {
+		poly.translate((int) center.x, (int) center.y);
 		basePoly = poly;
 		drawPoly = new Polygon(poly.xpoints, poly.ypoints, poly.npoints);
+		
 		double tmpRadius = 0, newRad = 0;
 		int[] xPoints = poly.xpoints, yPoints = poly.ypoints;
 		for(int i = 0; i < poly.npoints;i++){
@@ -69,7 +73,11 @@ public abstract class Actor {
 		}
 		radius = (float) newRad;
 	}
-
+	
+	
+	public double getRad(){
+		return radius;
+	}
 	public Polygon getDrawnPoly() {
 		return drawPoly;
 	}
@@ -141,9 +149,7 @@ public abstract class Actor {
 	 * @return boolean
 	 *            If the actor died when colliding
 	 */
-	public boolean checkCollision(Actor other) {
-		return false;
-	}
+	public abstract boolean checkCollision(Actor other);
 
 	public void setCenter(float x, float y) {
 		if (drawPoly != null)
@@ -158,7 +164,7 @@ public abstract class Actor {
 	/**
 	 * Returns the direction that the Actor is facing in radians.
 	 * 
-	 * @return dir
+	 * @return direction
 	 */
 	public double getAngle() {
 		return angle;
@@ -198,7 +204,7 @@ public abstract class Actor {
 		return "" + ID;
 	}
 
-	private static Polygon applyAffineTransform(Polygon poly,
+	public static Polygon applyAffineTransform(Polygon poly,
 			AffineTransform trans) {
 		Point[] points = new Point[poly.npoints];
 		for (int i = 0; i < poly.npoints; i++) {
@@ -286,7 +292,7 @@ public abstract class Actor {
 	 */
 	public static void handleActors(int ms) {
 		ArrayList<Actor> toRemove = new ArrayList<Actor>();
-
+		
 		// adds toAdd Actors to actors
 		for (Actor a : toAdd) {
 			actors.add(a);
@@ -301,13 +307,10 @@ public abstract class Actor {
 				toRemove.add(a);
 			} else {
 				a.move(ms);
-				for (Actor act : actors) {//use of radius will massively increase speed of collisions, thus no need for thread
+				for (Actor act : actors) {//use of radius will massively increase speed of collisions, thus no need for threading
 					if (!a.equals(act) && a.center.distance(act.center) <= a.radius + act.radius)
 						if (a.checkCollision(act)) break;
 				}
-				/*// check for collisions
-				threadPool.execute(new CollisionThread(a, actors
-						.toArray(new Actor[0])));*/
 			}
 		}
 		// removes dead actors from the main array
@@ -330,7 +333,11 @@ public abstract class Actor {
 			a.draw(g);
 		}
 	}
-
+	
+	public static void onEnvSizeChange(){
+		Laser.resetBounds();
+	}
+	
 	public static void setEngine(GameEngine e) {
 		engine = e;
 	}

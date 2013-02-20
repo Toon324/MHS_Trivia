@@ -1,6 +1,7 @@
-package trivia;
+package Actors;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -18,10 +19,12 @@ import aiControls.RotateSearch;
 public class Square extends AI_Actor {
 
 	static float MAX_ACCEL = 100F;
-	static float fireRate = 10;// ms/shot
+	static float fireRate = 1;// ms/shot
 	long lastShotTime;
 	double shotSpeed = 500;
-
+	
+	private ArrayList<Point2D.Float> corners;
+	
 	private Square() {
 		super();
 		Polygon poly = new Polygon();
@@ -32,6 +35,8 @@ public class Square extends AI_Actor {
 		poly.addPoint(-width, 0);
 		poly.addPoint(0, height);
 		setBasePoly(poly);
+		corners = new ArrayList<Point2D.Float>();
+		for(int i = 0; i < 4; i++) corners.add(new Point2D.Float());
 		viewAngle = Math.PI / 16;
 		viewDist = 150;
 		clearAI_Control();
@@ -40,9 +45,18 @@ public class Square extends AI_Actor {
 	}
 
 	public void move(int ms) {
+		setCorners();
 		super.move(ms);
 	}
-
+	
+	private void setCorners(){
+		for(int i = 0; i < drawPoly.npoints; i++){
+			Point2D.Float crn = corners.get(i);
+			crn.x = drawPoly.xpoints[i];
+			crn.y = drawPoly.ypoints[i];
+		}
+	}
+	
 	/**
 	 * Fires a shot from the given spoke, 0-3
 	 * 
@@ -62,7 +76,8 @@ public class Square extends AI_Actor {
 					(float) (shotSpeed * Math.sin(shotAngle)));
 			// Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[]
 			// {0, 3, -3}, 3);
-			Particle.addParticle(shotPos, shotVel, Color.magenta);
+			Particle.addBullet(shotPos, shotVel, Color.magenta);
+			Particle.addLaser(corners.get((drawPoly.npoints - spoke) % drawPoly.npoints), shotAngle, Color.BLUE);
 			return true;
 		}
 		return false;
