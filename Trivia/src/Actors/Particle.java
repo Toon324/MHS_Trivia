@@ -18,13 +18,15 @@ import trivia.Helper;
  */
 public abstract class Particle extends Actor {
 
+	protected Actor creator;
 	
 	public Particle(){
 		super();
 	}
 	
-	protected Particle(Point2D.Float center, Color c) {
+	protected Particle(Point2D.Float center, Color c, Actor create) {
 		super();
+		creator = create;
 		setCenter(center.x, center.y);
 		drawClr = c;
 	}
@@ -48,19 +50,27 @@ public abstract class Particle extends Actor {
 		return "Particle " + super.toString();
 	}
 
-	public static Bullet addBullet(Point2D.Float center, Point2D.Float vectorSpeed,
+	public static Bullet addBullet(Actor creator, Point2D.Float center, Point2D.Float vectorSpeed,
 			Color c) {
-		Bullet p = new Bullet(center, (Float) vectorSpeed.clone(), c);
+		Bullet p = new Bullet(center, (Float) vectorSpeed.clone(), c, creator);
 		add(p);
 		return p;
 	}
 	
-	public static Laser addLaser(Point2D.Float center, Helper.myDub angle, Color c){
-		return addLaser(center, angle, c, 1000);
+	public static Laser addLaser(Actor creator, Point2D.Float center, Helper.myDub angle, Color c){
+		return addLaser(creator, center, angle, c, 1000);
 	}
 	
-	public static Laser addLaser(Point2D.Float center, Helper.myDub angle, Color c, int life){
-		Laser l = new Laser(center, angle, c);
+	public static Laser addLaser(Actor creator, Point2D.Float center, Helper.myDub angle, Color c, int life){
+		Laser l = new Laser(center, angle, c, creator);
+		l.setLife(life);
+		add(l);
+		return l;
+	}
+	
+	
+	public static Laser addLaser(Actor creator, Point2D.Float center, Helper.myDub angle, Color c, int life, double damage){
+		Laser l = new Laser(center, angle, c, creator, damage);
 		l.setLife(life);
 		add(l);
 		return l;
@@ -91,8 +101,8 @@ public abstract class Particle extends Actor {
 			vector.x = (float) (speed * Math.cos(angleInc * x + rndAngleAdd));
 			vector.y = (float) (speed * Math.sin(angleInc * x + rndAngleAdd));
 			// engine.log("Vector " + vector.x + ", " + vector.y);
-			addBullet(center, vector, c);
-			addLaser(center, new Helper.myDub(gen.nextDouble() * 2 * Math.PI), c);
+			addBullet(null, center, vector, c);
+			addLaser(null, center, new Helper.myDub(gen.nextDouble() * 2 * Math.PI), c);
 		}
 	}
 }

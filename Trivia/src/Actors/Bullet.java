@@ -12,8 +12,8 @@ import trivia.Helper;
 
 public class Bullet extends CollidingParticle {
 
-	protected Bullet(Float center, Float velocity, Color c) {
-		super(center, c);
+	protected Bullet(Float center, Float velocity, Color c, Actor creator) {
+		super(center, c, creator);
 
 		Polygon poly = new Polygon(new int[] {-2, 2, -2}, new int[] {2, 0, -2}, 3);
 		poly = Helper.applyAffineTransform(poly, AffineTransform.getScaleInstance(2, 2));

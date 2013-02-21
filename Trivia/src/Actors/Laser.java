@@ -15,24 +15,27 @@ import trivia.Helper;
 public class Laser extends Particle {
 
 	int chargeTime, fireTime;
-	double damage;
+	double DPS;
 	Helper.myDub directionLink;
 	Point endPoint;
-	
+
 	long stateStartTime;
-	
+
+	public static double chargeToFiring = 4 / 5;
+
 	int chargeBallRad = 5;
 	boolean charging;
-	
+
 	static ArrayList<Line2D.Float> windowBounds;
-	
-	public Laser(){
+
+	public Laser() {
 		super();
 		remove = true;
 	}
-	
-	protected Laser(Point2D.Float origin, Helper.myDub angle, Color c) {
-		super(origin, c);
+
+	protected Laser(Point2D.Float origin, Helper.myDub angle, Color c, Actor create, double damage) {
+		super(origin, c, create);
+		DPS = damage;
 		center = origin;
 		directionLink = angle;
 		radius = -50;// to prevent any collisions
@@ -40,35 +43,43 @@ public class Laser extends Particle {
 		charging = true;
 	}
 
+	protected Laser(Point2D.Float origin, Helper.myDub angle, Color c, Actor create) {
+		this(origin, angle, c, create, 0);
+	}
+
 	public void setLife(int life) {
-		chargeTime = life * 4 / 5;
-		fireTime = life / 5;
+		chargeTime = (int) (life * chargeToFiring);
+		fireTime = (int) (life * (1 - chargeToFiring));
 	}
 
 	public void move(int ms) {
 		if (charging) {
-			if (stateStartTime + chargeTime < System.currentTimeMillis()) {
-				//when charging is done
+			if (stateStartTime + chargeTime <= System.currentTimeMillis()) {
+				// when charging is done
 				stateStartTime = System.currentTimeMillis();
 				charging = false;
-				center = new Point2D.Float(center.x, center.y);
-				angle = directionLink.val;
-				directionLink = null;
-				findCollidePoint();
+				
+				AI_Actor target = findCollidePoint();
+				if (target != null) {
+					target.damage(DPS * (ms/(1000F)));
+				}
 			}
 		} else {
 			if (stateStartTime + fireTime < System.currentTimeMillis()) {
 				remove = true;
-				return;
 			}
-			findCollidePoint();
+			AI_Actor target = findCollidePoint();
+			if (target != null) {
+				target.damage(DPS * (ms/(1000F)));
+			}
 		}
 	}
-	
+
 	public void draw(Graphics g) {
 		g.setColor(drawClr);
 		if (charging) {
-			g.drawOval((int) center.x - chargeBallRad/2, (int) center.y- chargeBallRad/2, 5, 5);
+			g.drawOval((int) center.x - chargeBallRad / 2, (int) center.y
+					- chargeBallRad / 2, 5, 5);
 		} else {
 			g.drawLine((int) center.x, (int) center.y, endPoint.x, endPoint.y);
 		}
@@ -84,13 +95,13 @@ public class Laser extends Particle {
 		windowBounds.add(new Line2D.Float(0, GameEngine.getEnv().y, 0, 0));
 	}
 
-	private void findCollidePoint() {
+	private AI_Actor findCollidePoint() {
 		ArrayList<AI_Actor> toCheck = new ArrayList<AI_Actor>();
 		Line2D.Float laserRay = new Line2D.Float(center.x, center.y,
-				(float) (center.x + 10000 * Math.cos(angle)),
-				(float) (center.y + 10000 * Math.sin(angle)));
+				(float) (center.x + 10000 * Math.cos(directionLink.val)),
+				(float) (center.y + 10000 * Math.sin(directionLink.val)));
 		for (Actor a : actors) {
-			if (!(a instanceof AI_Actor))
+			if (!(a instanceof AI_Actor) || a == creator)
 				continue;
 			Polygon poly = a.getDrawnPoly();
 			if (poly != null && laserRay.intersects(poly.getBounds2D())) {
@@ -143,13 +154,12 @@ public class Laser extends Particle {
 			}
 		}
 
-		AI_Actor close = actMapping.get(closest);
-		if (close != null)
-			close.damage(damage);
-
 		endPoint = new Point((int) possIntersect.get(closest).x,
 				(int) possIntersect.get(closest).y);
 		// endPoint = new Point((int) laserRay.x2, (int) laserRay.y2);
+
+		AI_Actor close = actMapping.get(closest);
+		return close;
 	}
 
 	@Override

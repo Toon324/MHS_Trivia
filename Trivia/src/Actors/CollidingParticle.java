@@ -7,8 +7,8 @@ import java.awt.geom.Point2D.Float;
 
 public abstract class CollidingParticle extends Particle {
 	
-	public CollidingParticle(Float center, Color c) {
-		super(center, c);
+	public CollidingParticle(Float center, Color c, Actor create) {
+		super(center, c, create);
 		// TODO Auto-generated constructor stub
 	}
 }

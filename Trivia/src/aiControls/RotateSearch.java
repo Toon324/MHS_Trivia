@@ -23,7 +23,7 @@ public class RotateSearch extends AI_Control {
 	@Override
 	public void run(int ms) {
 		double rotateVel = actor.getRotateVel();
-		if(rotateVel < 4 * Math.PI)//<---- MAXVEL
+		if(rotateVel < 2 * Math.PI)//<---- MAXVEL
 			actor.accelerateRotation(0.5 * (ms/1000F));
 		ArrayList<Actor> seenActors = actor.getActorsInView();
 		if( !(seenActors.isEmpty() || actor.hasAIClass(SquareAttack.class)) ){
@@ -32,7 +32,7 @@ public class RotateSearch extends AI_Control {
 			Actor selectActor = seenActors.get(start);
 			for(count = 0; count < seenActors.size(); count++){
 				selectActor = seenActors.get((start + count) % seenActors.size());
-				if(/*!(selectActor instanceof Square)*/selectActor != actor){
+				if(!(selectActor instanceof Square)){
 					SquareAttack tmp = new SquareAttack(((Square) actor), selectActor);
 					actor.addAI_Control(tmp);
 					tmp.run(ms);

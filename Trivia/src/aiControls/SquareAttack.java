@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 
 import Actors.AI_Actor;
 import Actors.Actor;
+import Actors.Laser;
 import Actors.Square;
 
 import trivia.GameEngine;
@@ -21,7 +22,7 @@ public class SquareAttack extends AI_Control {
 
 	public SquareAttack(Square a, Actor b) {
 		super(a);
-		laserTime = Square.laserChargeTime;
+		laserTime = Square.laserCycleTime * Laser.chargeToFiring;
 		target = b;
 		if (target == actor)
 			actor.removeAI_Control(this);
@@ -44,7 +45,7 @@ public class SquareAttack extends AI_Control {
 		//difference between the current angle between centers and the predicted angle between centers after laser charge time
 		double addAngle = (Helper.getAngleAtTime(actor.getCenter(),
 				targetCen, target.getVelocity(), target.getAccel(),
-				(laserTime * 4 / 5)/(1000F))
+				(laserTime)/(1000F))
 				- Math.atan2(targetCen.y - cen.y, targetCen.x - cen.x) + Math.PI * 2)
 				% (2 * Math.PI);
 
@@ -54,7 +55,7 @@ public class SquareAttack extends AI_Control {
 		// GameEngine.log("Target angle: " + targetAngle);
 
 		// the possible change in angle after fired now
-		double angleChange = ((laserTime * 4 / 5) / 1000F)
+		double angleChange = ((laserTime) / 1000F)
 				* actor.getRotateVel();
 		for (int i = 0; i < 360; i += 90) {
 			double cornerAngle = (angle + Math.toRadians(i) + angleChange + addAngle)

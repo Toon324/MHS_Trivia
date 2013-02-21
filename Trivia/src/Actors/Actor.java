@@ -291,8 +291,6 @@ public abstract class Actor {
 	 * 
 	 * @param g
 	 *            Graphics to be drawn with
-	 * @param i
-	 *            ImageObserver to be reported to
 	 */
 	public static void drawActors(Graphics g) {
 		for (Actor a : actors.toArray(new Actor[0])) {

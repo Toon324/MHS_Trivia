@@ -23,8 +23,8 @@ public class Square extends AI_Actor {
 
 	static float MAX_ACCEL = 100F;
 	static float fireRate = 1;// ms/shot
-	public static int laserChargeTime = 10;// if small, better to be divisible
-											// by 5
+	public static int laserCycleTime = 0;
+	public static double laserDamage = 1000;
 	long lastShotTime;
 	double shotSpeed = 500;
 
@@ -42,6 +42,7 @@ public class Square extends AI_Actor {
 		poly.addPoint(-width, 0);
 		poly.addPoint(0, height);
 		setBasePoly(poly);
+		
 		corners = new ArrayList<Point2D.Float>();
 		cornerAngles = new ArrayList<Helper.myDub>();
 		cornerLasers = new ArrayList<Laser>();
@@ -51,7 +52,7 @@ public class Square extends AI_Actor {
 			cornerLasers.add(new Laser());
 		}
 		viewAngle = Math.PI / 16;
-		viewDist = 150;
+		viewDist = 300;
 		clearAI_Control();
 		aiCtrl.add(new RotateSearch(this));
 		drawClr = Color.red;
@@ -92,7 +93,7 @@ public class Square extends AI_Actor {
 					(float) (shotSpeed * Math.sin(shotAngle)));
 			// Polygon shotShape = new Polygon(new int[] {-4, 4, 4}, new int[]
 			// {0, 3, -3}, 3);
-			Particle.addBullet(shotPos, shotVel, Color.magenta);
+			Particle.addBullet(this, shotPos, shotVel, Color.magenta);
 			return true;
 		}
 		return false;
@@ -103,8 +104,8 @@ public class Square extends AI_Actor {
 		if (cornerLasers.get(trueIndex).remove) {
 			cornerLasers.set(
 					trueIndex,
-					Particle.addLaser(corners.get(trueIndex),
-							cornerAngles.get(trueIndex), Color.BLUE, laserChargeTime));
+					Particle.addLaser(this, corners.get(trueIndex),
+							cornerAngles.get(trueIndex), Color.BLUE, laserCycleTime, laserDamage));
 			return true;
 		} else {
 			return false;
