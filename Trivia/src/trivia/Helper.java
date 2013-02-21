@@ -41,6 +41,16 @@ public final class Helper {
 		return new Point2D.Float((float) x, (float) y);
 	}
 
+	/**
+	 * Applies an affine transformation to a poly and returns the transformed
+	 * poly
+	 * 
+	 * @param poly
+	 *            Polygon to be transformed
+	 * @param trans
+	 *            AffineTransform to be applied
+	 * @return transformed polygon
+	 */
 	public static Polygon applyAffineTransform(Polygon poly,
 			AffineTransform trans) {
 		Point[] points = new Point[poly.npoints];
@@ -187,12 +197,23 @@ public final class Helper {
 		return theta;
 	}
 
+	/**
+	 * returns the angle from p1 to p2 after the velocity and acceleration
+	 * applied over time
+	 * 
+	 * @param p1
+	 *            first point
+	 * @param p2
+	 * @param vel
+	 * @param ac
+	 * @param time
+	 * @return
+	 */
 	public static double getAngleAtTime(Point2D.Float p1, Point2D.Float p2,
 			Point2D.Float vel, Point2D.Float ac, double time) {
 
-		double theta = (Math.atan2(p1.y
-				- (p2.y + vel.y * time + ac.y * time * time / 2), p1.y
-				- (p2.y + vel.x * time + ac.y * time * time / 2)) + Math.PI * 2)
+		double theta = (Math.atan2((p2.y + vel.y * time + ac.y * time * time / 2) - p1.y,
+				(p2.x + vel.x * time + ac.x * time * time / 2) - p1.x) + Math.PI * 2)
 				% (Math.PI * 2);
 
 		return theta;

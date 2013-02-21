@@ -23,7 +23,7 @@ public class Square extends AI_Actor {
 
 	static float MAX_ACCEL = 100F;
 	static float fireRate = 1;// ms/shot
-	public static int laserChargeTime = 500;// if small, better to be divisible
+	public static int laserChargeTime = 10;// if small, better to be divisible
 											// by 5
 	long lastShotTime;
 	double shotSpeed = 500;
@@ -31,7 +31,7 @@ public class Square extends AI_Actor {
 	private ArrayList<Point2D.Float> corners;
 	private ArrayList<Helper.myDub> cornerAngles;
 	private ArrayList<Laser> cornerLasers;
-
+	
 	private Square() {
 		super();
 		Polygon poly = new Polygon();
