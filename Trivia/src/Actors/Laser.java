@@ -10,18 +10,20 @@ import java.awt.geom.Point2D.Float;
 import java.util.ArrayList;
 
 import trivia.GameEngine;
-import trivia.MathHelper;
+import trivia.Helper;
 
 public class Laser extends Particle {
 
 	int chargeTime, fireTime;
-	boolean charging;
 	double damage;
-	MathHelper.myDub directionLink;
+	Helper.myDub directionLink;
 	Point endPoint;
 	
 	long stateStartTime;
-
+	
+	int chargeBallRad = 5;
+	boolean charging;
+	
 	static ArrayList<Line2D.Float> windowBounds;
 	
 	public Laser(){
@@ -29,7 +31,7 @@ public class Laser extends Particle {
 		remove = true;
 	}
 	
-	protected Laser(Point2D.Float origin, MathHelper.myDub angle, Color c) {
+	protected Laser(Point2D.Float origin, Helper.myDub angle, Color c) {
 		super(origin, c);
 		center = origin;
 		directionLink = angle;
@@ -49,10 +51,10 @@ public class Laser extends Particle {
 				//when charging is done
 				stateStartTime = System.currentTimeMillis();
 				charging = false;
-				findCollidePoint();
 				center = new Point2D.Float(center.x, center.y);
 				angle = directionLink.val;
 				directionLink = null;
+				findCollidePoint();
 			}
 		} else {
 			if (stateStartTime + fireTime < System.currentTimeMillis()) {
@@ -66,7 +68,7 @@ public class Laser extends Particle {
 	public void draw(Graphics g) {
 		g.setColor(drawClr);
 		if (charging) {
-			g.drawOval((int) center.x, (int) center.y, 5, 5);
+			g.drawOval((int) center.x - chargeBallRad/2, (int) center.y- chargeBallRad/2, 5, 5);
 		} else {
 			g.drawLine((int) center.x, (int) center.y, endPoint.x, endPoint.y);
 		}
@@ -103,7 +105,7 @@ public class Laser extends Particle {
 		// add the window edges to intersects
 		for (Line2D ln : windowBounds) {
 			if (laserRay.intersectsLine(ln)) {
-				possIntersect.add(findIntersect(laserRay, ln));
+				possIntersect.add(Helper.findIntersect(laserRay, ln));
 				actMapping.add(null);
 			}
 		}
@@ -117,7 +119,7 @@ public class Laser extends Particle {
 				ln = new Line2D.Float(poly.xpoints[i], poly.ypoints[i],
 						poly.xpoints[i + 1], poly.ypoints[i + 1]);
 				if (laserRay.intersectsLine(ln)) {
-					possIntersect.add(findIntersect(laserRay, ln));
+					possIntersect.add(Helper.findIntersect(laserRay, ln));
 					actMapping.add(act);
 				}
 			}
@@ -125,7 +127,7 @@ public class Laser extends Particle {
 					poly.ypoints[poly.npoints - 1], poly.xpoints[0],
 					poly.ypoints[0]);
 			if (laserRay.intersectsLine(ln)) {
-				possIntersect.add(findIntersect(laserRay, ln));
+				possIntersect.add(Helper.findIntersect(laserRay, ln));
 				actMapping.add(act);
 			}
 		}
@@ -148,29 +150,6 @@ public class Laser extends Particle {
 		endPoint = new Point((int) possIntersect.get(closest).x,
 				(int) possIntersect.get(closest).y);
 		// endPoint = new Point((int) laserRay.x2, (int) laserRay.y2);
-	}
-
-	private Point2D.Float findIntersect(Line2D l1, Line2D l2) {
-		double denom1 = l1.getX1() - l1.getX2();
-		double denom2 = l2.getX1() - l2.getX2();
-		double m1 = (l1.getY1() - l1.getY2()) / (denom1);
-		double m2 = (l2.getY1() - l2.getY2()) / (denom2);
-		double c1 = -l1.getX1() * m1 + l1.getY1();
-		double c2 = -l2.getX1() * m2 + l2.getY1();
-		double x, y;
-		if (denom1 == 0 && denom2 == 0) {
-			return new Point2D.Float(200, 200);
-		} else if (denom1 == 0) {
-			x = l1.getX1();
-			y = m2 * x + c2;
-		} else if (denom2 == 0) {
-			x = l2.getX1();
-			y = m1 * x + c1;
-		} else {
-			x = (c2 - c1) / (m1 - m2);
-			y = m1 * x + c1;
-		}
-		return new Point2D.Float((float) x, (float) y);
 	}
 
 	@Override

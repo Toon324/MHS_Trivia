@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 
 import trivia.GameEngine;
+import trivia.Helper;
 
 public class Bullet extends CollidingParticle {
 
@@ -15,8 +16,8 @@ public class Bullet extends CollidingParticle {
 		super(center, c);
 
 		Polygon poly = new Polygon(new int[] {-2, 2, -2}, new int[] {2, 0, -2}, 3);
-		poly = applyAffineTransform(poly, AffineTransform.getScaleInstance(2, 2));
-		poly = applyAffineTransform(poly, AffineTransform.getRotateInstance(Math.atan2(velocity.y, velocity.x)));
+		poly = Helper.applyAffineTransform(poly, AffineTransform.getScaleInstance(2, 2));
+		poly = Helper.applyAffineTransform(poly, AffineTransform.getRotateInstance(Math.atan2(velocity.y, velocity.x)));
 		setBasePoly(poly);
 		setVel(velocity.x, velocity.y);
 	}

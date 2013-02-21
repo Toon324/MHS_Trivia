@@ -9,6 +9,7 @@ import Actors.Square;
 
 
 import trivia.GameEngine;
+import trivia.Helper;
 
 public class SquareAttack extends AI_Control {
 
@@ -35,34 +36,20 @@ public class SquareAttack extends AI_Control {
 		Polygon targetPoly = target.getDrawnPoly();
 		if(targetPoly == null) {actor.removeAI_Control(this); return;}
 		
-		double angleAdd = AI_Actor.getAngleAtTime(actor.getCenter(), target.getCenter(), target.getVelocity(), target.getAccel(), laserTime * 4 / 5);
+		//double leadAngle = Helper.getAngleAtTime(actor.getCenter(), target.getCenter(), target.getVelocity(), target.getAccel(), laserTime * 4 / 5);
 		
 		//double targetAngle = AI_Actor.getLeadShotAngle(cen, target.getCenter(), target.getVelocity(), target.getAccel(), ((Square) actor).getShotSpeed());
 		//GameEngine.log("Target angle: " + targetAngle);
+		
+		//the possible change in angle after fired now
+		double angleChange = ((laserTime * 4 / 5)/1000F) * actor.getRotateVel();
 		for (int i = 0; i < 360; i += 90) {
-			boolean right = false, left = false; // used to determine if the
-												// enemy is in the shot area
-			double cornerAngle = (angle + Math.toRadians(i)) % (Math.PI * 2);
-			double pntAngle;
-
-			for (int j = 0; j < targetPoly.npoints; j++) {
-				pntAngle = (Math.atan2(targetPoly.ypoints[j] - cen.y,
-						targetPoly.xpoints[j] - cen.x) + angleAdd + 2 * Math.PI)
-						% (Math.PI * 2);
-				double difference = (pntAngle - cornerAngle) % (Math.PI * 2);
-				if (Math.abs(difference) < (Math.PI / 2))
-					if ((pntAngle - cornerAngle) % (Math.PI * 2) > 0) {
-						left = true;
-					} else {
-						right = true;
-					}
-				if (right && left) {
-					//((Square) actor).fireShot(i / 90);
-					((Square) actor).chargeLaser(1 / 90);
-					fired = true;
-					shots++;
-					break;
-				}
+			double cornerAngle = (angle + Math.toRadians(i) + angleChange) % (Math.PI * 2);
+			if(Helper.doesPolarIntersectPoly(cen, cornerAngle, target.getDrawnPoly())){
+				//((Square) actor).fireShot(i / 90);
+				((Square) actor).chargeLaser(i / 90);
+				fired = true;
+				shots++;
 			}
 		}
 		if (!fired) {

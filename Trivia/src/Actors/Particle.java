@@ -8,7 +8,7 @@ import java.awt.geom.Point2D.Float;
 import java.util.Random;
 
 import trivia.GameEngine;
-import trivia.MathHelper;
+import trivia.Helper;
 
 /**
  * A single point Actor that does not interact with others. Used for particle
@@ -55,11 +55,11 @@ public abstract class Particle extends Actor {
 		return p;
 	}
 	
-	public static Laser addLaser(Point2D.Float center, MathHelper.myDub angle, Color c){
+	public static Laser addLaser(Point2D.Float center, Helper.myDub angle, Color c){
 		return addLaser(center, angle, c, 1000);
 	}
 	
-	public static Laser addLaser(Point2D.Float center, MathHelper.myDub angle, Color c, int life){
+	public static Laser addLaser(Point2D.Float center, Helper.myDub angle, Color c, int life){
 		Laser l = new Laser(center, angle, c);
 		l.setLife(life);
 		add(l);
@@ -92,7 +92,7 @@ public abstract class Particle extends Actor {
 			vector.y = (float) (speed * Math.sin(angleInc * x + rndAngleAdd));
 			// engine.log("Vector " + vector.x + ", " + vector.y);
 			addBullet(center, vector, c);
-			addLaser(center, new MathHelper.myDub(gen.nextDouble() * 2 * Math.PI), c);
+			addLaser(center, new Helper.myDub(gen.nextDouble() * 2 * Math.PI), c);
 		}
 	}
 }

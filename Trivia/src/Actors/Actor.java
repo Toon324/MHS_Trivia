@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import trivia.GameEngine;
+import trivia.Helper;
 
 
 import aiControls.*;
@@ -191,7 +192,7 @@ public abstract class Actor {
 	}
 
 	private Polygon rotate(Polygon myPoly, double d) {
-		return applyAffineTransform(myPoly,
+		return Helper.applyAffineTransform(myPoly,
 				AffineTransform.getRotateInstance(d, center.x, center.y));
 	}
 
@@ -202,41 +203,6 @@ public abstract class Actor {
 	 */
 	public String toString() {
 		return "" + ID;
-	}
-
-	public static Polygon applyAffineTransform(Polygon poly,
-			AffineTransform trans) {
-		Point[] points = new Point[poly.npoints];
-		for (int i = 0; i < poly.npoints; i++) {
-			points[i] = new Point(poly.xpoints[i], poly.ypoints[i]);
-		}
-		trans.transform(points, 0, points, 0, points.length);
-		Polygon newPoly = new Polygon();
-		for (int i = 0; i < points.length; i++) {
-			newPoly.addPoint(points[i].x, points[i].y);
-		}
-		return newPoly;
-	}
-
-	public static float getAccelToReach(float xDist, float currentVel, float MAX) {
-		/*
-		 * Time for velocity to reach 0 if it started to slow down:
-		 * (currentVel/MAX_ACCEL)
-		 * 
-		 * Distance to the next solution for y = 0 that will be traveled in t
-		 * time if acceleration is reversed: currentVel * t - (MAX_ACCEL/2) *
-		 * t^2
-		 */
-		byte velSign = (byte) ((((Float.floatToIntBits(currentVel) >> 31) & (1)) * 2 - 1) * -1);
-		double t = currentVel / MAX;
-		float possibleDist = (float) (currentVel * t - (MAX / 2)
-				* Math.pow(t, 2));
-
-		if (possibleDist >= xDist * velSign)
-			velSign *= -1;
-		if (Math.abs(xDist) <= 2 && currentVel <= MAX)
-			return -currentVel;
-		return MAX * velSign;
 	}
 
 	protected static void drawPolyCenterLines(Graphics g, Polygon p,

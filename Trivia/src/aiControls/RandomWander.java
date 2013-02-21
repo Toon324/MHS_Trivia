@@ -3,6 +3,8 @@ package aiControls;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import trivia.Helper;
+
 import Actors.AI_Actor;
 import Actors.Actor;
 
@@ -26,8 +28,8 @@ public class RandomWander extends AI_Control {
 		Point2D.Float center = actor.getCenter();
 
 		actor.setAccel(new Point2D.Float(
-				Actor.getAccelToReach(currentDest.x - center.x, velocityVect.x, actor.getMaxAccel()),
-				Actor.getAccelToReach(currentDest.y - center.y, velocityVect.y,	actor.getMaxAccel())));
+				Helper.getAccelToReach(currentDest.x - center.x, velocityVect.x, actor.getMaxAccel()),
+				Helper.getAccelToReach(currentDest.y - center.y, velocityVect.y,	actor.getMaxAccel())));
 
 		if (center.distance(currentDest) <= 10) {
 			currentDest = new Point((int) (Math.random() * envSize.x),

@@ -2,6 +2,8 @@ package aiControls;
 
 import java.awt.geom.Point2D;
 
+import trivia.Helper;
+
 import Actors.Actor;
 import Actors.Triangle;
 
@@ -25,10 +27,10 @@ public class TriangleAttack extends AI_Control {
 		
 		
 		velocityVect.x += (ms / 1000F)
-				* Actor.getAccelToReach(target.x - center.x,
+				* Helper.getAccelToReach(target.x - center.x,
 						velocityVect.x, actor.getMaxAccel());
 		velocityVect.y += (ms / 1000F)
-				* Actor.getAccelToReach(target.y - center.y,
+				* Helper.getAccelToReach(target.y - center.y,
 						velocityVect.y, actor.getMaxAccel());
 	}
 

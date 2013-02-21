@@ -6,7 +6,8 @@ import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-import trivia.MathHelper;
+import trivia.GameEngine;
+import trivia.Helper;
 
 import aiControls.RotateSearch;
 
@@ -22,13 +23,13 @@ public class Square extends AI_Actor {
 
 	static float MAX_ACCEL = 100F;
 	static float fireRate = 1;// ms/shot
-	public static int laserChargeTime = 50;// if small, better to be divisible
+	public static int laserChargeTime = 500;// if small, better to be divisible
 											// by 5
 	long lastShotTime;
 	double shotSpeed = 500;
 
 	private ArrayList<Point2D.Float> corners;
-	private ArrayList<MathHelper.myDub> cornerAngles;
+	private ArrayList<Helper.myDub> cornerAngles;
 	private ArrayList<Laser> cornerLasers;
 
 	private Square() {
@@ -42,11 +43,11 @@ public class Square extends AI_Actor {
 		poly.addPoint(0, height);
 		setBasePoly(poly);
 		corners = new ArrayList<Point2D.Float>();
-		cornerAngles = new ArrayList<MathHelper.myDub>();
+		cornerAngles = new ArrayList<Helper.myDub>();
 		cornerLasers = new ArrayList<Laser>();
 		for (int i = 0; i < 4; i++) {
 			corners.add(new Point2D.Float());
-			cornerAngles.add(new MathHelper.myDub(0));
+			cornerAngles.add(new Helper.myDub(0));
 			cornerLasers.add(new Laser());
 		}
 		viewAngle = Math.PI / 16;
@@ -64,7 +65,7 @@ public class Square extends AI_Actor {
 	private void setCorners() {
 		for (int i = 0; i < drawPoly.npoints; i++) {
 			Point2D.Float crn = corners.get(i);
-			MathHelper.myDub val = cornerAngles.get(i);
+			Helper.myDub val = cornerAngles.get(i);
 			crn.x = drawPoly.xpoints[i];
 			crn.y = drawPoly.ypoints[i];
 			val.val = (Math.atan2(crn.y - center.y, crn.x - center.x) + 2 * Math.PI)
@@ -98,7 +99,7 @@ public class Square extends AI_Actor {
 	}
 
 	public boolean chargeLaser(int spoke) {
-		int trueIndex = drawPoly.npoints - spoke - 1;
+		int trueIndex = (drawPoly.npoints - spoke) % drawPoly.npoints;
 		if (cornerLasers.get(trueIndex).remove) {
 			cornerLasers.set(
 					trueIndex,
